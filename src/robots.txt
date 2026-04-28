@@ -1,0 +1,13 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow access to certain directories (if any)
+# Disallow: /admin/
+# Disallow: /private/
+
+# Sitemap location
+Sitemap: https://ryanoccg.com/sitemap.xml
+
+# Crawl-delay (optional, remove if not needed)
+# Crawl-delay: 10

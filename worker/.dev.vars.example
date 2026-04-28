@@ -1,0 +1,5 @@
+# Copy this file to `.dev.vars` for local development with `wrangler dev`.
+# DO NOT commit `.dev.vars` — it's in .gitignore.
+
+SMTP2GO_API_KEY=api-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TURNSTILE_SECRET=0x4AAAAAAA_xxxxxxxxxxxxxxxxxxxxxxxx

@@ -1,0 +1,23 @@
+name = "ryanoccg-quote-worker"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+# Route (uncomment and adjust after first deploy):
+# routes = [
+#   { pattern = "api.ryanoccg.com/quote", custom_domain = true }
+# ]
+
+# KV namespace for rate limiting (create via: wrangler kv namespace create RATE_LIMIT)
+# Uncomment and paste the id after creating:
+# [[kv_namespaces]]
+# binding = "RATE_LIMIT"
+# id = "YOUR_KV_NAMESPACE_ID"
+
+# Secrets (DO NOT commit). Set via:
+#   wrangler secret put SMTP2GO_API_KEY
+#   wrangler secret put TURNSTILE_SECRET
+#
+# Public vars (safe to commit):
+[vars]
+SMTP2GO_SENDER = "noreply@ryanoccg.com"
+NOTIFY_TO = "ryanoccg@gmail.com"
