@@ -16,8 +16,17 @@
 
     # Main domain rewrite rules (only for ryanoccg.com)
     RewriteCond %{HTTP_HOST} ^ryanoccg\.com$ [NC]
+
+    # 首頁導向 dist/index.html
     RewriteRule ^$ dist/index.html [L]
-    
+
+    # 如果請求的檔案或資料夾真實存在於根目錄,直接存取
+    RewriteCond %{HTTP_HOST} ^ryanoccg\.com$ [NC]
+    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI} -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI} -d
+    RewriteRule ^ - [L]
+
+    # 其他路徑才重定向到 dist/
     RewriteCond %{HTTP_HOST} ^ryanoccg\.com$ [NC]
     RewriteRule ^((?!dist/).*)$ dist/$1 [L,NC]
 </IfModule>

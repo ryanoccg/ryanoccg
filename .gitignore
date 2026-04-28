@@ -13,7 +13,10 @@ worker/.wrangler/
 .env
 .env.local
 .env.*.local
-*.env
+
+# Blog generated images (re-generate with scripts)
+blog/images/
+blog/published/
 
 # OS
 .DS_Store

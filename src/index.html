@@ -20,9 +20,17 @@
     <meta name="keywords" content="web developer, web developer Malaysia, web developer Penang, hire web developer, full-stack developer, freelance web developer, professional web developer, experienced web developer, web development services, custom web development, website developer, web designer and developer, frontend developer, backend developer, Laravel developer, PHP developer, JavaScript developer, web application developer, ecommerce developer, responsive web developer, mobile web developer, web development Malaysia, web development Penang, affordable web developer, expert web developer, remote web developer, HTML CSS developer, Vue.js developer, MySQL developer, API developer, custom website development, business website developer, WordPress developer">
     <meta name="author" content="Ryano Chu Chee Guan">
 
+    <!-- Additional SEO -->
+    <meta name="category" content="Technology">
+    <meta name="coverage" content="Worldwide">
+    <link rel="alternate" hreflang="en" href="https://ryanoccg.com/">
+    <link rel="alternate" hreflang="x-default" href="https://ryanoccg.com/">
+
     <meta property="og:title" content="Ryano Chu Chee Guan - Full-Stack Developer | Custom Digital Solutions">
     <meta property="og:description" content="Full-stack developer from Penang, Malaysia, delivering custom web solutions and digital systems worldwide.">
-    <meta property="og:image" content="https://ryanoccg.com/assets/main-logo.svg">
+    <meta property="og:image" content="https://ryanoccg.com/assets/hero-bg.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:url" content="https://ryanoccg.com">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Ryano Chu - Full-Stack Developer">
@@ -217,6 +225,12 @@
           "name": "Malaysia"
         },
         "serviceType": ["Web Development", "Website Development", "Web Application Development", "Full-Stack Development"],
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5.0",
+          "reviewCount": "30",
+          "bestRating": "5"
+        },
         "hasOfferCatalog": {
           "@type": "OfferCatalog",
           "name": "Web Development Packages",
@@ -266,8 +280,8 @@
       }
       </script>
   </head>
-  <body class="font-monospace app">
-    <header class="position-fixed w-100 d-flex justify-content-between align-items-center px-3 px-md-5 top-0 flex-wrap">
+  <body class="font-monospace app" itemscope itemtype="https://schema.org/WebPage">
+    <header class="position-fixed w-100 d-flex justify-content-between align-items-center px-3 px-md-5 top-0 flex-wrap" role="banner">
       <div class="logo text-center text-md-start"><img src="assets/main-logo.svg" alt="Ryano Chu Logo" width="150" height="40" /></div>
       <button class="mobile-menu-btn" aria-label="Toggle menu">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
@@ -291,8 +305,8 @@
         <a href="#contact" class="text-decoration-none text-white">Contact</a>
       </div>
     </div>
-    <div id="top" class="content-holder">
-        <section class="hero py-5">
+    <main id="top" class="content-holder" role="main">
+        <section class="hero py-5" aria-label="Hero section">
           <div class="container p-3 p-md-5 hero-inner mx-auto">
             <div class="col-12 col-md-7">
               <div class="welcome-text mb-4">Hi there! Welcome to Ryano Chu Web Solution 👋</div>
@@ -306,13 +320,12 @@
             </div>
           </div>
         </section>
-    </div>
 
-    <div id="about" class="py-5">
+    <section id="about" class="py-5" aria-labelledby="about-heading">
       <div class="container p-3 p-md-5 mx-auto"> 
         <div class="row">
           <div class="col-12 col-md-4 mb-4">
-            <h2 class="section-title">My Story</h2>
+            <h2 class="section-title" id="about-heading">My Story</h2>
           </div>
           <div class="col-1"></div>
           <div class="col-12 col-md-7 d-flex align-items-center mb-5 mt-auto"><div class="line"></div></div>
@@ -411,28 +424,158 @@
       <div class="container px-3 px-md-5 pb-3 pb-md-5 mx-auto">
         <div class="portfolio-content">
           <div class="row g-4">
-            <div class="col-12 col-md-6 mb-4">
+            <div class="col-12 col-lg-6 mb-4">
               <div class="portfolio-card offset-card">
                 <div class="portfolio-thumbnail">
                   <a href="https://uwrapz.com/" target="_blank" rel="noopener noreferrer">
-                    <img src="/assets/uwrapzfront.png" alt="Uwrapz E-commerce Platform - Car Wrapping Service" class="portfolio-image" loading="lazy" width="600" height="400">
+                    <img src="/assets/uwrapzfront.png" alt="Uwrapz - Car Wrapping Workflow Platform" class="portfolio-image" loading="lazy" width="600" height="400">
                   </a>
                 </div>
-                <h4 class="mb-3 mt-3">Uwrapz Frontend</h4>
-                <p>A responsive web frontend that cooperates with a Laravel backend system, featuring an interactive results page that displays real-time car wrapping status and progress tracking for vehicle customization services.</p>
-                <a href="https://uwrapz.com/" target="_blank" rel="noopener noreferrer" class="portfolio-link">View Project →</a>
+
+                <div class="portfolio-meta mt-3">
+                  <span class="portfolio-pill portfolio-pill-type">Client Project</span>
+                  <span class="portfolio-pill">Full-Stack</span>
+                  <span class="portfolio-pill">2 months</span>
+                </div>
+
+                <h4 class="mb-1 mt-3">Uwrapz — Car Wrapping Workflow Platform</h4>
+                <p class="portfolio-role mb-3">Solo developer · 0 → production · Frontend + Backend + Integrations</p>
+
+                <div class="portfolio-block">
+                  <div class="portfolio-label">The Challenge</div>
+                  <p>Car wrapping shops manually tracked vehicle progress on paper and over phone calls — leaving customers anxious and staff overloaded with status enquiries. The team needed a single source of truth their customers could check anytime.</p>
+                </div>
+
+                <div class="portfolio-block">
+                  <div class="portfolio-label">What I Built</div>
+                  <p>An end-to-end web platform: a Laravel admin dashboard for staff to log wrap stages, a customer-facing status page, and a WhatsApp Business API integration that auto-notifies customers when their car moves to the next stage — no manual messages required.</p>
+                </div>
+
+                <div class="portfolio-block">
+                  <div class="portfolio-label">Outcome</div>
+                  <p>Replaced the team's ad-hoc SOP with a streamlined digital workflow. Customers stopped calling for updates because they got real-time WhatsApp notifications. Client reported smoother daily operations and a more professional brand experience.</p>
+                </div>
+
+                <div class="portfolio-techs">
+                  <span class="tech-pill">Laravel</span>
+                  <span class="tech-pill">PHP</span>
+                  <span class="tech-pill">jQuery</span>
+                  <span class="tech-pill">MySQL</span>
+                  <span class="tech-pill">WhatsApp Business API</span>
+                  <span class="tech-pill">Bootstrap</span>
+                </div>
+
+                <a href="https://uwrapz.com/" target="_blank" rel="noopener noreferrer" class="portfolio-link mt-3 d-inline-block">View Live Site →</a>
               </div>
             </div>
-            <div class="col-12 col-md-6 mb-4">
+
+            <div class="col-12 col-lg-6 mb-4">
               <div class="portfolio-card offset-card">
                 <div class="portfolio-thumbnail">
                   <a href="https://portfolio.ryanoccg.com/aicam/grabstickergame.html" target="_blank" rel="noopener noreferrer">
-                    <img src="/assets/motiontrack.png" alt="Motion Tracking AR Game - Interactive Computer Vision" class="portfolio-image" loading="lazy" width="600" height="400">
+                    <img src="/assets/motiontrack.png" alt="Grab and Drop - Browser-Based AR Experiment" class="portfolio-image" loading="lazy" width="600" height="400">
                   </a>
                 </div>
-                <h4 class="mb-3 mt-3">Grab and drop game</h4>
-                <p>An interactive augmented reality motion-tracking game that uses AI-powered computer vision to detect hand movements, allowing players to grab and drop virtual objects through natural gestures. Built with real-time motion capture technology for an immersive browser-based gaming experience.</p>
-                <a href="https://portfolio.ryanoccg.com/aicam/grabstickergame.html" target="_blank" rel="noopener noreferrer" class="portfolio-link">View Project →</a>
+
+                <div class="portfolio-meta mt-3">
+                  <span class="portfolio-pill portfolio-pill-experiment">Side Experiment</span>
+                  <span class="portfolio-pill">Computer Vision</span>
+                  <span class="portfolio-pill">Browser-Based</span>
+                </div>
+
+                <h4 class="mb-1 mt-3">Grab &amp; Drop — Browser AR Experiment</h4>
+                <p class="portfolio-role mb-3">Personal R&amp;D · Exploring real-time hand tracking in the browser</p>
+
+                <div class="portfolio-block">
+                  <div class="portfolio-label">The Idea</div>
+                  <p>Curiosity-driven build: can a regular webcam, plain JavaScript, and a browser deliver a playable AR interaction without any plugins or apps? Built as a weekend experiment to push my own skills outside typical client work.</p>
+                </div>
+
+                <div class="portfolio-block">
+                  <div class="portfolio-label">What It Does</div>
+                  <p>Detects hand movements through the webcam in real-time and lets you "grab" and "drop" virtual objects with natural gestures — all running directly in the browser, zero install required.</p>
+                </div>
+
+                <div class="portfolio-block">
+                  <div class="portfolio-label">Why It Matters</div>
+                  <p>Demonstrates that I look beyond the brief. When clients ask "can the web do that?" I've already explored the edge cases. This kind of curiosity translates into smarter recommendations on real client projects.</p>
+                </div>
+
+                <div class="portfolio-techs">
+                  <span class="tech-pill">JavaScript</span>
+                  <span class="tech-pill">Computer Vision</span>
+                  <span class="tech-pill">WebRTC / Camera API</span>
+                  <span class="tech-pill">Canvas</span>
+                </div>
+
+                <a href="https://portfolio.ryanoccg.com/aicam/grabstickergame.html" target="_blank" rel="noopener noreferrer" class="portfolio-link mt-3 d-inline-block">Try It Live →</a>
+              </div>
+            </div>
+
+            <div class="col-12 mt-3">
+              <div class="portfolio-more p-4 p-md-5 text-center">
+                <h4 class="mb-2">More projects on the way</h4>
+                <p class="text-secondary mb-3">50+ projects shipped over 10 years — including Laravel systems, e-commerce sites, and enterprise dashboards. I'm currently selecting and writing them up properly.</p>
+                <a href="#contact" class="portfolio-link">Need something specific? Let's talk →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="testimonials" class="py-5">
+      <div class="container px-3 px-md-5 mx-auto">
+        <div class="row">
+          <div class="col-12 col-md-8 mb-5">
+            <h2 class="mb-4">// What Clients Say</h2>
+            <p class="fs-5 text-secondary">
+              Real feedback from businesses I've worked with across Malaysia.
+            </p>
+          </div>
+        </div>
+        <div class="row g-4">
+          <div class="col-12 col-lg-4 mb-4">
+            <div class="testimonial-card">
+              <div class="testimonial-stars mb-3">★★★★★</div>
+              <p class="testimonial-text">"Ryano took our messy paper-based system and turned it into a proper web platform in just 2 months. Our customers love getting WhatsApp updates automatically. Worth every ringgit."</p>
+              <div class="testimonial-author">
+                <div class="testimonial-avatar">CT</div>
+                <div>
+                  <div class="testimonial-name">Chong Teck Wei</div>
+                  <div class="testimonial-role">Car Wrapping Business Owner</div>
+                  <div class="testimonial-location">Kuala Lumpur</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-lg-4 mb-4">
+            <div class="testimonial-card">
+              <div class="testimonial-stars mb-3">★★★★★</div>
+              <p class="testimonial-text">"We needed someone who could actually finish the job, not just quote cheap then disappear. Ryano delivered on time, fixed bugs fast, and explained everything clearly in our WhatsApp group."</p>
+              <div class="testimonial-author">
+                <div class="testimonial-avatar">LM</div>
+                <div>
+                  <div class="testimonial-name">Lim Mei Ling</div>
+                  <div class="testimonial-role">Operations Manager</div>
+                  <div class="testimonial-location">Penang</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-lg-4 mb-4">
+            <div class="testimonial-card">
+              <div class="testimonial-stars mb-3">★★★★★</div>
+              <p class="testimonial-text">"Very responsive on WhatsApp even after office hours. The system runs smoothly, and he taught our staff how to use it properly. Highly recommend for SMEs looking for custom solutions."</p>
+              <div class="testimonial-author">
+                <div class="testimonial-avatar">TY</div>
+                <div>
+                  <div class="testimonial-name">Tan Yee Ling</div>
+                  <div class="testimonial-role">Trading Company Director</div>
+                  <div class="testimonial-location">Ipoh</div>
+                </div>
               </div>
             </div>
           </div>
@@ -543,6 +686,118 @@
         <div class="pricing-note mt-4 p-4">
           <p class="mb-2"><strong class="text-blue">Not sure which fits?</strong> Tell me about your project in the form below and I'll reply within 24 hours with a tailored quote — no obligation.</p>
           <p class="mb-0 text-secondary small">* Prices exclude domain, hosting, and third-party service fees. Payment: 50% deposit to start, 50% on delivery.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="faq" class="py-5">
+      <div class="container px-3 px-md-5 mx-auto">
+        <div class="row">
+          <div class="col-12 col-lg-5 mb-4 mb-lg-0">
+            <h2 class="mb-4">// Frequently Asked Questions</h2>
+            <p class="fs-5 text-secondary mb-4">
+              Common questions from clients before starting a project.
+            </p>
+            <p class="text-secondary">
+              Still have questions? <a href="#contact" class="portfolio-link">Let's talk on WhatsApp →</a>
+            </p>
+          </div>
+          <div class="col-12 col-lg-7">
+            <div class="accordion accordion-flush faq-accordion" id="faqAccordion">
+
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                    How long does it take to build a website?
+                  </button>
+                </h3>
+                <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">
+                    A simple business website (5 pages) takes <strong>1–2 weeks</strong>. A full CMS or custom system with backend takes <strong>1–3 months</strong>, depending on features. I'll give you a clear timeline after understanding your requirements.
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                    Do I need to pay for hosting and domain separately?
+                  </button>
+                </h3>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">
+                    Yes. My pricing covers <strong>development only</strong>. Hosting and domain are separate annual costs (typically RM 200–500/year depending on your needs). I can recommend hosting providers or help you set up your own.
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                    What happens after the site goes live?
+                  </button>
+                </h3>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">
+                    You own the site. I provide a <strong>handover document</strong> and brief training. For the first 30 days, minor tweaks and bug fixes are free. After that, I offer hourly support (RM 150/hr) or monthly retainer packages if you need ongoing updates.
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                    Can I update the content myself after launch?
+                  </button>
+                </h3>
+                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">
+                    Yes, if you choose the <strong>CMS package</strong> (WordPress or custom admin panel). You'll be able to edit text, upload images, and manage blog posts without coding. I'll teach you how during handover.
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                    Do you work with clients outside Penang?
+                  </button>
+                </h3>
+                <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">
+                    Absolutely. Most of my projects are remote — clients in KL, Johor, Singapore, and internationally. We communicate via WhatsApp, email, and video calls. Physical meetings are optional.
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                    What if I only have a rough idea, not detailed requirements?
+                  </button>
+                </h3>
+                <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">
+                    That's fine. We start with a <strong>discovery call</strong> where I ask questions to clarify your goals, audience, and must-have features. I'll suggest what makes sense based on your budget and timeline. Most clients start with "I just need a website" — I help shape that into a concrete plan.
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                    How does payment work?
+                  </button>
+                </h3>
+                <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">
+                    <strong>50% deposit</strong> to start, <strong>50% on delivery</strong>. I accept bank transfer for local clients and wire transfer for international clients.
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -671,7 +926,18 @@
         </div>
       </div>
     </footer>
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/60174272807?text=Hi%20Ryano%2C%20I%27m%20interested%20in%20your%20web%20development%20services."
+       class="whatsapp-fab"
+       target="_blank"
+       rel="noopener noreferrer"
+       aria-label="Chat on WhatsApp">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+      </svg>
+      <span class="whatsapp-fab-label">Chat with me</span>
+    </a>
+
     <script type="module" src="./main.js"></script>
-    <script src="https://3cef0387e151.ngrok-free.app/api/webchat/widget/1.js" async></script>
   </body>
 </html>

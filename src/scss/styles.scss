@@ -176,10 +176,197 @@ header {
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s ease;
-    
+
     &:hover {
         color: #FFF;
     }
+}
+
+.portfolio-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.portfolio-pill {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #aaa;
+    border: 1px solid #2a2a2a;
+
+    &.portfolio-pill-type {
+        background: rgba(6, 154, 255, 0.12);
+        color: #069AFF;
+        border-color: rgba(6, 154, 255, 0.3);
+    }
+
+    &.portfolio-pill-experiment {
+        background: rgba(255, 184, 0, 0.1);
+        color: #ffb800;
+        border-color: rgba(255, 184, 0, 0.3);
+    }
+}
+
+.portfolio-role {
+    color: #888;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.portfolio-block {
+    margin-top: 1.25rem;
+
+    p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: #ccc;
+        margin-bottom: 0;
+    }
+}
+
+.portfolio-label {
+    color: #069AFF;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.4rem;
+}
+
+.portfolio-techs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px dashed #2a2a2a;
+}
+
+.tech-pill {
+    background: transparent;
+    border: 1px solid #069AFF;
+    color: #069AFF;
+    font-size: 0.78rem;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+.portfolio-more {
+    background: linear-gradient(135deg, rgba(6, 154, 255, 0.08) 0%, rgba(6, 154, 255, 0.02) 100%);
+    border: 1px dashed rgba(6, 154, 255, 0.3);
+    border-radius: 12px;
+    transition: border-color 0.3s ease, background 0.3s ease;
+
+    &:hover {
+        border-color: #069AFF;
+        background: linear-gradient(135deg, rgba(6, 154, 255, 0.12) 0%, rgba(6, 154, 255, 0.04) 100%);
+    }
+
+    h4 {
+        color: #fff;
+    }
+}
+
+// Testimonials
+#testimonials {
+    background: linear-gradient(180deg, #161616 0%, #1a1a1a 100%);
+}
+
+.testimonial-card {
+    background: #1e1e1e;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 2rem 1.75rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        border-color: #069AFF;
+        box-shadow: 0 8px 24px rgba(6, 154, 255, 0.12);
+    }
+}
+
+.testimonial-stars {
+    color: #FFB800;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+}
+
+.testimonial-text {
+    flex-grow: 1;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: #ccc;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+
+    &::before {
+        content: '"';
+        color: #069AFF;
+        font-size: 2rem;
+        line-height: 0;
+        margin-right: 4px;
+        vertical-align: -0.4rem;
+    }
+
+    &::after {
+        content: '"';
+        color: #069AFF;
+        font-size: 2rem;
+        line-height: 0;
+        margin-left: 4px;
+        vertical-align: -0.4rem;
+    }
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #2a2a2a;
+}
+
+.testimonial-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #069AFF 0%, #0077cc 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.testimonial-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+.testimonial-role {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 2px;
+}
+
+.testimonial-location {
+    font-size: 0.75rem;
+    color: #069AFF;
+    font-weight: 500;
 }
 
 .tag {
@@ -600,5 +787,128 @@ header {
     &:disabled {
         opacity: 0.7;
         cursor: not-allowed;
+    }
+}
+
+// FAQ Section
+#faq {
+    background: #161616;
+}
+
+.faq-accordion {
+    .accordion-item {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid #2a2a2a;
+
+        &:first-child {
+            border-top: 1px solid #2a2a2a;
+        }
+    }
+
+    .accordion-button {
+        background: transparent;
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 1.25rem 0;
+        border: none;
+        box-shadow: none;
+        transition: color 0.2s ease;
+
+        &:not(.collapsed) {
+            background: transparent;
+            color: #069AFF;
+            box-shadow: none;
+
+            &::after {
+                filter: brightness(0) saturate(100%) invert(52%) sepia(97%) saturate(2421%) hue-rotate(182deg) brightness(101%) contrast(101%);
+            }
+        }
+
+        &:focus {
+            box-shadow: none;
+            border: none;
+        }
+
+        &:hover {
+            color: #069AFF;
+        }
+
+        &::after {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+    }
+
+    .accordion-body {
+        padding: 0 0 1.5rem 0;
+        color: #ccc;
+        line-height: 1.65;
+        font-size: 0.95rem;
+
+        strong {
+            color: #069AFF;
+            font-weight: 600;
+        }
+    }
+}
+
+// WhatsApp Floating Button
+.whatsapp-fab {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #25D366;
+    color: #fff;
+    border-radius: 50px;
+    padding: 14px 20px 14px 16px;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, padding 0.25s ease;
+    overflow: hidden;
+    max-width: 56px;
+
+    svg {
+        flex-shrink: 0;
+        transition: transform 0.25s ease;
+    }
+
+    .whatsapp-fab-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        white-space: nowrap;
+        opacity: 0;
+        max-width: 0;
+        overflow: hidden;
+        transition: opacity 0.2s ease 0.05s, max-width 0.25s ease;
+    }
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(37, 211, 102, 0.5);
+        max-width: 200px;
+        color: #fff;
+
+        .whatsapp-fab-label {
+            opacity: 1;
+            max-width: 120px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        bottom: 20px;
+        right: 20px;
+        padding: 14px;
+        max-width: 56px;
+        border-radius: 50%;
+
+        .whatsapp-fab-label {
+            display: none;
+        }
     }
 }
