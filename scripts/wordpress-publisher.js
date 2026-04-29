@@ -65,8 +65,28 @@ function parseFrontmatter(content) {
   return { meta, body: match[2] };
 }
 
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function markdownToHtml(md) {
   let html = md;
+
+  // Code blocks (must be before other replacements)
+  // Wrap in .coding-div for styled code blocks
+  html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => {
+    return `<div class="coding-div"><pre><code class="language-${lang || 'text'}">${escapeHtml(code.trim())}</code></pre></div>`;
+  });
+
+  // Inline code
+  html = html.replace(/`([^`]+)`/g, (_, code) => `<code>${escapeHtml(code)}</code>`);
+
+  // Blockquotes (must be before headers/paragraphs)
+  html = html.replace(/^> (.+)$/gm, '<blockquote><p>$1</p></blockquote>');
 
   // Headers
   html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
@@ -84,12 +104,30 @@ function markdownToHtml(md) {
   // Images
   html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" loading="lazy" />');
 
-  // Unordered lists
-  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
-  html = html.replace(/(<li>[\s\S]*?<\/li>)/g, (match) => {
-    if (!match.startsWith('<ul>')) return `<ul>${match}</ul>`;
-    return match;
-  });
+  // Unordered lists - merge consecutive <li> into single <ul>
+  const lines = html.split('\n');
+  const processed = [];
+  let inList = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (line.match(/^- (.+)$/)) {
+      const content = line.replace(/^- (.+)$/, '$1');
+      if (!inList) {
+        processed.push('<ul>');
+        inList = true;
+      }
+      processed.push(`<li>${content}</li>`);
+    } else {
+      if (inList) {
+        processed.push('</ul>');
+        inList = false;
+      }
+      processed.push(line);
+    }
+  }
+  if (inList) processed.push('</ul>');
+  html = processed.join('\n');
 
   // Tables (basic)
   const tableRegex = /\|(.+)\|\n\|[-| ]+\|\n((?:\|.+\|\n?)+)/g;
@@ -106,7 +144,7 @@ function markdownToHtml(md) {
   html = html.replace(/\n\n/g, '</p><p>');
   html = `<p>${html}</p>`;
 
-  // Clean up empty paragraphs
+  // Clean up empty paragraphs and malformed tags
   html = html.replace(/<p>\s*<\/p>/g, '');
   html = html.replace(/<p>\s*(<h[1-6]>)/g, '$1');
   html = html.replace(/(<\/h[1-6]>)\s*<\/p>/g, '$1');
@@ -114,6 +152,10 @@ function markdownToHtml(md) {
   html = html.replace(/(<\/table>)\s*<\/p>/g, '$1');
   html = html.replace(/<p>\s*(<ul>)/g, '$1');
   html = html.replace(/(<\/ul>)\s*<\/p>/g, '$1');
+  html = html.replace(/<p>\s*(<pre>)/g, '$1');
+  html = html.replace(/(<\/pre>)\s*<\/p>/g, '$1');
+  html = html.replace(/<p>\s*(<blockquote>)/g, '$1');
+  html = html.replace(/(<\/blockquote>)\s*<\/p>/g, '$1');
 
   return html;
 }

@@ -50,6 +50,10 @@ export default defineConfig({
               resolve(__dirname, 'src/llm.txt'),
               resolve(__dirname, 'dist/llm.txt')
             )
+            copyFileSync(
+              resolve(__dirname, 'src/sitemap-index.xml'),
+              resolve(__dirname, 'dist/sitemap-index.xml')
+            )
           } catch (err) {
             console.warn('Could not copy static files:', err.message)
           }
