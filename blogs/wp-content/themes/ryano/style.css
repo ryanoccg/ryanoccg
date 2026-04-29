@@ -4,7 +4,7 @@ Theme URI: https://ryanoccg.com
 Author: Ryano Chu
 Author URI: https://ryanoccg.com
 Description: Custom blog theme matching Ryano's portfolio design - dark theme with blue accents, tech-focused
-Version: 2.0.9
+Version: 2.1.0
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 8.0
@@ -492,7 +492,6 @@ img {
 .post-thumbnail {
     width: 100%;
     height: auto;
-    max-height: 500px;
     object-fit: cover;
     border-radius: 16px;
     margin-bottom: 3rem;
