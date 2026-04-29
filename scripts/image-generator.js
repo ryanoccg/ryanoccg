@@ -13,7 +13,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const IMAGES_DIR = path.join(__dirname, '..', 'blog', 'images');
 
 const WIDTH = 1200;
-const HEIGHT = 630;
+const HEIGHT = 800; // Changed from 630 to match blog card aspect ratio (1.5:1)
 
 function wrapText(ctx, text, maxWidth) {
   const words = text.split(' ');

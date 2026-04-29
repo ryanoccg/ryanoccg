@@ -13,11 +13,17 @@
 
 import fs from 'fs';
 import path from 'path';
+import https from 'https';
 import { fileURLToPath } from 'url';
 import { generateThumbnail } from './image-generator.js';
 import { fetchImages } from './unsplash-fetcher.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Allow self-signed certificates for local DDEV (development only)
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false
+});
 
 // Load .env manually (avoid extra dependency)
 function loadEnv() {
@@ -138,6 +144,7 @@ async function uploadMedia(filePath, altText) {
       'Content-Type': contentType,
     },
     body: fileBuffer,
+    agent: httpsAgent,
   });
 
   if (!res.ok) {
@@ -156,6 +163,7 @@ async function uploadMedia(filePath, altText) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ alt_text: altText }),
+      agent: httpsAgent,
     });
   }
 
@@ -163,8 +171,46 @@ async function uploadMedia(filePath, altText) {
   return media;
 }
 
+async function getBlogCategoryId() {
+  const apiUrl = process.env.WP_API_URL;
+
+  // Try to find existing "Blog" category
+  const res = await fetch(`${apiUrl}/categories?search=Blog`, {
+    headers: { Authorization: wpAuth() },
+    agent: httpsAgent,
+  });
+
+  if (res.ok) {
+    const categories = await res.json();
+    const blogCat = categories.find(c => c.name === 'Blog');
+    if (blogCat) return blogCat.id;
+  }
+
+  // Create "Blog" category if not exists
+  const createRes = await fetch(`${apiUrl}/categories`, {
+    method: 'POST',
+    headers: {
+      Authorization: wpAuth(),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ name: 'Blog', slug: 'blog' }),
+    agent: httpsAgent,
+  });
+
+  if (createRes.ok) {
+    const newCat = await createRes.json();
+    console.log(`✅ Created "Blog" category (ID: ${newCat.id})`);
+    return newCat.id;
+  }
+
+  return null; // Fallback to Uncategorized
+}
+
 async function createPost(title, content, slug, featuredImageId, status, meta) {
   const apiUrl = process.env.WP_API_URL;
+
+  // Get Blog category ID
+  const blogCategoryId = await getBlogCategoryId();
 
   const postData = {
     title,
@@ -172,6 +218,7 @@ async function createPost(title, content, slug, featuredImageId, status, meta) {
     slug,
     status, // 'publish' or 'draft'
     featured_media: featuredImageId || 0,
+    categories: blogCategoryId ? [blogCategoryId] : [],
     meta: {},
   };
 
@@ -193,6 +240,7 @@ async function createPost(title, content, slug, featuredImageId, status, meta) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(postData),
+    agent: httpsAgent,
   });
 
   if (!res.ok) {

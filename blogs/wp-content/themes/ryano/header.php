@@ -10,11 +10,13 @@
 
 <header class="site-header">
     <div class="container">
-        <h1 class="site-title">
+        <div class="site-logo">
             <a href="<?php echo esc_url(home_url('/')); ?>">
-                <?php bloginfo('name'); ?>
+                <img src="<?php echo get_template_directory_uri(); ?>/assets/logo.svg"
+                     alt="<?php bloginfo('name'); ?>"
+                     class="logo-img">
             </a>
-        </h1>
+        </div>
 
         <?php
         wp_nav_menu(array(

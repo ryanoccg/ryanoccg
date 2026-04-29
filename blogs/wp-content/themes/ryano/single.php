@@ -4,10 +4,9 @@
  */
 get_header(); ?>
 
-<main class="site-main">
-    <div class="container">
-        <?php while (have_posts()) : the_post(); ?>
-            <article class="single-post">
+<main class="site-main site-main-single">
+    <?php while (have_posts()) : the_post(); ?>
+        <article class="single-post">
                 <header class="post-header">
                     <h1 class="post-title"><?php the_title(); ?></h1>
 
@@ -54,9 +53,8 @@ get_header(); ?>
                         </nav>
                     <?php endif; ?>
                 </footer>
-            </article>
-        <?php endwhile; ?>
-    </div>
+        </article>
+    <?php endwhile; ?>
 </main>
 
 <?php get_footer(); ?>
