@@ -7,7 +7,7 @@
 // Enqueue styles and scripts
 function ryano_scripts() {
     // Main stylesheet - versioned for cache busting
-    wp_enqueue_style('ryano-style', get_stylesheet_uri(), array(), '2.0.8');
+    wp_enqueue_style('ryano-style', get_stylesheet_uri(), array(), '2.0.9');
 
     // Google Fonts for better typography (optional)
     wp_enqueue_style('ryano-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', array(), null);
