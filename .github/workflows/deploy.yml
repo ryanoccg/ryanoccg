@@ -39,16 +39,43 @@ jobs:
             exit 1
           }
 
+      - name: Verify remote directory
+        run: |
+          echo "🔍 检查远程目录是否存在..."
+          ssh -p ${{ secrets.SSH_PORT }} \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+            "mkdir -p ~/public_html/dist && echo '✅ 目录已创建' && df -h ~ | tail -1"
+
       - name: Deploy via rsync over SSH
         run: |
+          echo "📦 开始同步文件到 cPanel..."
+
           # Sync dist/ → public_html/dist/  (--delete removes stale files)
           rsync -avz --delete \
-            -e "ssh -p ${{ secrets.SSH_PORT }}" \
+            --timeout=300 \
+            --progress \
+            -e "ssh -p ${{ secrets.SSH_PORT }} -o ServerAliveInterval=60 -o ServerAliveCountMax=3" \
             dist/ \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/public_html/dist/
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/public_html/dist/ || {
+            echo "❌ rsync dist/ 失败"
+            echo "尝试不使用 --delete 重新同步..."
+            rsync -avz \
+              --timeout=300 \
+              -e "ssh -p ${{ secrets.SSH_PORT }}" \
+              dist/ \
+              ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/public_html/dist/
+          }
 
-          # Sync .htaccess → public_html/.htaccess
-          rsync -avz \
-            -e "ssh -p ${{ secrets.SSH_PORT }}" \
-            .htaccess \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/public_html/.htaccess
+          # Sync .htaccess → public_html/.htaccess (if exists)
+          if [ -f .htaccess ]; then
+            echo "📝 同步 .htaccess..."
+            rsync -avz \
+              --timeout=300 \
+              -e "ssh -p ${{ secrets.SSH_PORT }}" \
+              .htaccess \
+              ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/public_html/.htaccess
+          else
+            echo "⚠️  .htaccess 不存在,跳过"
+          fi
+
+          echo "✅ 部署完成!"
