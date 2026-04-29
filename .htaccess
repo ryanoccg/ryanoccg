@@ -26,6 +26,14 @@
     RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI} -d
     RewriteRule ^ - [L]
 
+    # blogs/ → WordPress installation (serve from root blogs/ directory)
+    RewriteCond %{HTTP_HOST} ^ryanoccg\.com$ [NC]
+    RewriteRule ^blogs(/.*)?$ blogs$1 [L]
+
+    # Portfolio path → SPA fallback (dist/index.html)
+    RewriteCond %{HTTP_HOST} ^ryanoccg\.com$ [NC]
+    RewriteRule ^portfolio(/.*)?$ dist/index.html [L]
+
     # 其他路徑才重定向到 dist/
     RewriteCond %{HTTP_HOST} ^ryanoccg\.com$ [NC]
     RewriteRule ^((?!dist/).*)$ dist/$1 [L,NC]

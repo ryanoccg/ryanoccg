@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ddev version *)",
+      "Bash(docker version *)",
+      "Bash(ddev describe *)",
+      "Bash(ddev list *)",
+      "Bash(ddev stop *)",
+      "Bash(COMPOSE_PROJECT_NAME=ddev-ryanoccg-blogs docker compose -f .ddev/.ddev-docker-compose-full.yaml --progress=plain build)",
+      "Bash(docker buildx ls *)",
+      "Bash(docker buildx version *)"
+    ]
+  }
+}

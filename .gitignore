@@ -1,22 +1,27 @@
 # Dependencies
 node_modules/
-worker/node_modules/
+
+# Cloudflare Worker (managed separately)
+worker/
+
+# Shared internal configs (not needed in repo)
+.shared/
+.github/prompts/
 
 # Build output — upload dist/ to cPanel manually, don't commit
 dist/
-
-# Cloudflare Worker secrets — NEVER commit
-worker/.dev.vars
-worker/.wrangler/
 
 # Environment & secrets
 .env
 .env.local
 .env.*.local
 
-# Blog generated images (re-generate with scripts)
-blog/images/
-blog/published/
+# Blog skill generated content (re-generate with scripts)
+blogs/blog/
+
+# Markdown docs — only README.md is kept
+*.md
+!README.md
 
 # OS
 .DS_Store

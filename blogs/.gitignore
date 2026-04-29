@@ -1,0 +1,47 @@
+# ─── WordPress Core (不提交，伺服器自行安裝) ───────────────────────────────
+/index.php
+/license.txt
+/readme.html
+/wp-activate.php
+/wp-blog-header.php
+/wp-comments-post.php
+/wp-config-sample.php
+/wp-cron.php
+/wp-links-opml.php
+/wp-load.php
+/wp-login.php
+/wp-mail.php
+/wp-settings.php
+/wp-signup.php
+/wp-trackback.php
+/xmlrpc.php
+/wp-admin/
+/wp-includes/
+
+# ─── WordPress Config (含 DB 密碼，絕不提交) ─────────────────────────────
+/wp-config.php
+/wp-config-local.php
+
+# ─── WordPress 自動產生內容 ───────────────────────────────────────────────
+/wp-content/uploads/
+/wp-content/cache/
+/wp-content/upgrade/
+/wp-content/backup-db/
+/wp-content/advanced-cache.php
+/wp-content/wp-cache-config.php
+/wp-content/debug.log
+
+# ─── 預設 WordPress Themes (不需提交) ────────────────────────────────────
+/wp-content/themes/twentytwentythree/
+/wp-content/themes/twentytwentyfour/
+/wp-content/themes/twentytwentyfive/
+
+# ─── Blog Skill 生成的文章內容 (重新生成即可) ─────────────────────────────
+/blog/
+
+# ─── OS & Editor ─────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
