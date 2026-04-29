@@ -15,17 +15,18 @@ get_header(); ?>
                         $categories = get_the_category();
                         if (!empty($categories)) :
                         ?>
-                            <span class="post-category"><?php echo esc_html($categories[0]->name); ?></span>
+                            <div class="post-category"><?php echo esc_html($categories[0]->name); ?></div>
                         <?php endif; ?>
-                        <span class="post-date"><?php echo get_the_date(); ?></span>
-                        <span class="reading-time"><?php echo ryano_reading_time(); ?></span>
+                        <div class="post-date"><?php echo get_the_date('M d, Y'); ?></div>
+                        <div class="reading-time"><?php echo ryano_reading_time(); ?></div>
                     </div>
                 </header>
 
                 <?php if (has_post_thumbnail()) : ?>
                     <img src="<?php echo esc_url(get_the_post_thumbnail_url(get_the_ID(), 'full')); ?>"
                          alt="<?php echo esc_attr(get_the_title()); ?>"
-                         class="post-thumbnail">
+                         class="post-thumbnail"
+                         loading="eager">
                 <?php endif; ?>
 
                 <div class="post-content">
@@ -41,13 +42,15 @@ get_header(); ?>
                         <nav class="post-navigation">
                             <?php if ($prev_post) : ?>
                                 <a href="<?php echo get_permalink($prev_post); ?>" class="nav-previous">
-                                    ← <?php echo get_the_title($prev_post); ?>
+                                    <div style="font-size: 0.85rem; color: var(--color-text-dim); margin-bottom: 0.5rem; font-family: var(--font-mono);">← Previous</div>
+                                    <div style="color: var(--color-text); font-weight: 600;"><?php echo get_the_title($prev_post); ?></div>
                                 </a>
                             <?php endif; ?>
 
                             <?php if ($next_post) : ?>
                                 <a href="<?php echo get_permalink($next_post); ?>" class="nav-next">
-                                    <?php echo get_the_title($next_post); ?> →
+                                    <div style="font-size: 0.85rem; color: var(--color-text-dim); margin-bottom: 0.5rem; font-family: var(--font-mono);">Next →</div>
+                                    <div style="color: var(--color-text); font-weight: 600;"><?php echo get_the_title($next_post); ?></div>
                                 </a>
                             <?php endif; ?>
                         </nav>
