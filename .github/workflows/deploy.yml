@@ -50,32 +50,53 @@ jobs:
         run: |
           echo "📦 开始同步文件到 cPanel..."
 
-          # Sync dist/ → public_html/dist/  (--delete removes stale files)
+          # Sync everything (除了开发文件) → public_html/
           rsync -avz --delete \
             --timeout=300 \
             --progress \
+            --exclude 'node_modules/' \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude 'src/' \
+            --exclude 'package.json' \
+            --exclude 'package-lock.json' \
+            --exclude 'vite.config.js' \
+            --exclude '.env*' \
+            --exclude '.gitignore' \
+            --exclude '*.md' \
+            --exclude '.vscode/' \
+            --exclude '.idea/' \
+            --exclude '.DS_Store' \
+            --exclude 'worker/' \
+            --exclude '.shared/' \
+            --exclude 'blog/' \
+            --exclude 'scripts/' \
             -e "ssh -p ${{ secrets.SSH_PORT }} -o ServerAliveInterval=60 -o ServerAliveCountMax=3" \
-            dist/ \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/public_html/dist/ || {
-            echo "❌ rsync dist/ 失败"
-            echo "尝试不使用 --delete 重新同步..."
+            ./ \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/public_html/ || {
+            echo "❌ rsync 失败，尝试不使用 --delete 重新同步..."
             rsync -avz \
               --timeout=300 \
+              --exclude 'node_modules/' \
+              --exclude '.git/' \
+              --exclude '.github/' \
+              --exclude 'src/' \
+              --exclude 'package.json' \
+              --exclude 'package-lock.json' \
+              --exclude 'vite.config.js' \
+              --exclude '.env*' \
+              --exclude '.gitignore' \
+              --exclude '*.md' \
+              --exclude '.vscode/' \
+              --exclude '.idea/' \
+              --exclude '.DS_Store' \
+              --exclude 'worker/' \
+              --exclude '.shared/' \
+              --exclude 'blog/' \
+              --exclude 'scripts/' \
               -e "ssh -p ${{ secrets.SSH_PORT }}" \
-              dist/ \
-              ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/public_html/dist/
+              ./ \
+              ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/public_html/
           }
-
-          # Sync .htaccess → public_html/.htaccess (if exists)
-          if [ -f .htaccess ]; then
-            echo "📝 同步 .htaccess..."
-            rsync -avz \
-              --timeout=300 \
-              -e "ssh -p ${{ secrets.SSH_PORT }}" \
-              .htaccess \
-              ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/public_html/.htaccess
-          else
-            echo "⚠️  .htaccess 不存在,跳过"
-          fi
 
           echo "✅ 部署完成!"
