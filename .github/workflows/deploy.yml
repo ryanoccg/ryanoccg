@@ -51,7 +51,8 @@ jobs:
           echo "📦 开始同步文件到 cPanel..."
 
           # Sync everything (除了开发文件) → public_html/
-          rsync -avz --delete \
+          # 只添加和更新文件，不删除服务器上的文件
+          rsync -avz \
             --timeout=300 \
             --progress \
             --exclude 'node_modules/' \
@@ -73,30 +74,6 @@ jobs:
             --exclude 'scripts/' \
             -e "ssh -p ${{ secrets.SSH_PORT }} -o ServerAliveInterval=60 -o ServerAliveCountMax=3" \
             ./ \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/public_html/ || {
-            echo "❌ rsync 失败，尝试不使用 --delete 重新同步..."
-            rsync -avz \
-              --timeout=300 \
-              --exclude 'node_modules/' \
-              --exclude '.git/' \
-              --exclude '.github/' \
-              --exclude 'src/' \
-              --exclude 'package.json' \
-              --exclude 'package-lock.json' \
-              --exclude 'vite.config.js' \
-              --exclude '.env*' \
-              --exclude '.gitignore' \
-              --exclude '*.md' \
-              --exclude '.vscode/' \
-              --exclude '.idea/' \
-              --exclude '.DS_Store' \
-              --exclude 'worker/' \
-              --exclude '.shared/' \
-              --exclude 'blog/' \
-              --exclude 'scripts/' \
-              -e "ssh -p ${{ secrets.SSH_PORT }}" \
-              ./ \
-              ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/public_html/
-          }
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/public_html/
 
           echo "✅ 部署完成!"
