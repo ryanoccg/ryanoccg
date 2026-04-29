@@ -16,6 +16,25 @@ dist/
 .env.local
 .env.*.local
 
+# Google API credentials & tokens (NEVER COMMIT!)
+credentials.json
+token.json
+*.json.tmp.*
+
+# Analytics & SEO data
+temp-seo.json
+website_analysis.json
+
+# WordPress plugins (managed by WordPress, not version controlled)
+blogs/wp-content/plugins/
+blogs/wp-content/uploads/
+
+# Python analytics scripts (project-specific, not for production)
+ga_oauth_client.py
+gsc_oauth_client.py
+analyze_website.py
+list_gsc_sites.py
+
 # Blog skill generated content (re-generate with scripts)
 blog/
 blogs/blog/
