@@ -67,7 +67,14 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'G-XJ5EEW4SPG');
+      // Suppress GA on local dev traffic: skip when referrer is a dev domain
+      // or when ?no_track=1 is present. Prevents ddev.site / localhost pollution.
+      var ref = document.referrer || '';
+      var isLocalRef = /(\.ddev\.site|localhost|127\.0\.0\.1|\.local(:|\/|$))/i.test(ref);
+      var noTrackParam = /[?&]no_track=1\b/.test(location.search);
+      if (!isLocalRef && !noTrackParam) {
+        gtag('config', 'G-XJ5EEW4SPG');
+      }
     </script>
     <script type="application/ld+json">
       {
