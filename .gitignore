@@ -41,6 +41,10 @@ analyze_website.py
 list_gsc_sites.py
 seo_sitemap_submit.py
 
+# Node helper scripts (local-only: blog publishing, thumbnail gen, Unsplash, WP-CLI sync)
+# Production runs dist/ + WordPress — scripts/ are dev tools that don't deploy.
+scripts/
+
 # Blog skill generated content (re-generate with scripts)
 blog/
 blogs/blog/
