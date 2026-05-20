@@ -4,6 +4,55 @@
 import * as bootstrap from 'bootstrap'
 import './scss/styles.scss'
 
+// ─── Conversion Tracking ────────────────────────────────────────────────────
+// Fires GA4 events for high-intent actions. Mark each in GA4 admin
+// (Configure → Events → toggle "Mark as key event") to count as conversions.
+// Events fired here: whatsapp_click, resume_download, view_pricing, quote_request
+
+function trackEvent(name, params = {}) {
+  if (window.gtag) window.gtag('event', name, params);
+}
+
+function locationHint(el) {
+  const section = el.closest('section, header, footer, #pricing-items, #contact, #portfolio-items, .resume-hero, .resume-final-cta, .pricing-note');
+  if (!section) return 'unknown';
+  return section.id || section.className.split(' ').find(c => c) || 'unknown';
+}
+
+// Delegated click tracking — covers all WhatsApp + PDF links on any page
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('a');
+  if (!link || !link.href) return;
+
+  if (link.href.includes('wa.me/60174272807')) {
+    trackEvent('whatsapp_click', {
+      event_category: 'engagement',
+      link_location: locationHint(link),
+    });
+  } else if (link.href.includes('Ryano_Resume.pdf')) {
+    trackEvent('resume_download', {
+      event_category: 'engagement',
+      link_location: locationHint(link),
+    });
+  }
+});
+
+// Pricing section viewed — fires once per page load when ≥40% scrolled into view
+const pricingSection = document.getElementById('pricing');
+if (pricingSection && 'IntersectionObserver' in window) {
+  let pricingFired = false;
+  const pricingObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !pricingFired) {
+        pricingFired = true;
+        trackEvent('view_pricing', { event_category: 'engagement' });
+        pricingObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.4 });
+  pricingObserver.observe(pricingSection);
+}
+
 // Select all links that have hash (#) in them
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function(e) {
