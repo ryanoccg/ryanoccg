@@ -418,12 +418,13 @@ async function main() {
   console.log(`   📊 Status: ${post.status}`);
   console.log(`   🖼️  Images: ${uploadedImages.length + 1} uploaded\n`);
 
-  // GSC Request Indexing deep link (manual click required — no public API for general URLs)
+  // Request Indexing reminder — GSC has no public API for general URLs, must be manual
   if (post.status === 'publish' && post.link) {
-    const gscResource = 'sc-domain:ryanoccg.com';
-    const inspectUrl = `https://search.google.com/search-console/inspect?resource_id=${encodeURIComponent(gscResource)}&id=${encodeURIComponent(post.link)}`;
-    console.log(`   🔍 Request indexing (click then press "Request Indexing"):`);
-    console.log(`      ${inspectUrl}\n`);
+    const gscTool = `https://search.google.com/search-console?resource_id=${encodeURIComponent('sc-domain:ryanoccg.com')}`;
+    console.log(`   🔍 Request indexing in GSC:`);
+    console.log(`      1. Open: ${gscTool}`);
+    console.log(`      2. Paste into URL Inspection bar: ${post.link}`);
+    console.log(`      3. Click "Request Indexing"\n`);
   }
 }
 

@@ -177,9 +177,11 @@ async function main() {
   console.log(`   Status: ${updated.status}`);
 
   if (updated.status === 'publish' && updated.link) {
-    const inspectUrl = `https://search.google.com/search-console/inspect?resource_id=${encodeURIComponent('sc-domain:ryanoccg.com')}&id=${encodeURIComponent(updated.link)}`;
-    console.log(`   Re-crawl request (click then press "Request Indexing"):`);
-    console.log(`   ${inspectUrl}`);
+    const gscTool = `https://search.google.com/search-console?resource_id=${encodeURIComponent('sc-domain:ryanoccg.com')}`;
+    console.log(`   Re-crawl request in GSC:`);
+    console.log(`     1. Open: ${gscTool}`);
+    console.log(`     2. Paste into URL Inspection bar: ${updated.link}`);
+    console.log(`     3. Click "Request Indexing"`);
   }
 }
 
