@@ -98,11 +98,11 @@ function markdownToHtml(md) {
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
 
+  // Images (must be before links, so ![alt](url) isn't matched by the link regex first)
+  html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" loading="lazy" />');
+
   // Links
   html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
-
-  // Images
-  html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" loading="lazy" />');
 
   // Unordered lists - merge consecutive <li> into single <ul>
   const lines = html.split('\n');
@@ -264,6 +264,16 @@ async function createPost(title, content, slug, featuredImageId, status, meta) {
     meta: {},
   };
 
+  // Schedule post if date is provided and in the future
+  if (meta.date) {
+    const scheduleDate = new Date(meta.date);
+    const now = new Date();
+    if (scheduleDate > now) {
+      postData.date = scheduleDate.toISOString();
+      postData.status = 'future'; // WordPress uses 'future' status for scheduled posts
+    }
+  }
+
   // Add Yoast SEO meta if available
   if (meta.focus_keyphrase || meta.description) {
     postData.yoast_head_json = {};
@@ -407,6 +417,14 @@ async function main() {
   console.log(`   📎 URL: ${post.link}`);
   console.log(`   📊 Status: ${post.status}`);
   console.log(`   🖼️  Images: ${uploadedImages.length + 1} uploaded\n`);
+
+  // GSC Request Indexing deep link (manual click required — no public API for general URLs)
+  if (post.status === 'publish' && post.link) {
+    const gscResource = 'sc-domain:ryanoccg.com';
+    const inspectUrl = `https://search.google.com/search-console/inspect?resource_id=${encodeURIComponent(gscResource)}&id=${encodeURIComponent(post.link)}`;
+    console.log(`   🔍 Request indexing (click then press "Request Indexing"):`);
+    console.log(`      ${inspectUrl}\n`);
+  }
 }
 
 main().catch((err) => {

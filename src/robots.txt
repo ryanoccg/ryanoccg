@@ -6,8 +6,8 @@ Allow: /
 # Disallow: /admin/
 # Disallow: /private/
 
-# Sitemap location
-Sitemap: https://ryanoccg.com/sitemap.xml
+# Sitemap location (index points to both static + WP blog sitemaps)
+Sitemap: https://ryanoccg.com/sitemap-index.xml
 
 # Crawl-delay (optional, remove if not needed)
 # Crawl-delay: 10
