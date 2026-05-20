@@ -45,6 +45,9 @@ seo_sitemap_submit.py
 # Production runs dist/ + WordPress — scripts/ are dev tools that don't deploy.
 scripts/
 
+# Local-first workflow helper (only used when publishing to DDEV instead of production)
+convert-md-to-html.js
+
 # Blog skill generated content (re-generate with scripts)
 blog/
 blogs/blog/
