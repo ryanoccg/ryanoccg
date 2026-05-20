@@ -16,7 +16,10 @@ export default defineConfig({
     // Chunk size optimization
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
-      input: resolve(__dirname, 'src/index.html'),
+      input: {
+        main: resolve(__dirname, 'src/index.html'),
+        resume: resolve(__dirname, 'src/resume/index.html'),
+      },
       output: {
         // Manual chunks for better caching
         manualChunks: {
