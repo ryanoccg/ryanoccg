@@ -19,11 +19,16 @@ dist/
 # Google API credentials & tokens (NEVER COMMIT!)
 credentials.json
 token.json
-*.json.tmp.*
+*.tmp.*
 
-# Analytics & SEO data
+# Analytics & SEO data (all generated outputs)
 temp-seo.json
 website_analysis.json
+previous_period.json
+gsc_data.json
+gsc_index_status.json
+seo_report_data.json
+ai-ready-content.html
 
 # WordPress plugins (managed by WordPress, not version controlled)
 blogs/wp-content/plugins/
@@ -34,6 +39,7 @@ ga_oauth_client.py
 gsc_oauth_client.py
 analyze_website.py
 list_gsc_sites.py
+seo_sitemap_submit.py
 
 # Blog skill generated content (re-generate with scripts)
 blog/
