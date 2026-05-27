@@ -100,6 +100,61 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// ─── Latest Blog (homepage) ──────────────────────────────────────────────────
+// Fetches 3 newest posts from the WordPress REST API and replaces the static
+// fallback cards. If the request fails, the static cards in the HTML stay
+// visible so the section is never empty.
+
+const blogGrid = document.getElementById('latest-blog-grid');
+if (blogGrid) {
+    const BLOG_API = 'https://ryanoccg.com/blogs/wp-json/wp/v2/posts?per_page=3&_embed=1&_fields=id,title,excerpt,date,link,_embedded,content';
+
+    const stripTags = (html) => html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    const formatDate = (iso) => {
+        const d = new Date(iso);
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    };
+    const readingTime = (html) => {
+        const words = stripTags(html).split(/\s+/).filter(Boolean).length;
+        return Math.max(1, Math.ceil(words / 200));
+    };
+
+    const renderCard = (post) => {
+        const title = stripTags(post.title.rendered);
+        const excerpt = stripTags(post.excerpt.rendered).replace(/\[…\]$/, '…');
+        const featured = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
+        const date = formatDate(post.date);
+        const mins = readingTime(post.content?.rendered || post.excerpt.rendered);
+
+        return `
+            <div class="col-12 col-lg-4">
+                <a href="${post.link}" class="blog-card-link">
+                    <article class="blog-card">
+                        <div class="blog-card-image" style="background-image: url('${featured}');"></div>
+                        <div class="blog-card-body">
+                            <div class="blog-card-meta">${date} · ${mins} min read</div>
+                            <h3 class="blog-card-title">${title}</h3>
+                            <p class="blog-card-excerpt">${excerpt}</p>
+                            <span class="blog-card-cta">Read article →</span>
+                        </div>
+                    </article>
+                </a>
+            </div>
+        `;
+    };
+
+    fetch(BLOG_API)
+        .then(r => r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))
+        .then(posts => {
+            if (!Array.isArray(posts) || posts.length === 0) return;
+            blogGrid.innerHTML = posts.map(renderCard).join('');
+            blogGrid.dataset.fallbackLoaded = '1';
+        })
+        .catch(() => {
+            // Silent fail: static fallback cards remain visible.
+        });
+}
+
 // ─── Quote Form ───────────────────────────────────────────────────────────────
 // Replace this with your deployed Worker URL:
 //   Development : http://127.0.0.1:8787

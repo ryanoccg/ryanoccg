@@ -19,7 +19,13 @@ dist/
 # Google API credentials & tokens (NEVER COMMIT!)
 credentials.json
 token.json
+token.json.*
+*.bak
 *.tmp.*
+
+# Local-only OAuth & data-fetch helpers (dev tools, never deploy)
+reauth.py
+fetch_seo_data.py
 
 # Analytics & SEO data (all generated outputs)
 temp-seo.json
