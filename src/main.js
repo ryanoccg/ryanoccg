@@ -107,7 +107,9 @@ document.addEventListener('click', (e) => {
 
 const blogGrid = document.getElementById('latest-blog-grid');
 if (blogGrid) {
-    const BLOG_API = 'https://ryanoccg.com/blogs/wp-json/wp/v2/posts?per_page=3&_embed=1&_fields=id,title,excerpt,date,link,_embedded,content';
+    // Don't use _fields here — WP REST drops _embedded when _fields is set,
+    // even with _embed=1. Payload for 3 posts is ~50KB which is fine.
+    const BLOG_API = 'https://ryanoccg.com/blogs/wp-json/wp/v2/posts?per_page=3&_embed=1';
 
     const stripTags = (html) => html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
     const formatDate = (iso) => {
