@@ -2,12 +2,12 @@
 User-agent: *
 Allow: /
 
-# Disallow access to certain directories (if any)
-# Disallow: /admin/
-# Disallow: /private/
+# Block WordPress admin & sensitive paths from indexing
+Disallow: /blogs/wp-admin/
+Disallow: /blogs/wp-login.php
+Disallow: /blogs/wp-includes/
+Disallow: /blogs/wp-content/plugins/
+Disallow: /blogs/xmlrpc.php
 
 # Sitemap location (index points to both static + WP blog sitemaps)
 Sitemap: https://ryanoccg.com/sitemap-index.xml
-
-# Crawl-delay (optional, remove if not needed)
-# Crawl-delay: 10
