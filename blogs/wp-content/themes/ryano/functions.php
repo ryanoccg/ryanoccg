@@ -160,16 +160,34 @@ remove_action('wp_head', 'wp_generator');
 remove_action('wp_head', 'wlwmanifest_link');
 remove_action('wp_head', 'rsd_link');
 
-// Add Open Graph meta tags for better social sharing
+// Per-post SEO title/description overrides (id => [title, description])
+// title: keep under 60 chars so Google doesn't truncate
+// description: 120-155 chars, include CTA
+$ryano_seo_overrides = array(
+    120 => array(
+        'title'       => '10 Bad Website Design Mistakes in Malaysia (2026)',
+        'description' => 'Is your website silently losing leads? I audit 10 costly design mistakes on Malaysian SME sites — with exact fixes. Free audit: WhatsApp +60174272807',
+    ),
+    26 => array(
+        'title'       => 'Web Design Malaysia: 7 Mistakes & Quick Fixes (2026)',
+        'description' => '7 web design mistakes I find on 80% of Malaysian SME audits — fix them in 30 mins. Free website review: WhatsApp +60174272807',
+    ),
+);
+
+// Add Open Graph meta tags + <meta name="description"> for better SEO
 function ryano_og_meta_tags() {
     if (is_single()) {
-        global $post;
+        global $post, $ryano_seo_overrides;
 
-        $og_title = get_the_title();
-        $og_description = get_the_excerpt();
-        $og_url = get_permalink();
-        $og_image = has_post_thumbnail() ? get_the_post_thumbnail_url(null, 'full') : get_template_directory_uri() . '/assets/hero-bg.png';
+        $post_id = get_the_ID();
+        $override = isset($ryano_seo_overrides[$post_id]) ? $ryano_seo_overrides[$post_id] : array();
 
+        $og_title       = get_the_title();
+        $og_description = !empty($override['description']) ? $override['description'] : get_the_excerpt();
+        $og_url         = get_permalink();
+        $og_image       = has_post_thumbnail() ? get_the_post_thumbnail_url(null, 'full') : get_template_directory_uri() . '/assets/hero-bg.png';
+
+        echo '<meta name="description" content="' . esc_attr($og_description) . '">' . "\n";
         echo '<meta property="og:title" content="' . esc_attr($og_title) . '">' . "\n";
         echo '<meta property="og:description" content="' . esc_attr($og_description) . '">' . "\n";
         echo '<meta property="og:url" content="' . esc_url($og_url) . '">' . "\n";
@@ -184,6 +202,20 @@ function ryano_og_meta_tags() {
     }
 }
 add_action('wp_head', 'ryano_og_meta_tags');
+
+// Shorten <title> tag — default "Post Title – Site Name" appends 31+ chars
+// New format: "SEO Title | Ryano Web" (keeps total under ~65 chars)
+function ryano_custom_document_title($title) {
+    global $ryano_seo_overrides;
+    if (is_single()) {
+        $post_id  = get_queried_object_id();
+        $override = isset($ryano_seo_overrides[$post_id]) ? $ryano_seo_overrides[$post_id] : array();
+        $seo_title = !empty($override['title']) ? $override['title'] : get_the_title();
+        return $seo_title . ' | Ryano Web';
+    }
+    return $title;
+}
+add_filter('pre_get_document_title', 'ryano_custom_document_title');
 
 // Add custom body classes
 function ryano_body_classes($classes) {
