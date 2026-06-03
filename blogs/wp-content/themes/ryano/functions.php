@@ -127,6 +127,28 @@ function ryano_viewport_meta() {
 }
 add_action('wp_head', 'ryano_viewport_meta', 1);
 
+// Google Analytics 4 (gtag.js) — match homepage tracking (G-XJ5EEW4SPG)
+function ryano_google_analytics() {
+    // Skip GA on local/staging
+    if (defined('WP_ENVIRONMENT_TYPE') && WP_ENVIRONMENT_TYPE !== 'production') {
+        return;
+    }
+    if (strpos($_SERVER['HTTP_HOST'] ?? '', '.ddev.site') !== false) {
+        return;
+    }
+    ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ5EEW4SPG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XJ5EEW4SPG');
+    </script>
+    <?php
+}
+add_action('wp_head', 'ryano_google_analytics', 1);
+
 // Add preconnect for performance
 function ryano_resource_hints($urls, $relation_type) {
     if ('dns-prefetch' === $relation_type) {
@@ -165,8 +187,16 @@ remove_action('wp_head', 'rsd_link');
 // description: 120-155 chars, include CTA
 $ryano_seo_overrides = array(
     120 => array(
-        'title'       => '10 Bad Website Design Mistakes in Malaysia (2026)',
-        'description' => 'Is your website silently losing leads? I audit 10 costly design mistakes on Malaysian SME sites — with exact fixes. Free audit: WhatsApp +60174272807',
+        'title'       => 'Bad Website Design Malaysia: 7 Mistakes Killing Sales',
+        'description' => 'These 7 web design mistakes silently kill 80% of Malaysian SME sites. Real audits, real fixes — spot yours in 30 sec. Free review: WhatsApp +60174272807',
+    ),
+    126 => array(
+        'title'       => 'Core Web Vitals 2026: 3 Speed Metrics Malaysian Sites Must Pass',
+        'description' => 'Failed Core Web Vitals = Page 2 rankings. The 3 metrics Google now demands in 2026, with exact fixes for Malaysian sites. Free audit: WhatsApp +60174272807',
+    ),
+    22 => array(
+        'title'       => 'Website Maintenance Malaysia 2026: Real Costs + Plans',
+        'description' => 'What website maintenance really costs in Malaysia (2026): monthly plans, hidden fees, and which tier your site needs. Free quote: WhatsApp +60174272807',
     ),
     26 => array(
         'title'       => 'Web Design Malaysia: 7 Mistakes & Quick Fixes (2026)',
