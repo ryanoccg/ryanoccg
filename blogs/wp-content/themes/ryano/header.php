@@ -19,14 +19,21 @@
             </a>
         </div>
 
-        <?php
-        wp_nav_menu(array(
-            'theme_location' => 'primary',
-            'container' => 'nav',
-            'container_class' => 'site-nav',
-            'fallback_cb' => 'ryano_fallback_menu',
-        ));
-        ?>
+        <div class="header-actions">
+            <a class="back-to-portfolio" href="https://ryanoccg.com" rel="noopener">
+                <span class="back-arrow" aria-hidden="true">←</span>
+                <span class="back-label">Portfolio</span>
+            </a>
+
+            <?php
+            wp_nav_menu(array(
+                'theme_location' => 'primary',
+                'container' => 'nav',
+                'container_class' => 'site-nav',
+                'fallback_cb' => 'ryano_fallback_menu',
+            ));
+            ?>
+        </div>
     </div>
 </header>
 
