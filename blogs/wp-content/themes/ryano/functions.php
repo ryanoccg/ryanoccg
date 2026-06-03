@@ -315,6 +315,107 @@ function ryano_structured_data() {
 }
 add_action('wp_head', 'ryano_structured_data');
 
+// Pillar-specific structured data for post 22 (website-maintenance-malaysia)
+// FAQPage + HowTo + Service schemas — boost rich result eligibility for the highest-impression page
+function ryano_pillar_maintenance_schema() {
+    if (!is_single(22)) {
+        return;
+    }
+
+    // FAQPage schema (12 Q&As mirroring the on-page FAQ section)
+    $faqs = array(
+        array('Can I do website maintenance myself?', 'Yes, if you are technical and have 3-5 hours per month available. Non-technical owners or busy Malaysian SMEs almost always save money by outsourcing — the cost of one missed update can exceed a year of maintenance fees.'),
+        array('What if I haven\'t maintained my site in years?', 'Start with a security audit (RM 1,500-3,000) to find vulnerabilities and backdoors. Once the site is clean, move to regular monthly maintenance to prevent the issue from recurring.'),
+        array('My developer said maintenance isn\'t necessary. Is that true?', 'No. Every website needs ongoing maintenance. A developer claiming otherwise is either inexperienced or hoping you\'ll pay for expensive emergency fixes later. WordPress, plugins, themes, and PHP all receive security patches every few weeks.'),
+        array('Can\'t my hosting company handle maintenance?', 'Most cannot. Shared hosting providers handle server-level updates only. Managed WordPress hosts (WP Engine, Kinsta) cover core updates but not your plugins, themes, or content. Maintenance is a separate responsibility.'),
+        array('What happens if I cancel maintenance?', 'Your site becomes gradually more vulnerable. Within 3-6 months you will likely have outdated plugins with public CVEs, no recent backup, and broken SSL renewal. The risk of being hacked rises sharply after month 4.'),
+        array('Is yearly maintenance better than monthly?', 'No. "Yearly maintenance" means 11 months of vulnerability. Security patches and plugin updates need to be applied weekly, not annually. Monthly retainer plans exist for this reason.'),
+        array('Does WordPress maintenance differ from Shopify maintenance?', 'Yes, significantly. WordPress requires hands-on plugin, theme, and core updates (2-4 hours/month) because you own the stack. Shopify handles the platform itself, so your maintenance focuses on app audits, theme tweaks, and storefront optimization (1-2 hours/month).'),
+        array('Can maintenance fees be claimed as a business expense in Malaysia?', 'Yes. Website maintenance is a recurring business expense and qualifies as a deduction under your company tax filing with LHDN. Keep monthly invoices — both digital and printed receipts are accepted.'),
+        array('How soon after launching a new website do I need maintenance?', 'Day one. WordPress core, plugins, and themes start receiving updates within weeks of any launch. A 3-month-old unmaintained site is just as exposed as a 3-year-old one.'),
+        array('Is switching maintenance providers risky?', 'Only if your current provider holds your assets hostage. Before signing up, confirm in writing: you own the domain, you have admin-level access to hosting and the site, and there is no exit fee. A clean handover should take less than 48 hours.'),
+        array('Can I pause maintenance for one or two months?', 'Technically yes, practically no. WordPress plugin vulnerabilities are exploited within hours of public disclosure. A 60-day pause is enough exposure to get hit by routine mass-scan attacks. Downgrade to a lower tier instead of pausing.'),
+        array('Can I mix DIY and professional maintenance?', 'Yes, this hybrid model works well for technical Malaysian SME owners. Handle content updates and image swaps yourself. Outsource the dangerous parts: core updates, plugin updates, backups, security monitoring, and emergency response. Hybrid plans typically run RM 150-250/month.'),
+    );
+    $faq_schema = array(
+        '@context' => 'https://schema.org',
+        '@type' => 'FAQPage',
+        'mainEntity' => array_map(function($q) {
+            return array(
+                '@type' => 'Question',
+                'name' => $q[0],
+                'acceptedAnswer' => array('@type' => 'Answer', 'text' => $q[1]),
+            );
+        }, $faqs),
+    );
+    echo '<script type="application/ld+json">' . wp_json_encode($faq_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+
+    // HowTo schema — maintenance schedule
+    $howto = array(
+        '@context' => 'https://schema.org',
+        '@type' => 'HowTo',
+        'name' => 'How to Maintain a Malaysian Business Website',
+        'description' => 'A complete maintenance schedule for WordPress and custom websites in Malaysia, broken down by frequency.',
+        'totalTime' => 'PT5H',
+        'estimatedCost' => array('@type' => 'MonetaryAmount', 'currency' => 'MYR', 'value' => '300'),
+        'step' => array(
+            array('@type' => 'HowToStep', 'name' => 'Daily automated tasks', 'text' => 'Run automated backups, uptime monitoring, malware scanning, and SSL certificate checks. Most are handled by your hosting or maintenance service automatically.'),
+            array('@type' => 'HowToStep', 'name' => 'Weekly checks (15 minutes)', 'text' => 'Apply WordPress core and plugin updates, review uptime reports, check for broken links, and verify the previous week\'s backup actually restored cleanly.'),
+            array('@type' => 'HowToStep', 'name' => 'Monthly maintenance (1-2 hours)', 'text' => 'Review Google Analytics traffic, check page speed (PageSpeed Insights, Core Web Vitals), audit security logs, test contact forms, and review user-generated content.'),
+            array('@type' => 'HowToStep', 'name' => 'Quarterly deep audit (3-4 hours)', 'text' => 'Full security audit, database optimization, content audit (update outdated posts), SEO audit, and review of all installed plugins for relevance.'),
+            array('@type' => 'HowToStep', 'name' => 'Yearly review (1 day)', 'text' => 'Renew domain and SSL, review hosting plan, full backup verification with restore test, design refresh planning, and budget review for the next 12 months.'),
+        ),
+    );
+    echo '<script type="application/ld+json">' . wp_json_encode($howto, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+
+    // Service / Offer schema — 3 maintenance packages
+    $service = array(
+        '@context' => 'https://schema.org',
+        '@type' => 'Service',
+        'serviceType' => 'Website Maintenance',
+        'provider' => array(
+            '@type' => 'Person',
+            'name' => 'Ryano Chu',
+            'url' => 'https://ryanoccg.com',
+            'telephone' => '+60174272807',
+            'areaServed' => 'Malaysia',
+        ),
+        'areaServed' => array('@type' => 'Country', 'name' => 'Malaysia'),
+        'hasOfferCatalog' => array(
+            '@type' => 'OfferCatalog',
+            'name' => 'Website Maintenance Plans',
+            'itemListElement' => array(
+                array(
+                    '@type' => 'Offer',
+                    'name' => 'Essential Plan',
+                    'description' => 'Weekly WordPress, plugin and theme updates. Daily automated backups (30-day retention). Weekly malware scans. Uptime monitoring with 99.9% guarantee. SSL monitoring. Monthly report.',
+                    'price' => '300',
+                    'priceCurrency' => 'MYR',
+                    'priceSpecification' => array('@type' => 'UnitPriceSpecification', 'price' => '300', 'priceCurrency' => 'MYR', 'unitCode' => 'MON'),
+                ),
+                array(
+                    '@type' => 'Offer',
+                    'name' => 'Business Plan',
+                    'description' => 'Everything in Essential. Daily security scans. Monthly performance optimization. Broken link fixes. 30 min content updates. Priority support with 4-hour response.',
+                    'price' => '450',
+                    'priceCurrency' => 'MYR',
+                    'priceSpecification' => array('@type' => 'UnitPriceSpecification', 'price' => '450', 'priceCurrency' => 'MYR', 'unitCode' => 'MON'),
+                ),
+                array(
+                    '@type' => 'Offer',
+                    'name' => 'E-Commerce Plan',
+                    'description' => 'Everything in Business. Hourly backups. Staging environment. Advanced security. Monthly speed audits. 1 hour content updates. Priority support with 2-hour response.',
+                    'price' => '650',
+                    'priceCurrency' => 'MYR',
+                    'priceSpecification' => array('@type' => 'UnitPriceSpecification', 'price' => '650', 'priceCurrency' => 'MYR', 'unitCode' => 'MON'),
+                ),
+            ),
+        ),
+    );
+    echo '<script type="application/ld+json">' . wp_json_encode($service, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+}
+add_action('wp_head', 'ryano_pillar_maintenance_schema');
+
 // Security: Disable XML-RPC
 add_filter('xmlrpc_enabled', '__return_false');
 
