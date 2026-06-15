@@ -39,8 +39,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const info: PlanInfo = await api.get('plan.php')
         setPlan(info)
-        // We don't persist the user object; reconstruct minimal identity.
-        setUser({ id: '', email: '', plan: info.plan })
+        // plan.php returns the real identity, so the user survives a reload.
+        setUser(info.user)
       } catch {
         setToken(null)
       } finally {

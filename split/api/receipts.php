@@ -18,9 +18,10 @@ switch (method()) {
         save_receipt($id, $uid);
         break;
     case 'DELETE':
-        require_owned_receipt($id, $uid);
+        $receipt = require_owned_receipt($id, $uid);
         $stmt = db()->prepare('DELETE FROM receipts WHERE id = ?');
         $stmt->execute([$id]);
+        delete_upload($receipt['image_path'] ?? null); // don't leave the photo on disk
         jout(['deleted' => $id]);
         break;
     default:
@@ -57,36 +58,42 @@ function save_receipt(string $id, string $uid): void
     $sessionId = (string) ($in['session_id'] ?? '');
     $session = require_owned_session($sessionId, $uid);
 
+    $oldImage = null;
     if ($id !== '') {
         $existing = require_owned_receipt($id, $uid);
         if ((string) $existing['session_id'] !== $sessionId) {
             jfail('Receipt does not belong to that session.', 422);
         }
+        $oldImage = $existing['image_path'] ?? null;
     }
 
-    // Valid member ids for this session (for payer + share validation).
-    $mStmt = db()->prepare('SELECT id FROM members WHERE session_id = ?');
-    $mStmt->execute([$sessionId]);
-    $validSet = array_flip(array_column($mStmt->fetchAll(), 'id'));
+    // Keep only items that carry a name; a receipt must have at least one.
+    $lineItems = is_array($in['line_items'] ?? null) ? $in['line_items'] : [];
+    $lineItems = array_values(array_filter($lineItems, fn($it) => trim((string) ($it['name'] ?? '')) !== ''));
+    if (!$lineItems) {
+        jfail('A receipt needs at least one line item.', 422);
+    }
+
+    $validSet = session_member_id_set($sessionId);
 
     $merchant = trim((string) ($in['merchant'] ?? '')) ?: null;
-    $currency = strtoupper(trim((string) ($in['currency'] ?? $session['currency'])));
-    if (!preg_match('/^[A-Z]{3}$/', $currency)) {
-        $currency = $session['currency'];
-    }
+    $currency = normalize_currency($in['currency'] ?? null, $session['currency']);
     $subtotal = round((float) ($in['subtotal'] ?? 0), 2);
     $tax = round((float) ($in['tax'] ?? 0), 2);
     $tip = round((float) ($in['tip'] ?? 0), 2);
     $total = round((float) ($in['total'] ?? 0), 2);
-    $imagePath = isset($in['image_path']) ? (string) $in['image_path'] : ($id !== '' ? ($existing['image_path'] ?? null) : null);
+
+    // image_path is client-supplied: accept only our own generated filename.
+    $imagePath = $oldImage;
+    if (isset($in['image_path']) && valid_upload_name((string) $in['image_path'])) {
+        $imagePath = (string) $in['image_path'];
+    }
 
     $payer = $in['paid_by_member_id'] ?? null;
     $payer = ($payer === null || $payer === '') ? null : (string) $payer;
     if ($payer !== null && !isset($validSet[$payer])) {
         jfail('Payer must be a member of this session.', 422);
     }
-
-    $lineItems = is_array($in['line_items'] ?? null) ? $in['line_items'] : [];
 
     $pdo = db();
     $pdo->beginTransaction();
@@ -112,16 +119,10 @@ function save_receipt(string $id, string $uid): void
         $insItem = $pdo->prepare(
             'INSERT INTO line_items (id, receipt_id, name, quantity, unit_price, total, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)'
         );
-        $insShare = $pdo->prepare(
-            'INSERT INTO item_shares (id, line_item_id, member_id, weight) VALUES (?, ?, ?, ?)'
-        );
 
         $order = 0;
         foreach ($lineItems as $item) {
-            $name = trim((string) ($item['name'] ?? ''));
-            if ($name === '') {
-                continue;
-            }
+            $name = trim((string) $item['name']);
             $qty = round((float) ($item['quantity'] ?? 1), 3);
             $unit = round((float) ($item['unit_price'] ?? 0), 2);
             $itemTotal = round((float) ($item['total'] ?? ($qty * $unit)), 2);
@@ -129,25 +130,18 @@ function save_receipt(string $id, string $uid): void
             $insItem->execute([$lineItemId, $id, $name, $qty, $unit, $itemTotal, $order++]);
 
             $shares = is_array($item['shares'] ?? null) ? $item['shares'] : [];
-            $seen = [];
-            foreach ($shares as $share) {
-                $memberId = (string) ($share['member_id'] ?? '');
-                if (!isset($validSet[$memberId]) || isset($seen[$memberId])) {
-                    continue;
-                }
-                $seen[$memberId] = true;
-                $weight = (float) ($share['weight'] ?? 1);
-                if ($weight <= 0) {
-                    $weight = 1;
-                }
-                $insShare->execute([uuidv4(), $lineItemId, $memberId, round($weight, 3)]);
-            }
+            replace_item_shares($pdo, $lineItemId, $shares, $validSet);
         }
 
         $pdo->commit();
     } catch (Throwable $e) {
         $pdo->rollBack();
         jfail('Could not save receipt.', 500);
+    }
+
+    // If the photo was swapped out, remove the old file from disk.
+    if ($oldImage && $oldImage !== $imagePath) {
+        delete_upload($oldImage);
     }
 
     get_receipt($id, $uid);

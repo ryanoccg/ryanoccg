@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api, ApiError } from '../api'
 import { useAuth } from '../auth/AuthContext'
 import UpgradePrompt from '../components/UpgradePrompt'
-import { formatCents, toCents, toNum } from '../money'
+import { CURRENCIES, formatCents, toCents, toNum } from '../money'
 import type { Extraction, Member, Receipt, SessionDetail } from '../types'
 
 interface EditItem {
@@ -131,8 +131,9 @@ export default function ReceiptEditor() {
       if (idx !== i) return it
       const next = { ...it, [field]: value }
       const q = toNum(next.quantity), u = toNum(next.unit_price)
-      // Auto-fill total from qty×unit when both present.
-      if (q && u) next.total = (q * u).toFixed(2)
+      // Auto-fill total from qty×unit only when it's blank — never clobber a
+      // total the user (or OCR) already set.
+      if (q && u && next.total.trim() === '') next.total = (q * u).toFixed(2)
       return next
     }))
   }
@@ -240,7 +241,11 @@ export default function ReceiptEditor() {
             <input value={merchant} onChange={(e) => setMerchant(e.target.value)} placeholder="e.g. Sushi King" />
           </label>
           <label>Currency
-            <input value={currency} onChange={(e) => setCurrency(e.target.value.toUpperCase())} maxLength={3} style={{ width: 70 }} />
+            <select value={currency} onChange={(e) => setCurrency(e.target.value)} style={{ width: 90 }}>
+              {Array.from(new Set([currency, ...CURRENCIES])).filter(Boolean).map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
           </label>
         </div>
 

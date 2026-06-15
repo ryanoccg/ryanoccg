@@ -8,9 +8,20 @@
     AddHandler application/x-httpd-ea-php81 .php .php8 .phtml
 </IfModule>
 
+# Pass the Authorization header through to PHP. Under CGI/FCGI (the cPanel
+# default) Apache otherwise strips it, breaking JWT auth on every API call.
+# Supported on cPanel EA4 / Apache 2.4.13+. The RewriteRule below is a fallback
+# for any host where this isn't honored.
+CGIPassAuth On
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
+
+    # Fallback for servers without CGIPassAuth: copy Authorization into an env
+    # var PHP can read as REDIRECT_HTTP_AUTHORIZATION.
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
     # Force HTTPS.
     RewriteCond %{HTTPS} off

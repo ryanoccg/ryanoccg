@@ -56,4 +56,23 @@ split/
 - Secrets (`secrets.php`) and receipt uploads live **outside the web root**
   (`~/app_private/`); both are gitignored and never deployed by CI.
 - Every query is scoped to the authenticated user; receipt images are served
-  only through the authenticated `api/image.php`.
+  only through the authenticated `api/image.php` (`nosniff`, image MIME only).
+- Auth is a stateless HS256 JWT (no `alg`-from-token confusion). The docroot
+  `.htaccess` passes the `Authorization` header to PHP (`CGIPassAuth` + a
+  rewrite fallback) — required under cPanel FCGI.
+- `image_path` is validated against our generated filename pattern on write;
+  uploaded images are deleted from disk when a receipt/session is deleted or its
+  photo replaced.
+- Plan limits + monthly OCR usage are enforced server-side; the OCR scan is
+  reserved before the OpenAI call (no check-then-use race, no free-retry drain).
+
+### Known limitations (deferred, not blockers for v1)
+
+- **No pre-auth rate limiting** on `login`/`register` — add a per-IP throttle
+  (e.g. Cloudflare rules or an attempts table) before public launch.
+- **`image.php` accepts a `?token=`** so `<img>` can load it; the JWT can appear
+  in access logs. A signed, short-lived image URL would harden this.
+- **Stripe events are processed without ordering guarantees** — a rare
+  out-of-order `subscription.updated` could momentarily flip plan state.
+- **Abandoned OCR uploads** (scanned but never saved) aren't reaped; add a cron
+  to sweep unreferenced files in `uploads/`.

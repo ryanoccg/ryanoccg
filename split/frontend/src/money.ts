@@ -1,5 +1,8 @@
 // Money helpers. All settlement math runs in integer cents to avoid float drift.
 
+// Currencies offered in the UI (shared by session creation + the receipt editor).
+export const CURRENCIES = ['USD', 'MYR', 'EUR', 'GBP', 'SGD', 'AUD', 'JPY', 'CNY']
+
 /** Parse a number|string (possibly null) into cents (integer). */
 export function toCents(v: number | string | null | undefined): number {
   if (v === null || v === undefined || v === '') return 0

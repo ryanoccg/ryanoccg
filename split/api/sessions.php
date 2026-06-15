@@ -104,13 +104,10 @@ function create_session(array $user): void
     guard_create_session($user);
     $in = jin();
     $name = trim((string) ($in['name'] ?? ''));
-    $currency = strtoupper(trim((string) ($in['currency'] ?? 'USD')));
     if ($name === '') {
         jfail('Session name is required.', 422);
     }
-    if (!preg_match('/^[A-Z]{3}$/', $currency)) {
-        $currency = 'USD';
-    }
+    $currency = normalize_currency($in['currency'] ?? null, 'USD');
     $id = uuidv4();
     $stmt = db()->prepare('INSERT INTO sessions (id, owner_user_id, name, currency) VALUES (?, ?, ?, ?)');
     $stmt->execute([$id, (string) $user['id'], $name, $currency]);
@@ -146,8 +143,8 @@ function update_session(string $id, string $uid): void
         $args[] = $name;
     }
     if (isset($in['currency'])) {
-        $cur = strtoupper(trim((string) $in['currency']));
-        if (preg_match('/^[A-Z]{3}$/', $cur)) {
+        $cur = normalize_currency((string) $in['currency'], null);
+        if ($cur !== null) {
             $fields[] = 'currency = ?';
             $args[] = $cur;
         }
@@ -163,7 +160,16 @@ function update_session(string $id, string $uid): void
 function delete_session(string $id, string $uid): void
 {
     require_owned_session($id, $uid);
+    // Collect image filenames before the cascade removes the rows.
+    $imgs = db()->prepare('SELECT image_path FROM receipts WHERE session_id = ? AND image_path IS NOT NULL');
+    $imgs->execute([$id]);
+    $paths = array_column($imgs->fetchAll(), 'image_path');
+
     $stmt = db()->prepare('DELETE FROM sessions WHERE id = ?');
     $stmt->execute([$id]); // cascades to members/receipts/line_items/shares
+
+    foreach ($paths as $p) {
+        delete_upload($p);
+    }
     jout(['deleted' => $id]);
 }

@@ -50,14 +50,24 @@ export default function SessionDetail() {
 
   async function removeMember(mid: string) {
     if (!confirm('Remove this member? Their item assignments will be cleared.')) return
-    await api.del(`members.php?id=${mid}`)
-    await load()
+    setError('')
+    try {
+      await api.del(`members.php?id=${mid}`)
+      await load()
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Could not remove member.')
+    }
   }
 
   async function deleteReceipt(rid: string) {
     if (!confirm('Delete this receipt?')) return
-    await api.del(`receipts.php?id=${rid}`)
-    await load()
+    setError('')
+    try {
+      await api.del(`receipts.php?id=${rid}`)
+      await load()
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Could not delete receipt.')
+    }
   }
 
   async function deleteSession() {

@@ -15,6 +15,7 @@ $stmt->execute([(string) $user['id']]);
 $sessionCount = (int) $stmt->fetchColumn();
 
 jout([
+    'user'             => ['id' => (string) $user['id'], 'email' => $user['email'], 'plan' => $plan],
     'plan'             => $plan,
     'plan_expires_at'  => $user['plan_expires_at'] ?? null,
     'ads'              => ads_enabled($plan),

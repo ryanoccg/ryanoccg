@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom'
 import { api, ApiError } from '../api'
 import { useAuth } from '../auth/AuthContext'
 import UpgradePrompt from '../components/UpgradePrompt'
+import { CURRENCIES } from '../money'
 import type { SessionSummary } from '../types'
-
-const CURRENCIES = ['USD', 'MYR', 'EUR', 'GBP', 'SGD', 'AUD', 'JPY', 'CNY']
 
 export default function SessionList() {
   const { refreshPlan } = useAuth()

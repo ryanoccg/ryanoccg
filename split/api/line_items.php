@@ -29,7 +29,7 @@ switch (method()) {
 
     case 'PUT':
     case 'PATCH':
-        $item = require_owned_line_item_li($id, $uid);
+        $item = require_owned_line_item($id, $uid);
         $in = jin();
         $name = isset($in['name']) ? trim((string) $in['name']) : $item['name'];
         $qty = isset($in['quantity']) ? round((float) $in['quantity'], 3) : (float) $item['quantity'];
@@ -44,7 +44,7 @@ switch (method()) {
         break;
 
     case 'DELETE':
-        require_owned_line_item_li($id, $uid);
+        require_owned_line_item($id, $uid);
         $stmt = db()->prepare('DELETE FROM line_items WHERE id = ?');
         $stmt->execute([$id]);
         jout(['deleted' => $id]);
@@ -52,20 +52,4 @@ switch (method()) {
 
     default:
         jfail('Method not allowed.', 405);
-}
-
-function require_owned_line_item_li(string $lineItemId, string $uid): array
-{
-    $stmt = db()->prepare(
-        'SELECT li.* FROM line_items li
-         JOIN receipts r ON r.id = li.receipt_id
-         JOIN sessions s ON s.id = r.session_id
-         WHERE li.id = ? AND s.owner_user_id = ?'
-    );
-    $stmt->execute([$lineItemId, $uid]);
-    $row = $stmt->fetch();
-    if (!$row) {
-        jfail('Line item not found.', 404);
-    }
-    return $row;
 }

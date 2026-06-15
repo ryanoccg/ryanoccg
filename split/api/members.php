@@ -46,6 +46,13 @@ switch (method()) {
     case 'DELETE':
         $id = (string) ($_GET['id'] ?? '');
         require_owned_member($id, $uid);
+        // Refuse if they paid for receipts — deleting would nullify the payer and
+        // silently drop those receipts from settlement. Make the user reassign first.
+        $chk = db()->prepare('SELECT COUNT(*) FROM receipts WHERE paid_by_member_id = ?');
+        $chk->execute([$id]);
+        if ((int) $chk->fetchColumn() > 0) {
+            jfail('This member paid for one or more receipts. Change those payers before removing them.', 409);
+        }
         $stmt = db()->prepare('DELETE FROM members WHERE id = ?');
         $stmt->execute([$id]);
         jout(['deleted' => $id]);
@@ -53,19 +60,4 @@ switch (method()) {
 
     default:
         jfail('Method not allowed.', 405);
-}
-
-function require_owned_member(string $memberId, string $uid): array
-{
-    $stmt = db()->prepare(
-        'SELECT m.* FROM members m
-         JOIN sessions s ON s.id = m.session_id
-         WHERE m.id = ? AND s.owner_user_id = ?'
-    );
-    $stmt->execute([$memberId, $uid]);
-    $row = $stmt->fetch();
-    if (!$row) {
-        jfail('Member not found.', 404);
-    }
-    return $row;
 }

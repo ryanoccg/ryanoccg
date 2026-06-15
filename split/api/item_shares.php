@@ -29,23 +29,7 @@ $validSet = array_flip(array_column($mStmt->fetchAll(), 'id'));
 $pdo = db();
 $pdo->beginTransaction();
 try {
-    $del = $pdo->prepare('DELETE FROM item_shares WHERE line_item_id = ?');
-    $del->execute([$lineItemId]);
-
-    $ins = $pdo->prepare('INSERT INTO item_shares (id, line_item_id, member_id, weight) VALUES (?, ?, ?, ?)');
-    $seen = [];
-    foreach ($shares as $share) {
-        $memberId = (string) ($share['member_id'] ?? '');
-        if (!isset($validSet[$memberId]) || isset($seen[$memberId])) {
-            continue;
-        }
-        $seen[$memberId] = true;
-        $weight = (float) ($share['weight'] ?? 1);
-        if ($weight <= 0) {
-            $weight = 1;
-        }
-        $ins->execute([uuidv4(), $lineItemId, $memberId, round($weight, 3)]);
-    }
+    replace_item_shares($pdo, $lineItemId, $shares, $validSet);
     $pdo->commit();
 } catch (Throwable $e) {
     $pdo->rollBack();
@@ -55,19 +39,3 @@ try {
 $sh = db()->prepare('SELECT id, member_id, weight FROM item_shares WHERE line_item_id = ?');
 $sh->execute([$lineItemId]);
 jout(['line_item_id' => $lineItemId, 'shares' => $sh->fetchAll()]);
-
-function require_owned_line_item(string $lineItemId, string $uid): array
-{
-    $stmt = db()->prepare(
-        'SELECT li.* FROM line_items li
-         JOIN receipts r ON r.id = li.receipt_id
-         JOIN sessions s ON s.id = r.session_id
-         WHERE li.id = ? AND s.owner_user_id = ?'
-    );
-    $stmt->execute([$lineItemId, $uid]);
-    $row = $stmt->fetch();
-    if (!$row) {
-        jfail('Line item not found.', 404);
-    }
-    return $row;
-}

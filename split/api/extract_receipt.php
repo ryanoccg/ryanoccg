@@ -50,13 +50,14 @@ if (!is_dir($uploadsDir)) {
 $filename = bin2hex(random_bytes(16)) . '.' . $allowed[$mime];
 $dest = rtrim($uploadsDir, '/') . '/' . $filename;
 if (!move_uploaded_file($tmp, $dest)) {
-    // Fallback for non-multipart test contexts.
-    if (!@copy($tmp, $dest)) {
-        jfail('Could not store the uploaded image.', 500);
-    }
+    jfail('Could not store the uploaded image.', 500);
 }
 
 $dataUrl = 'data:' . $mime . ';base64,' . base64_encode((string) file_get_contents($dest));
+
+// Reserve the scan BEFORE calling OpenAI: closes the check-then-use race between
+// concurrent requests and stops unlimited free retries from draining the budget.
+increment_ocr($uid);
 
 $parsed = openai_extract($dataUrl);
 if ($parsed === null) {
@@ -66,8 +67,6 @@ if ($parsed === null) {
         'message'    => 'Could not read this receipt. Try a clearer photo or enter items manually.',
     ], 200);
 }
-
-increment_ocr($uid);
 
 $parsed['status'] = 'ready';
 $parsed['image_path'] = $filename;
@@ -195,10 +194,7 @@ function normalize_extraction(array $p): array
         $total = isset($it['total']) ? round((float) $it['total'], 2) : round($qty * $unit, 2);
         $items[] = ['name' => $name, 'quantity' => $qty, 'unit_price' => $unit, 'total' => $total];
     }
-    $currency = strtoupper(trim((string) ($p['currency'] ?? '')));
-    if (!preg_match('/^[A-Z]{3}$/', $currency)) {
-        $currency = null;
-    }
+    $currency = normalize_currency($p['currency'] ?? null, null);
     return [
         'merchant'   => ($p['merchant'] ?? null) ? trim((string) $p['merchant']) : null,
         'currency'   => $currency,
