@@ -1,0 +1,75 @@
+name: Deploy Splitwell (split.ryanoccg.com)
+
+# Builds the React app and deploys it + the PHP API to the subdomain docroot.
+# Independent of the portfolio deploy (deploy.yml), which excludes split/.
+#
+# Required repo secrets (reuses the portfolio's SSH secrets):
+#   SSH_PRIVATE_KEY, SSH_HOST, SSH_PORT, SSH_USERNAME
+#   SPLIT_DOCROOT   — absolute path to the subdomain docroot, e.g. ~/public_html/split
+# Optional repo variable:
+#   VITE_ADSENSE_CLIENT_ID — public AdSense client id baked into the build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'split/**'
+      - '.github/workflows/deploy-split.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: split/frontend/package-lock.json
+
+      - name: Install & build frontend
+        working-directory: split/frontend
+        env:
+          VITE_API_BASE: /api
+          VITE_ADSENSE_CLIENT_ID: ${{ vars.VITE_ADSENSE_CLIENT_ID }}
+        run: |
+          npm ci
+          npm run build
+
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -T 10 -p ${{ secrets.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>&1
+
+      - name: Ensure remote dirs
+        run: |
+          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+            "mkdir -p ${{ secrets.SPLIT_DOCROOT }}/api"
+
+      - name: Deploy SPA (dist/ → docroot)
+        run: |
+          # No --delete: api/ lives under the docroot, and old hashed assets are harmless.
+          rsync -avz --timeout=300 \
+            -e "ssh -p ${{ secrets.SSH_PORT }} -o ServerAliveInterval=60" \
+            split/frontend/dist/ \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SPLIT_DOCROOT }}/
+
+      - name: Deploy API (api/ → docroot/api)
+        run: |
+          # Never ship secrets — they live in ~/app_private/secrets.php on the server.
+          rsync -avz --timeout=300 --delete \
+            --exclude 'secrets.php' \
+            --exclude 'secrets.example.php' \
+            --exclude 'private_uploads/' \
+            -e "ssh -p ${{ secrets.SSH_PORT }} -o ServerAliveInterval=60" \
+            split/api/ \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SPLIT_DOCROOT }}/api/
+
+      - run: echo "✅ Splitwell deployed to split.ryanoccg.com"
