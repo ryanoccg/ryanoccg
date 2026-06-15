@@ -39,6 +39,6 @@ if (!$user) {
 // Super/free have no expiry; pro granted here gets a far-future expiry.
 $expires = $plan === 'pro' ? gmdate('Y-m-d H:i:s', time() + 3650 * 86400) : null;
 $upd = db()->prepare('UPDATE users SET plan = ?, plan_expires_at = ? WHERE id = ?');
-$upd->execute([$plan, $expires, (int) $user['id']]);
+$upd->execute([$plan, $expires, (string) $user['id']]);
 
 jout(['email' => $email, 'plan' => $plan]);

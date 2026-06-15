@@ -84,7 +84,7 @@ function current_user(): ?array
         return null;
     }
     $stmt = db()->prepare('SELECT id, email, plan, plan_expires_at FROM users WHERE id = ?');
-    $stmt->execute([(int) $payload['sub']]);
+    $stmt->execute([(string) $payload['sub']]);
     $user = $stmt->fetch();
     if (!$user) {
         return null;

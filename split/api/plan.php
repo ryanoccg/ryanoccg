@@ -11,7 +11,7 @@ $plan = $user['plan'];
 $limits = plan_limits($plan);
 
 $stmt = db()->prepare('SELECT COUNT(*) FROM sessions WHERE owner_user_id = ?');
-$stmt->execute([(int) $user['id']]);
+$stmt->execute([(string) $user['id']]);
 $sessionCount = (int) $stmt->fetchColumn();
 
 jout([
@@ -21,7 +21,7 @@ jout([
     'limits'           => $limits,
     'usage'            => [
         'sessions'  => $sessionCount,
-        'ocr_scans' => ocr_used_this_month((int) $user['id']),
+        'ocr_scans' => ocr_used_this_month((string) $user['id']),
         'period'    => current_period(),
     ],
 ]);

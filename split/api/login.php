@@ -22,8 +22,8 @@ if (!$user || !password_verify($password, $user['password_hash'])) {
     jfail('Invalid email or password.', 401);
 }
 
-$token = jwt_encode(['sub' => (int) $user['id'], 'email' => $user['email']]);
+$token = jwt_encode(['sub' => (string) $user['id'], 'email' => $user['email']]);
 jout([
     'token' => $token,
-    'user'  => ['id' => (int) $user['id'], 'email' => $user['email'], 'plan' => $user['plan']],
+    'user'  => ['id' => (string) $user['id'], 'email' => $user['email'], 'plan' => $user['plan']],
 ]);

@@ -7,7 +7,7 @@ import type { SessionDetail } from '../types'
 
 export default function Settlement() {
   const { id } = useParams()
-  const sessionId = Number(id)
+  const sessionId = id ?? ''
   const [session, setSession] = useState<SessionDetail | null>(null)
   const [error, setError] = useState('')
 

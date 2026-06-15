@@ -13,14 +13,14 @@ function eq(label: string, got: unknown, want: unknown) {
   }
 }
 
-// Members A=1, B=2, C=3
+// Members A, B, C (UUID-style string ids)
 const members = [
-  { id: 1, display_name: 'A', linked_user_id: null },
-  { id: 2, display_name: 'B', linked_user_id: null },
-  { id: 3, display_name: 'C', linked_user_id: null },
+  { id: 'A', display_name: 'A', linked_user_id: null },
+  { id: 'B', display_name: 'B', linked_user_id: null },
+  { id: 'C', display_name: 'C', linked_user_id: null },
 ]
 
-function item(name: string, total: number, memberIds: number[], weights?: number[]) {
+function item(name: string, total: number, memberIds: string[], weights?: number[]) {
   return {
     name, quantity: 1, unit_price: total, total,
     shares: memberIds.map((m, i) => ({ member_id: m, weight: weights ? weights[i] : 1 })),
@@ -29,14 +29,14 @@ function item(name: string, total: number, memberIds: number[], weights?: number
 
 // --- Scenario 1: two places, different payers, equal + partial shares ---
 const s1: SessionDetail = {
-  id: 1, name: 'Trip', currency: 'USD', members,
+  id: 's1', name: 'Trip', currency: 'USD', members,
   receipts: [
-    { id: 1, merchant: 'Restaurant', currency: 'USD', subtotal: 42, tax: 0, tip: 0, total: 42,
-      paid_by_member_id: 1, status: 'ready', image_path: null,
-      line_items: [item('Pizza', 30, [1, 2, 3]), item('Beer', 12, [1, 2])] },
-    { id: 2, merchant: 'Taxi', currency: 'USD', subtotal: 30, tax: 0, tip: 0, total: 30,
-      paid_by_member_id: 2, status: 'ready', image_path: null,
-      line_items: [item('Ride', 30, [1, 2, 3])] },
+    { id: 'r1', merchant: 'Restaurant', currency: 'USD', subtotal: 42, tax: 0, tip: 0, total: 42,
+      paid_by_member_id: 'A', status: 'ready', image_path: null,
+      line_items: [item('Pizza', 30, ['A', 'B', 'C']), item('Beer', 12, ['A', 'B'])] },
+    { id: 'r2', merchant: 'Taxi', currency: 'USD', subtotal: 30, tax: 0, tip: 0, total: 30,
+      paid_by_member_id: 'B', status: 'ready', image_path: null,
+      line_items: [item('Ride', 30, ['A', 'B', 'C'])] },
   ],
 }
 const r1 = computeSettlement(s1)
@@ -52,11 +52,11 @@ eq('S1 all from C', r1.transactions.every((t) => t.fromName === 'C'), true)
 
 // --- Scenario 2: proportional tax+tip allocation ---
 const s2: SessionDetail = {
-  id: 2, name: 'Dinner', currency: 'USD', members: members.slice(0, 2),
+  id: 's2', name: 'Dinner', currency: 'USD', members: members.slice(0, 2),
   receipts: [
-    { id: 3, merchant: 'Cafe', currency: 'USD', subtotal: 40, tax: 5, tip: 3, total: 48,
-      paid_by_member_id: 1, status: 'ready', image_path: null,
-      line_items: [item('Salad', 10, [1]), item('Steak', 30, [2])] },
+    { id: 'r3', merchant: 'Cafe', currency: 'USD', subtotal: 40, tax: 5, tip: 3, total: 48,
+      paid_by_member_id: 'A', status: 'ready', image_path: null,
+      line_items: [item('Salad', 10, ['A']), item('Steak', 30, ['B'])] },
   ],
 }
 const r2 = computeSettlement(s2)
@@ -65,15 +65,15 @@ const net2 = Object.fromEntries(r2.balances.map((b) => [b.name, b.netCents]))
 // net A = 48 - 12 = 36 ; net B = -36
 eq('S2 net A', net2['A'], 3600)
 eq('S2 net B', net2['B'], -3600)
-eq('S2 B pays A 36', r2.transactions, [{ fromMemberId: 2, fromName: 'B', toMemberId: 1, toName: 'A', amountCents: 3600 }])
+eq('S2 B pays A 36', r2.transactions, [{ fromMemberId: 'B', fromName: 'B', toMemberId: 'A', toName: 'A', amountCents: 3600 }])
 
 // --- Scenario 3: weighted share (A weight 2, B weight 1 on a 30 item) ---
 const s3: SessionDetail = {
-  id: 3, name: 'Weighted', currency: 'USD', members: members.slice(0, 2),
+  id: 's3', name: 'Weighted', currency: 'USD', members: members.slice(0, 2),
   receipts: [
-    { id: 4, merchant: 'Bar', currency: 'USD', subtotal: 30, tax: 0, tip: 0, total: 30,
-      paid_by_member_id: 2, status: 'ready', image_path: null,
-      line_items: [item('Bottle', 30, [1, 2], [2, 1])] },
+    { id: 'r4', merchant: 'Bar', currency: 'USD', subtotal: 30, tax: 0, tip: 0, total: 30,
+      paid_by_member_id: 'B', status: 'ready', image_path: null,
+      line_items: [item('Bottle', 30, ['A', 'B'], [2, 1])] },
   ],
 }
 const r3 = computeSettlement(s3)
@@ -84,11 +84,11 @@ eq('S3 net B', net3['B'], 2000)
 
 // --- Scenario 4: unassigned item + no-payer warnings ---
 const s4: SessionDetail = {
-  id: 4, name: 'Warn', currency: 'USD', members: members.slice(0, 2),
+  id: 's4', name: 'Warn', currency: 'USD', members: members.slice(0, 2),
   receipts: [
-    { id: 5, merchant: 'Shop', currency: 'USD', subtotal: 20, tax: 0, tip: 0, total: 20,
-      paid_by_member_id: 1, status: 'ready', image_path: null,
-      line_items: [item('Assigned', 10, [2]), { name: 'Lonely', quantity: 1, unit_price: 10, total: 10, shares: [] }] },
+    { id: 'r5', merchant: 'Shop', currency: 'USD', subtotal: 20, tax: 0, tip: 0, total: 20,
+      paid_by_member_id: 'A', status: 'ready', image_path: null,
+      line_items: [item('Assigned', 10, ['B']), { name: 'Lonely', quantity: 1, unit_price: 10, total: 10, shares: [] }] },
   ],
 }
 const r4 = computeSettlement(s4)

@@ -24,9 +24,9 @@ if ($stmt->fetch()) {
 }
 
 $hash = password_hash($password, PASSWORD_DEFAULT);
-$stmt = db()->prepare('INSERT INTO users (email, password_hash, plan) VALUES (?, ?, ?)');
-$stmt->execute([$email, $hash, 'free']);
-$userId = (int) db()->lastInsertId();
+$userId = uuidv4();
+$stmt = db()->prepare('INSERT INTO users (id, email, password_hash, plan) VALUES (?, ?, ?, ?)');
+$stmt->execute([$userId, $email, $hash, 'free']);
 
 $token = jwt_encode(['sub' => $userId, 'email' => $email]);
 jout([

@@ -11,15 +11,15 @@ interface EditItem {
   quantity: string
   unit_price: string
   total: string
-  shares: Record<number, number> // memberId -> weight
+  shares: Record<string, number> // memberId -> weight
 }
 
 const blankItem = (): EditItem => ({ name: '', quantity: '1', unit_price: '', total: '', shares: {} })
 
 export default function ReceiptEditor() {
   const { id, rid } = useParams()
-  const sessionId = Number(id)
-  const receiptId = rid ? Number(rid) : 0
+  const sessionId = id ?? ''
+  const receiptId = rid ?? ''
   const navigate = useNavigate()
   const { refreshPlan } = useAuth()
 
@@ -28,7 +28,7 @@ export default function ReceiptEditor() {
   const [merchant, setMerchant] = useState('')
   const [tax, setTax] = useState('')
   const [tip, setTip] = useState('')
-  const [payerId, setPayerId] = useState<number | ''>('')
+  const [payerId, setPayerId] = useState<string>('')
   const [imagePath, setImagePath] = useState<string | null>(null)
   const [items, setItems] = useState<EditItem[]>([blankItem()])
   const [confidence, setConfidence] = useState<number | null>(null)
@@ -137,7 +137,7 @@ export default function ReceiptEditor() {
     }))
   }
 
-  function toggleShare(i: number, memberId: number) {
+  function toggleShare(i: number, memberId: string) {
     setItems((prev) => prev.map((it, idx) => {
       if (idx !== i) return it
       const shares = { ...it.shares }
@@ -147,7 +147,7 @@ export default function ReceiptEditor() {
     }))
   }
 
-  const setWeight = (i: number, memberId: number, w: string) =>
+  const setWeight = (i: number, memberId: string, w: string) =>
     setItems((prev) => prev.map((it, idx) => {
       if (idx !== i) return it
       const shares = { ...it.shares, [memberId]: Math.max(0.001, toNum(w) || 1) }
@@ -190,7 +190,7 @@ export default function ReceiptEditor() {
             quantity: toNum(it.quantity) || 1,
             unit_price: toNum(it.unit_price),
             total: toNum(it.total),
-            shares: Object.entries(it.shares).map(([mid, w]) => ({ member_id: Number(mid), weight: w })),
+            shares: Object.entries(it.shares).map(([mid, w]) => ({ member_id: mid, weight: w })),
           })),
       }
       if (payload.line_items.length === 0) {
@@ -285,7 +285,7 @@ export default function ReceiptEditor() {
 
         <div className="form-row">
           <label className="grow">Who paid?
-            <select value={payerId} onChange={(e) => setPayerId(e.target.value === '' ? '' : Number(e.target.value))}>
+            <select value={payerId} onChange={(e) => setPayerId(e.target.value)}>
               <option value="">— select payer —</option>
               {members.map((m) => <option key={m.id} value={m.id}>{m.display_name}</option>)}
             </select>

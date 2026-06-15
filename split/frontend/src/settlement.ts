@@ -5,7 +5,7 @@ import type { Receipt, SessionDetail } from './types'
 import { toCents } from './money'
 
 export interface Balance {
-  memberId: number
+  memberId: string
   name: string
   paidCents: number // total reimbursable amount this member fronted
   owedCents: number // total this member consumed
@@ -13,9 +13,9 @@ export interface Balance {
 }
 
 export interface Transaction {
-  fromMemberId: number
+  fromMemberId: string
   fromName: string
-  toMemberId: number
+  toMemberId: string
   toName: string
   amountCents: number
 }
@@ -34,8 +34,8 @@ export interface SettlementResult {
  */
 export function computeSettlement(session: SessionDetail): SettlementResult {
   const members = session.members
-  const paid = new Map<number, number>()
-  const owed = new Map<number, number>()
+  const paid = new Map<string, number>()
+  const owed = new Map<string, number>()
   const warnings: string[] = []
   for (const m of members) {
     paid.set(m.id, 0)
@@ -71,8 +71,8 @@ export function computeSettlement(session: SessionDetail): SettlementResult {
 }
 
 /** owed-cents-per-member for a single receipt (items + proportional tax/tip). */
-function receiptOwed(r: Receipt, warnings: string[]): Map<number, number> {
-  const itemSubtotal = new Map<number, number>() // cents
+function receiptOwed(r: Receipt, warnings: string[]): Map<string, number> {
+  const itemSubtotal = new Map<string, number>() // cents
   let baseSubtotal = 0
 
   for (const item of r.line_items) {
@@ -100,7 +100,7 @@ function receiptOwed(r: Receipt, warnings: string[]): Map<number, number> {
   }
 
   const taxTip = toCents(r.tax) + toCents(r.tip)
-  const owed = new Map<number, number>()
+  const owed = new Map<string, number>()
   if (baseSubtotal <= 0) return owed
 
   let allocatedTaxTip = 0
@@ -120,8 +120,8 @@ function receiptOwed(r: Receipt, warnings: string[]): Map<number, number> {
  * largest debtor. Near-optimal and produces few transactions.
  */
 export function minCashFlow(balances: Balance[]): Transaction[] {
-  const nameOf = new Map<number, string>()
-  const net: { id: number; amt: number }[] = []
+  const nameOf = new Map<string, string>()
+  const net: { id: string; amt: number }[] = []
   for (const b of balances) {
     nameOf.set(b.memberId, b.name)
     if (b.netCents !== 0) net.push({ id: b.memberId, amt: b.netCents })

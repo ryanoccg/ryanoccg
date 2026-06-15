@@ -22,8 +22,8 @@ $obj = $event['data']['object'] ?? [];
 
 switch ($type) {
     case 'checkout.session.completed':
-        $uid = (int) ($obj['client_reference_id'] ?? ($obj['metadata']['user_id'] ?? 0));
-        if ($uid > 0) {
+        $uid = (string) ($obj['client_reference_id'] ?? ($obj['metadata']['user_id'] ?? ''));
+        if ($uid !== '') {
             $stmt = db()->prepare(
                 'UPDATE users SET plan = "pro", stripe_customer_id = ?, stripe_subscription_id = ? WHERE id = ?'
             );
@@ -34,7 +34,7 @@ switch ($type) {
     case 'customer.subscription.created':
     case 'customer.subscription.updated':
         $uid = subscription_user_id($obj);
-        if ($uid > 0) {
+        if ($uid !== '') {
             $status = $obj['status'] ?? '';
             $active = in_array($status, ['active', 'trialing', 'past_due'], true);
             $expires = !empty($obj['current_period_end'])
@@ -49,7 +49,7 @@ switch ($type) {
 
     case 'customer.subscription.deleted':
         $uid = subscription_user_id($obj);
-        if ($uid > 0) {
+        if ($uid !== '') {
             $stmt = db()->prepare(
                 'UPDATE users SET plan = "free", plan_expires_at = NULL WHERE id = ? AND plan <> "super"'
             );
@@ -89,16 +89,16 @@ function verify_stripe_signature(string $payload, string $header, string $secret
 }
 
 /** Resolve the app user from a subscription object (metadata first, then customer id). */
-function subscription_user_id(array $sub): int
+function subscription_user_id(array $sub): string
 {
-    $uid = (int) ($sub['metadata']['user_id'] ?? 0);
-    if ($uid > 0) {
+    $uid = (string) ($sub['metadata']['user_id'] ?? '');
+    if ($uid !== '') {
         return $uid;
     }
     if (!empty($sub['customer'])) {
         $stmt = db()->prepare('SELECT id FROM users WHERE stripe_customer_id = ?');
         $stmt->execute([$sub['customer']]);
-        return (int) ($stmt->fetchColumn() ?: 0);
+        return (string) ($stmt->fetchColumn() ?: '');
     }
-    return 0;
+    return '';
 }

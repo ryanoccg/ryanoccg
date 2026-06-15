@@ -33,7 +33,7 @@ function current_period(): string
 }
 
 /** OCR scans used this month for a user. */
-function ocr_used_this_month(int $userId): int
+function ocr_used_this_month(string $userId): int
 {
     $stmt = db()->prepare(
         'SELECT ocr_scans FROM usage_counters WHERE user_id = ? AND period = ?'
@@ -43,7 +43,7 @@ function ocr_used_this_month(int $userId): int
 }
 
 /** Atomically increment this month's OCR counter. */
-function increment_ocr(int $userId): void
+function increment_ocr(string $userId): void
 {
     $stmt = db()->prepare(
         'INSERT INTO usage_counters (user_id, period, ocr_scans)
@@ -70,14 +70,14 @@ function guard_create_session(array $user): void
         return;
     }
     $stmt = db()->prepare('SELECT COUNT(*) FROM sessions WHERE owner_user_id = ?');
-    $stmt->execute([(int) $user['id']]);
+    $stmt->execute([(string) $user['id']]);
     if ((int) $stmt->fetchColumn() >= $limit) {
         over_limit('create_session');
     }
 }
 
 /** Guard: adding a member to a session. */
-function guard_add_member(array $user, int $sessionId): void
+function guard_add_member(array $user, string $sessionId): void
 {
     $limit = plan_limits($user['plan'])['members_per_session'];
     if ($limit < 0) {
@@ -97,7 +97,7 @@ function guard_ocr_scan(array $user): void
     if ($limit < 0) {
         return;
     }
-    if (ocr_used_this_month((int) $user['id']) >= $limit) {
+    if (ocr_used_this_month((string) $user['id']) >= $limit) {
         over_limit('ocr_scan');
     }
 }

@@ -9,7 +9,7 @@ import type { Member, SessionDetail as Session } from '../types'
 
 export default function SessionDetail() {
   const { id } = useParams()
-  const sessionId = Number(id)
+  const sessionId = id ?? ''
   const navigate = useNavigate()
   const { refreshPlan } = useAuth()
   const [session, setSession] = useState<Session | null>(null)
@@ -32,7 +32,7 @@ export default function SessionDetail() {
   useEffect(() => { load() }, [load])
 
   const settlement = useMemo(() => (session ? computeSettlement(session) : null), [session])
-  const memberName = (mid: number | null) =>
+  const memberName = (mid: string | null) =>
     session?.members.find((m: Member) => m.id === mid)?.display_name ?? '—'
 
   async function addMember(e: React.FormEvent) {
@@ -48,13 +48,13 @@ export default function SessionDetail() {
     }
   }
 
-  async function removeMember(mid: number) {
+  async function removeMember(mid: string) {
     if (!confirm('Remove this member? Their item assignments will be cleared.')) return
     await api.del(`members.php?id=${mid}`)
     await load()
   }
 
-  async function deleteReceipt(rid: number) {
+  async function deleteReceipt(rid: string) {
     if (!confirm('Delete this receipt?')) return
     await api.del(`receipts.php?id=${rid}`)
     await load()

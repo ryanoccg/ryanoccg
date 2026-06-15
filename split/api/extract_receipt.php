@@ -14,13 +14,13 @@ require __DIR__ . '/bootstrap.php';
  */
 
 $user = require_user();
-$uid = (int) $user['id'];
+$uid = (string) $user['id'];
 
 if (method() !== 'POST') {
     jfail('Method not allowed.', 405);
 }
 
-$sessionId = (int) ($_POST['session_id'] ?? 0);
+$sessionId = (string) ($_POST['session_id'] ?? '');
 require_owned_session($sessionId, $uid);
 
 guard_ocr_scan($user); // 402 if over the monthly limit

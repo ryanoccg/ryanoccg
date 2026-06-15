@@ -40,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const info: PlanInfo = await api.get('plan.php')
         setPlan(info)
         // We don't persist the user object; reconstruct minimal identity.
-        setUser({ id: 0, email: '', plan: info.plan })
+        setUser({ id: '', email: '', plan: info.plan })
       } catch {
         setToken(null)
       } finally {

@@ -14,8 +14,8 @@ if (!empty($_GET['token']) && !bearer_token()) {
 }
 
 $user = require_user();
-$uid = (int) $user['id'];
-$receiptId = (int) ($_GET['receipt_id'] ?? 0);
+$uid = (string) $user['id'];
+$receiptId = (string) ($_GET['receipt_id'] ?? '');
 $receipt = require_owned_receipt($receiptId, $uid);
 
 $imagePath = (string) ($receipt['image_path'] ?? '');

@@ -3,15 +3,15 @@ declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
 
 $user = require_user();
-$uid = (int) $user['id'];
-$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+$uid = (string) $user['id'];
+$id = isset($_GET['id']) ? (string) $_GET['id'] : '';
 
 switch (method()) {
     case 'GET':
         get_receipt($id, $uid);
         break;
     case 'POST':
-        save_receipt(0, $uid);
+        save_receipt('', $uid);
         break;
     case 'PUT':
     case 'PATCH':
@@ -27,7 +27,7 @@ switch (method()) {
         jfail('Method not allowed.', 405);
 }
 
-function get_receipt(int $id, int $uid): void
+function get_receipt(string $id, string $uid): void
 {
     $receipt = require_owned_receipt($id, $uid);
     $li = db()->prepare('SELECT id, name, quantity, unit_price, total, sort_order FROM line_items WHERE receipt_id = ? ORDER BY sort_order, id');
@@ -44,22 +44,22 @@ function get_receipt(int $id, int $uid): void
 }
 
 /**
- * Create ($id = 0) or replace ($id > 0) a receipt and its full line-item /
+ * Create ($id = '') or replace ($id set) a receipt and its full line-item /
  * share tree in one transaction. Body shape:
  *   { session_id, merchant, currency, subtotal, tax, tip, total,
  *     paid_by_member_id, image_path?,
  *     line_items: [ { name, quantity, unit_price, total,
  *                     shares: [ { member_id, weight } ] } ] }
  */
-function save_receipt(int $id, int $uid): void
+function save_receipt(string $id, string $uid): void
 {
     $in = jin();
-    $sessionId = (int) ($in['session_id'] ?? 0);
+    $sessionId = (string) ($in['session_id'] ?? '');
     $session = require_owned_session($sessionId, $uid);
 
-    if ($id > 0) {
+    if ($id !== '') {
         $existing = require_owned_receipt($id, $uid);
-        if ((int) $existing['session_id'] !== $sessionId) {
+        if ((string) $existing['session_id'] !== $sessionId) {
             jfail('Receipt does not belong to that session.', 422);
         }
     }
@@ -67,8 +67,7 @@ function save_receipt(int $id, int $uid): void
     // Valid member ids for this session (for payer + share validation).
     $mStmt = db()->prepare('SELECT id FROM members WHERE session_id = ?');
     $mStmt->execute([$sessionId]);
-    $validMembers = array_map('intval', array_column($mStmt->fetchAll(), 'id'));
-    $validSet = array_flip($validMembers);
+    $validSet = array_flip(array_column($mStmt->fetchAll(), 'id'));
 
     $merchant = trim((string) ($in['merchant'] ?? '')) ?: null;
     $currency = strtoupper(trim((string) ($in['currency'] ?? $session['currency'])));
@@ -79,10 +78,10 @@ function save_receipt(int $id, int $uid): void
     $tax = round((float) ($in['tax'] ?? 0), 2);
     $tip = round((float) ($in['tip'] ?? 0), 2);
     $total = round((float) ($in['total'] ?? 0), 2);
-    $imagePath = isset($in['image_path']) ? (string) $in['image_path'] : ($id > 0 ? ($existing['image_path'] ?? null) : null);
+    $imagePath = isset($in['image_path']) ? (string) $in['image_path'] : ($id !== '' ? ($existing['image_path'] ?? null) : null);
 
     $payer = $in['paid_by_member_id'] ?? null;
-    $payer = ($payer === null || $payer === '') ? null : (int) $payer;
+    $payer = ($payer === null || $payer === '') ? null : (string) $payer;
     if ($payer !== null && !isset($validSet[$payer])) {
         jfail('Payer must be a member of this session.', 422);
     }
@@ -92,13 +91,13 @@ function save_receipt(int $id, int $uid): void
     $pdo = db();
     $pdo->beginTransaction();
     try {
-        if ($id === 0) {
+        if ($id === '') {
+            $id = uuidv4();
             $stmt = $pdo->prepare(
-                'INSERT INTO receipts (session_id, image_path, merchant, currency, subtotal, tax, tip, total, paid_by_member_id, status)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "ready")'
+                'INSERT INTO receipts (id, session_id, image_path, merchant, currency, subtotal, tax, tip, total, paid_by_member_id, status)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "ready")'
             );
-            $stmt->execute([$sessionId, $imagePath, $merchant, $currency, $subtotal, $tax, $tip, $total, $payer]);
-            $id = (int) $pdo->lastInsertId();
+            $stmt->execute([$id, $sessionId, $imagePath, $merchant, $currency, $subtotal, $tax, $tip, $total, $payer]);
         } else {
             $stmt = $pdo->prepare(
                 'UPDATE receipts SET image_path = ?, merchant = ?, currency = ?, subtotal = ?, tax = ?, tip = ?, total = ?, paid_by_member_id = ?, status = "ready"
@@ -111,10 +110,10 @@ function save_receipt(int $id, int $uid): void
         }
 
         $insItem = $pdo->prepare(
-            'INSERT INTO line_items (receipt_id, name, quantity, unit_price, total, sort_order) VALUES (?, ?, ?, ?, ?, ?)'
+            'INSERT INTO line_items (id, receipt_id, name, quantity, unit_price, total, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)'
         );
         $insShare = $pdo->prepare(
-            'INSERT INTO item_shares (line_item_id, member_id, weight) VALUES (?, ?, ?)'
+            'INSERT INTO item_shares (id, line_item_id, member_id, weight) VALUES (?, ?, ?, ?)'
         );
 
         $order = 0;
@@ -126,13 +125,13 @@ function save_receipt(int $id, int $uid): void
             $qty = round((float) ($item['quantity'] ?? 1), 3);
             $unit = round((float) ($item['unit_price'] ?? 0), 2);
             $itemTotal = round((float) ($item['total'] ?? ($qty * $unit)), 2);
-            $insItem->execute([$id, $name, $qty, $unit, $itemTotal, $order++]);
-            $lineItemId = (int) $pdo->lastInsertId();
+            $lineItemId = uuidv4();
+            $insItem->execute([$lineItemId, $id, $name, $qty, $unit, $itemTotal, $order++]);
 
             $shares = is_array($item['shares'] ?? null) ? $item['shares'] : [];
             $seen = [];
             foreach ($shares as $share) {
-                $memberId = (int) ($share['member_id'] ?? 0);
+                $memberId = (string) ($share['member_id'] ?? '');
                 if (!isset($validSet[$memberId]) || isset($seen[$memberId])) {
                     continue;
                 }
@@ -141,7 +140,7 @@ function save_receipt(int $id, int $uid): void
                 if ($weight <= 0) {
                     $weight = 1;
                 }
-                $insShare->execute([$lineItemId, $memberId, round($weight, 3)]);
+                $insShare->execute([uuidv4(), $lineItemId, $memberId, round($weight, 3)]);
             }
         }
 

@@ -80,6 +80,6 @@ export const api = {
 }
 
 /** URL for an authenticated receipt image (token in query so <img> can load it). */
-export function imageUrl(receiptId: number): string {
+export function imageUrl(receiptId: string): string {
   return `${API_BASE}/image.php?receipt_id=${receiptId}&token=${encodeURIComponent(token || '')}`
 }

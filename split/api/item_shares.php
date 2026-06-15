@@ -3,7 +3,7 @@ declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
 
 $user = require_user();
-$uid = (int) $user['id'];
+$uid = (string) $user['id'];
 
 // Replace the full set of shares for one line item (powers the assignment UI:
 // the client sends the complete member set after each toggle).
@@ -11,7 +11,7 @@ if (method() !== 'PUT' && method() !== 'POST') {
     jfail('Method not allowed.', 405);
 }
 
-$lineItemId = (int) ($_GET['line_item_id'] ?? 0);
+$lineItemId = (string) ($_GET['line_item_id'] ?? '');
 $item = require_owned_line_item($lineItemId, $uid);
 
 $in = jin();
@@ -23,8 +23,8 @@ $mStmt = db()->prepare(
      JOIN receipts r ON r.session_id = m.session_id
      WHERE r.id = ?'
 );
-$mStmt->execute([(int) $item['receipt_id']]);
-$validSet = array_flip(array_map('intval', array_column($mStmt->fetchAll(), 'id')));
+$mStmt->execute([(string) $item['receipt_id']]);
+$validSet = array_flip(array_column($mStmt->fetchAll(), 'id'));
 
 $pdo = db();
 $pdo->beginTransaction();
@@ -32,10 +32,10 @@ try {
     $del = $pdo->prepare('DELETE FROM item_shares WHERE line_item_id = ?');
     $del->execute([$lineItemId]);
 
-    $ins = $pdo->prepare('INSERT INTO item_shares (line_item_id, member_id, weight) VALUES (?, ?, ?)');
+    $ins = $pdo->prepare('INSERT INTO item_shares (id, line_item_id, member_id, weight) VALUES (?, ?, ?, ?)');
     $seen = [];
     foreach ($shares as $share) {
-        $memberId = (int) ($share['member_id'] ?? 0);
+        $memberId = (string) ($share['member_id'] ?? '');
         if (!isset($validSet[$memberId]) || isset($seen[$memberId])) {
             continue;
         }
@@ -44,7 +44,7 @@ try {
         if ($weight <= 0) {
             $weight = 1;
         }
-        $ins->execute([$lineItemId, $memberId, round($weight, 3)]);
+        $ins->execute([uuidv4(), $lineItemId, $memberId, round($weight, 3)]);
     }
     $pdo->commit();
 } catch (Throwable $e) {
@@ -56,7 +56,7 @@ $sh = db()->prepare('SELECT id, member_id, weight FROM item_shares WHERE line_it
 $sh->execute([$lineItemId]);
 jout(['line_item_id' => $lineItemId, 'shares' => $sh->fetchAll()]);
 
-function require_owned_line_item(int $lineItemId, int $uid): array
+function require_owned_line_item(string $lineItemId, string $uid): array
 {
     $stmt = db()->prepare(
         'SELECT li.* FROM line_items li

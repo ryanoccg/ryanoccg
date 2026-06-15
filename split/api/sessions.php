@@ -3,12 +3,12 @@ declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
 
 $user = require_user();
-$uid = (int) $user['id'];
-$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+$uid = (string) $user['id'];
+$id = isset($_GET['id']) ? (string) $_GET['id'] : '';
 
 switch (method()) {
     case 'GET':
-        $id ? get_session_detail($id, $uid) : list_sessions($uid);
+        $id !== '' ? get_session_detail($id, $uid) : list_sessions($uid);
         break;
     case 'POST':
         create_session($user);
@@ -24,7 +24,7 @@ switch (method()) {
         jfail('Method not allowed.', 405);
 }
 
-function list_sessions(int $uid): void
+function list_sessions(string $uid): void
 {
     $stmt = db()->prepare(
         'SELECT s.id, s.name, s.currency, s.created_at,
@@ -39,11 +39,11 @@ function list_sessions(int $uid): void
 }
 
 /** Full nested tree: session + members + receipts(+ line_items(+ shares)). */
-function get_session_detail(int $id, int $uid): void
+function get_session_detail(string $id, string $uid): void
 {
     $session = require_owned_session($id, $uid);
 
-    $m = db()->prepare('SELECT id, display_name, linked_user_id FROM members WHERE session_id = ? ORDER BY id');
+    $m = db()->prepare('SELECT id, display_name, linked_user_id FROM members WHERE session_id = ? ORDER BY display_name, id');
     $m->execute([$id]);
     $members = $m->fetchAll();
 
@@ -111,9 +111,9 @@ function create_session(array $user): void
     if (!preg_match('/^[A-Z]{3}$/', $currency)) {
         $currency = 'USD';
     }
-    $stmt = db()->prepare('INSERT INTO sessions (owner_user_id, name, currency) VALUES (?, ?, ?)');
-    $stmt->execute([(int) $user['id'], $name, $currency]);
-    $id = (int) db()->lastInsertId();
+    $id = uuidv4();
+    $stmt = db()->prepare('INSERT INTO sessions (id, owner_user_id, name, currency) VALUES (?, ?, ?, ?)');
+    $stmt->execute([$id, (string) $user['id'], $name, $currency]);
 
     // Seed any members provided at creation (each subject to the member guard).
     if (!empty($in['members']) && is_array($in['members'])) {
@@ -123,15 +123,15 @@ function create_session(array $user): void
                 continue;
             }
             guard_add_member($user, $id);
-            $ms = db()->prepare('INSERT INTO members (session_id, display_name) VALUES (?, ?)');
-            $ms->execute([$id, $name]);
+            $ms = db()->prepare('INSERT INTO members (id, session_id, display_name) VALUES (?, ?, ?)');
+            $ms->execute([uuidv4(), $id, $name]);
         }
     }
 
-    get_session_detail($id, (int) $user['id']);
+    get_session_detail($id, (string) $user['id']);
 }
 
-function update_session(int $id, int $uid): void
+function update_session(string $id, string $uid): void
 {
     require_owned_session($id, $uid);
     $in = jin();
@@ -160,7 +160,7 @@ function update_session(int $id, int $uid): void
     get_session_detail($id, $uid);
 }
 
-function delete_session(int $id, int $uid): void
+function delete_session(string $id, string $uid): void
 {
     require_owned_session($id, $uid);
     $stmt = db()->prepare('DELETE FROM sessions WHERE id = ?');
