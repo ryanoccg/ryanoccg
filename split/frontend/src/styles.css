@@ -58,7 +58,7 @@ a:hover { color: var(--primary-dark); }
 .stack { display: flex; flex-direction: column; gap: 1.15rem; }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.35rem; box-shadow: var(--shadow); }
 .breadcrumb { font-size: 0.9rem; }
-.head-row { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; }
+.head-row { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.85rem; }
 .center { text-align: center; padding: 3rem 1rem; color: var(--muted); }
 .grow { flex: 1; min-width: 0; }
 .mt { margin-top: 0.7rem; }
