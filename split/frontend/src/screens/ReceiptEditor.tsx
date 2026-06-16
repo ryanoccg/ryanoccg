@@ -195,6 +195,17 @@ export default function ReceiptEditor() {
     }))
   }
 
+  // Whole-receipt shortcut: everyone shares every item equally (shared meal).
+  function shareAllEqually() {
+    setItems((prev) => prev.map((it) => ({
+      ...it,
+      shares: Object.fromEntries(members.map((m) => [m.id, it.shares[m.id] || 1])),
+    })))
+  }
+  function clearAllAssignments() {
+    setItems((prev) => prev.map((it) => ({ ...it, shares: {} })))
+  }
+
   const addRow = () => setItems((p) => [...p, blankItem()])
   const removeRow = (i: number) => setItems((p) => p.filter((_, idx) => idx !== i))
 
@@ -331,6 +342,12 @@ export default function ReceiptEditor() {
           />
         </div>
         <h2>Items — assign each to who shared it</h2>
+        {members.length > 0 && (
+          <div className="item-actions">
+            <button type="button" className="btn" onClick={shareAllEqually}>👥 Everyone shares all items</button>
+            <button type="button" className="linkbtn" onClick={clearAllAssignments}>Clear all</button>
+          </div>
+        )}
         {items.map((it, i) => (
           <div className="item" key={i}>
             <div className="item-fields">
