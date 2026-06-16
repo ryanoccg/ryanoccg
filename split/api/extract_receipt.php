@@ -120,6 +120,7 @@ function openai_extract(string $dataUrl): ?array
                 'content' => "You transcribe a photo of a restaurant or store receipt into structured JSON. Be precise and literal.\n"
                     . "Rules:\n"
                     . "- Output EVERY purchased line item, in the order printed, with its name exactly as shown, quantity, per-unit price, and line total.\n"
+                    . "- If the same item is printed on multiple lines (even with identical name, quantity and price), output a SEPARATE entry for EACH printed line — never merge, combine, or sum duplicate lines. The number of entries must match the number of printed item lines.\n"
                     . "- Do NOT output subtotal, tax, service charge, rounding adjustment, total, change, cash/card, or any non-item line as a line item.\n"
                     . "- If a quantity is printed, use it; otherwise quantity is 1. unit_price × quantity should equal the line total; if a discount makes them differ, keep the printed line total and set unit_price = total / quantity.\n"
                     . "- Numbers must be plain decimals with no currency symbols or thousands separators.\n"

@@ -13,10 +13,11 @@ interface EditItem {
   quantity: string
   unit_price: string
   total: string
+  totalEdited?: boolean // true once total came from OCR/receipt or was hand-typed
   shares: Record<string, number> // memberId -> weight
 }
 
-const blankItem = (): EditItem => ({ name: '', quantity: '1', unit_price: '', total: '', shares: {} })
+const blankItem = (): EditItem => ({ name: '', quantity: '1', unit_price: '', total: '', totalEdited: false, shares: {} })
 
 export default function ReceiptEditor() {
   const { id, rid } = useParams()
@@ -85,6 +86,7 @@ export default function ReceiptEditor() {
         quantity: String(toNum(li.quantity)),
         unit_price: String(toNum(li.unit_price)),
         total: String(toNum(li.total)),
+        totalEdited: true,
         shares: Object.fromEntries(li.shares.map((s) => [s.member_id, Number(s.weight) || 1])),
       })),
     )
@@ -103,6 +105,7 @@ export default function ReceiptEditor() {
         quantity: String(li.quantity),
         unit_price: String(li.unit_price),
         total: String(li.total),
+        totalEdited: true,
         shares: {},
       })))
     }
@@ -143,9 +146,8 @@ export default function ReceiptEditor() {
       if (idx !== i) return it
       const next = { ...it, [field]: value }
       const q = toNum(next.quantity), u = toNum(next.unit_price)
-      // Auto-fill total from qty×unit only when it's blank — never clobber a
-      // total the user (or OCR) already set.
-      if (q && u && next.total.trim() === '') next.total = (q * u).toFixed(2)
+      // Recompute total from qty×unit live, unless the total was set by hand/OCR.
+      if (q && u && !next.totalEdited) next.total = (q * u).toFixed(2)
       return next
     }))
   }
@@ -319,7 +321,7 @@ export default function ReceiptEditor() {
                   <input className="num" inputMode="decimal" value={it.unit_price} onChange={(e) => updateField(i, 'unit_price', e.target.value)} />
                 </label>
                 <label className="numfield"><span>Total</span>
-                  <input className="num" inputMode="decimal" value={it.total} onChange={(e) => setItem(i, { total: e.target.value })} />
+                  <input className="num" inputMode="decimal" value={it.total} onChange={(e) => setItem(i, { total: e.target.value, totalEdited: true })} />
                 </label>
                 <button className="chip-x" onClick={() => removeRow(i)} aria-label="Remove item">×</button>
               </div>
