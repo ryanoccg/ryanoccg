@@ -6,6 +6,7 @@ declare(strict_types=1);
  * CORS headers (handling OPTIONS preflight). Include this first in each endpoint.
  */
 require __DIR__ . '/config.php';
+require __DIR__ . '/lib/errors.php';   // log errors + clean JSON 500s (after config, before the rest)
 require __DIR__ . '/db.php';
 require __DIR__ . '/cors.php';
 require __DIR__ . '/auth.php';
