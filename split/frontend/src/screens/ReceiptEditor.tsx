@@ -288,6 +288,11 @@ export default function ReceiptEditor() {
           </label>
         </div>
 
+        <div className="totalbar">
+          <span className="muted small">Receipt total</span>
+          <span className="totalbar-amt">{formatCents(totalCents, currency)}</span>
+        </div>
+
         <h2>People</h2>
         <div className="chips">
           {members.map((m) => <span className="chip" key={m.id}>{m.display_name}</span>)}
