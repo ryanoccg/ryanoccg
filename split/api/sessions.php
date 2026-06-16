@@ -111,7 +111,7 @@ function create_session(array $user): void
     if ($name === '') {
         jfail('Session name is required.', 422);
     }
-    $currency = normalize_currency($in['currency'] ?? null, 'USD');
+    $currency = normalize_currency($in['currency'] ?? null, 'MYR');
     $id = uuidv4();
     $stmt = db()->prepare('INSERT INTO sessions (id, owner_user_id, name, currency) VALUES (?, ?, ?, ?)');
     $stmt->execute([$id, (string) $user['id'], $name, $currency]);

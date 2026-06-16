@@ -25,7 +25,7 @@ export default function ReceiptEditor() {
   const { refreshPlan } = useAuth()
 
   const [members, setMembers] = useState<Member[]>([])
-  const [currency, setCurrency] = useState('USD')
+  const [currency, setCurrency] = useState('MYR')
   const [merchant, setMerchant] = useState('')
   const [tax, setTax] = useState('')
   const [tip, setTip] = useState('')
