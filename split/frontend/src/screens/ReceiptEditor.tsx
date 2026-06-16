@@ -177,6 +177,23 @@ export default function ReceiptEditor() {
   const addRow = () => setItems((p) => [...p, blankItem()])
   const removeRow = (i: number) => setItems((p) => p.filter((_, idx) => idx !== i))
 
+  // Add a person to the session straight from an item's assign menu, then assign
+  // them to that item — no scrolling back up to the People section.
+  async function addPersonToItem(i: number, name: string) {
+    setError('')
+    try {
+      const res = await api.post('members.php', { session_id: sessionId, display_name: name })
+      await refreshMembers()
+      const memberId: string = res.member.id
+      setItems((prev) => prev.map((it, idx) =>
+        idx === i ? { ...it, shares: { ...it.shares, [memberId]: it.shares[memberId] || 1 } } : it,
+      ))
+    } catch (err) {
+      if (err instanceof ApiError && err.isLimit) setLimitMsg(err.message)
+      else setError(err instanceof ApiError ? err.message : 'Could not add person.')
+    }
+  }
+
   const itemsSubtotalCents = useMemo(
     () => items.reduce((s, it) => s + toCents(it.total), 0),
     [items],
@@ -301,6 +318,7 @@ export default function ReceiptEditor() {
               onToggle={(mid) => toggleShare(i, mid)}
               onSetWeight={(mid, w) => setWeight(i, mid, w)}
               onAssignAll={() => assignAll(i)}
+              onAddPerson={(name) => addPersonToItem(i, name)}
             />
           </div>
         ))}

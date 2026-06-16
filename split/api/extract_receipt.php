@@ -117,17 +117,23 @@ function openai_extract(string $dataUrl): ?array
         'messages' => [
             [
                 'role' => 'system',
-                'content' => 'You extract structured data from a photo of a restaurant or store receipt. '
-                    . 'Return every purchased line item with its name, quantity, per-unit price, and line total. '
-                    . 'Use the printed currency as a 3-letter ISO code when identifiable. '
-                    . 'Report subtotal, tax, tip (gratuity/service charge), and grand total when present, else null. '
-                    . 'Set confidence between 0 and 1 reflecting how legible the receipt was.',
+                'content' => "You transcribe a photo of a restaurant or store receipt into structured JSON. Be precise and literal.\n"
+                    . "Rules:\n"
+                    . "- Output EVERY purchased line item, in the order printed, with its name exactly as shown, quantity, per-unit price, and line total.\n"
+                    . "- Do NOT output subtotal, tax, service charge, rounding adjustment, total, change, cash/card, or any non-item line as a line item.\n"
+                    . "- If a quantity is printed, use it; otherwise quantity is 1. unit_price × quantity should equal the line total; if a discount makes them differ, keep the printed line total and set unit_price = total / quantity.\n"
+                    . "- Numbers must be plain decimals with no currency symbols or thousands separators.\n"
+                    . "- currency: the printed currency as a 3-letter ISO code (e.g. RM → MYR, \$ → USD, S\$ → SGD); null if unclear.\n"
+                    . "- subtotal, tax, tip (gratuity/service charge) and total: take from the printed summary; use null when not shown.\n"
+                    . "- confidence: 0..1 for how legible/clear the receipt was.\n"
+                    . "- If the image is too blurry or not a receipt, return empty line_items and a low confidence.",
             ],
             [
                 'role' => 'user',
                 'content' => [
-                    ['type' => 'text', 'text' => 'Extract this receipt into the required JSON schema.'],
-                    ['type' => 'image_url', 'image_url' => ['url' => $dataUrl]],
+                    ['type' => 'text', 'text' => 'Transcribe this receipt into the required JSON schema.'],
+                    // detail:high makes the model read at full resolution — important for small receipt text.
+                    ['type' => 'image_url', 'image_url' => ['url' => $dataUrl, 'detail' => 'high']],
                 ],
             ],
         ],
@@ -135,6 +141,7 @@ function openai_extract(string $dataUrl): ?array
             'type' => 'json_schema',
             'json_schema' => ['name' => 'receipt', 'strict' => true, 'schema' => $schema],
         ],
+        'seed' => 7,                 // best-effort reproducibility across identical images
         'max_completion_tokens' => 4000,
     ];
 

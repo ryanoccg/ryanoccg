@@ -92,11 +92,26 @@ const s4: SessionDetail = {
   ],
 }
 const r4 = computeSettlement(s4)
-eq('S4 has unassigned warning', r4.warnings.some((w) => w.includes('Lonely')), true)
+// Unassigned "Lonely" now defaults to the payer (A) — no warning.
+eq('S4 no unassigned warning', r4.warnings.some((w) => w.includes('Lonely')), false)
 const net4 = Object.fromEntries(r4.balances.map((b) => [b.name, b.netCents]))
-// Only the assigned $10 settles: B owes 10, A paid 10 → net A +10, B -10
+// B owes its $10; the unassigned $10 falls to payer A. A paid 20, owes 10 → net +10; B -10.
 eq('S4 net A', net4['A'], 1000)
 eq('S4 net B', net4['B'], -1000)
+eq('S4 payer A absorbs unassigned', r4.balances.find((b) => b.name === 'A')!.owedCents, 1000)
+
+// --- Scenario 5: an ASSIGNED item but NO payer → receipt excluded with a warning ---
+const s5: SessionDetail = {
+  id: 's5', name: 'NoPayer', currency: 'USD', members: members.slice(0, 2),
+  receipts: [
+    { id: 'r6', merchant: 'Stall', currency: 'USD', subtotal: 10, tax: 0, tip: 0, total: 10,
+      paid_by_member_id: null, status: 'ready', image_path: null,
+      line_items: [item('Shared', 10, ['B'])] },
+  ],
+}
+const r5 = computeSettlement(s5)
+eq('S5 no-payer warning', r5.warnings.some((w) => w.toLowerCase().includes('payer')), true)
+eq('S5 nothing owed', r5.balances.every((b) => b.netCents === 0), true)
 
 console.log(failures === 0 ? '\nALL PASSED' : `\n${failures} FAILED`)
 process.exit(failures === 0 ? 0 : 1)
