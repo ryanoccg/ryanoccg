@@ -72,51 +72,66 @@ export function computeSettlement(session: SessionDetail): SettlementResult {
 
 /** owed-cents-per-member for a single receipt (items + proportional tax/tip). */
 function receiptOwed(r: Receipt, payerId: string | null): Map<string, number> {
-  const itemSubtotal = new Map<string, number>() // cents
-  let baseSubtotal = 0
+  // Accumulate each member's EXACT (fractional) cents across all items, then round
+  // ONCE per member at the end. This makes an equal split come out exactly even
+  // (RM120 over 4 → RM30.00 each), instead of drifting from per-item rounding.
+  const exact = new Map<string, number>()
+  const add = (id: string, v: number) => exact.set(id, (exact.get(id) ?? 0) + v)
+  let itemSubtotal = 0 // exact cents of all charged items (tax/tip base)
 
   for (const item of r.line_items) {
     const itemCents = toCents(item.total)
+    if (itemCents <= 0) continue
     const shares = item.shares ?? []
     if (shares.length === 0) {
       // Unassigned items default to the payer — they cover whatever nobody claimed.
-      if (itemCents > 0 && payerId != null) {
-        itemSubtotal.set(payerId, (itemSubtotal.get(payerId) ?? 0) + itemCents)
-        baseSubtotal += itemCents
+      if (payerId != null) {
+        add(payerId, itemCents)
+        itemSubtotal += itemCents
       }
       continue
     }
     let weightSum = 0
     for (const s of shares) weightSum += Math.max(0, Number(s.weight) || 0)
     if (weightSum <= 0) weightSum = shares.length
-
-    // Distribute item cents by weight; push rounding remainder onto the last share.
-    let allocated = 0
-    shares.forEach((s, idx) => {
+    for (const s of shares) {
       const w = Math.max(0, Number(s.weight) || 0) || 1
-      let portion = idx === shares.length - 1
-        ? itemCents - allocated
-        : Math.round((itemCents * w) / weightSum)
-      allocated += portion
-      itemSubtotal.set(s.member_id, (itemSubtotal.get(s.member_id) ?? 0) + portion)
-      baseSubtotal += portion
-    })
+      add(s.member_id, (itemCents * w) / weightSum)
+    }
+    itemSubtotal += itemCents
   }
 
+  // Tax + tip proportional to each member's exact item subtotal.
   const taxTip = toCents(r.tax) + toCents(r.tip)
-  const owed = new Map<string, number>()
-  if (baseSubtotal <= 0) return owed
+  if (itemSubtotal > 0 && taxTip !== 0) {
+    for (const [id, sub] of [...exact.entries()]) {
+      add(id, (taxTip * sub) / itemSubtotal)
+    }
+  }
 
-  let allocatedTaxTip = 0
-  const entries = [...itemSubtotal.entries()]
-  entries.forEach(([memberId, sub], idx) => {
-    const extra = idx === entries.length - 1
-      ? taxTip - allocatedTaxTip
-      : Math.round((taxTip * sub) / baseSubtotal)
-    allocatedTaxTip += extra
-    owed.set(memberId, sub + extra)
-  })
-  return owed
+  return roundExactToCents(exact)
+}
+
+/**
+ * Round each member's fractional cents to integers via the largest-remainder
+ * method, so the parts sum EXACTLY to the integer total (no drift, no leftover
+ * always landing on the same person).
+ */
+function roundExactToCents(exact: Map<string, number>): Map<string, number> {
+  const ids = [...exact.keys()]
+  const vals = ids.map((id) => exact.get(id) as number)
+  const target = Math.round(vals.reduce((a, b) => a + b, 0))
+  const res = vals.map((v) => Math.floor(v))
+  let rem = target - res.reduce((a, b) => a + b, 0)
+  const order = vals
+    .map((v, i) => ({ i, frac: v - Math.floor(v) }))
+    .sort((a, b) => b.frac - a.frac || a.i - b.i)
+  for (let k = 0; rem > 0 && order.length > 0; k++, rem--) {
+    res[order[k % order.length].i] += 1
+  }
+  const out = new Map<string, number>()
+  ids.forEach((id, i) => out.set(id, res[i]))
+  return out
 }
 
 /**

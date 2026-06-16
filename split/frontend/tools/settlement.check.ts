@@ -113,5 +113,20 @@ const r5 = computeSettlement(s5)
 eq('S5 no-payer warning', r5.warnings.some((w) => w.toLowerCase().includes('payer')), true)
 eq('S5 nothing owed', r5.balances.every((b) => b.netCents === 0), true)
 
+// --- Scenario 6: equal split rounds fairly (leftover cents don't pile on one) ---
+const s6: SessionDetail = {
+  id: 's6', name: 'Even', currency: 'USD', members,
+  receipts: [
+    { id: 'r7', merchant: 'Mamak', currency: 'USD', subtotal: 2, tax: 0, tip: 0, total: 2,
+      paid_by_member_id: 'A', status: 'ready', image_path: null,
+      // two RM1 items each shared by all three → 200c / 3 ≈ 66.67 each
+      line_items: [item('x', 1, ['A', 'B', 'C']), item('y', 1, ['A', 'B', 'C'])] },
+  ],
+}
+const r6 = computeSettlement(s6)
+const owed6 = r6.balances.map((b) => b.owedCents)
+eq('S6 owed sums to 200', owed6.reduce((a, b) => a + b, 0), 200)
+eq('S6 spread within 1c', Math.max(...owed6) - Math.min(...owed6) <= 1, true)
+
 console.log(failures === 0 ? '\nALL PASSED' : `\n${failures} FAILED`)
 process.exit(failures === 0 ? 0 : 1)
