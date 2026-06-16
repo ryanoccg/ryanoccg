@@ -145,14 +145,10 @@ function openai_extract(string $dataUrl): ?array
         'max_completion_tokens' => 4000,
     ];
 
+    // Use the model's default reasoning — gpt-5-mini needs it to read the whole
+    // receipt; lowering it tanked accuracy. Two attempts to tolerate malformed JSON.
     for ($attempt = 0; $attempt < 2; $attempt++) {
-        $req = $body;
-        // First try with low reasoning effort (faster, fine for transcription);
-        // if that call fails for any reason, retry with the model default.
-        if ($attempt === 0) {
-            $req['reasoning_effort'] = 'low';
-        }
-        $content = openai_request($apiKey, $req);
+        $content = openai_request($apiKey, $body);
         if ($content === null) {
             continue;
         }
