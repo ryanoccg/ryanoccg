@@ -81,3 +81,19 @@ npm-debug.log*
 
 # Vite cache
 .vite/
+
+# ── Meal expense splitter app (split/) ──────────────────────────────
+# Real secrets & local env — NEVER COMMIT. Templates (*.example.*) are kept.
+split/api/secrets.php
+split/frontend/.env
+split/frontend/.env.local
+split/frontend/.env.*.local
+# Locally-stored receipt images. In production these live OUTSIDE the web root
+# (cfg uploads_dir); the local-dev fallback writes here — never commit them.
+split/private_uploads/
+split/api/private_uploads/
+split/**/uploads/
+# TypeScript incremental build cache
+split/frontend/*.tsbuildinfo
+# Keep the app's own markdown docs (override the global *.md ignore above)
+!split/**/*.md

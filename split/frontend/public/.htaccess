@@ -1,0 +1,49 @@
+# Splitwell SPA — subdomain docroot (split.ryanoccg.com)
+<IfModule mod_negotiation.c>
+    Options -MultiViews -Indexes
+</IfModule>
+
+# Ensure PHP 8.1 runs the API (matches the account handler).
+<IfModule mime_module>
+    AddHandler application/x-httpd-ea-php81 .php .php8 .phtml
+</IfModule>
+
+# Pass the Authorization header through to PHP. Under CGI/FCGI (the cPanel
+# default) Apache otherwise strips it, breaking JWT auth on every API call.
+# Supported on cPanel EA4 / Apache 2.4.13+. The RewriteRule below is a fallback
+# for any host where this isn't honored.
+CGIPassAuth On
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Fallback for servers without CGIPassAuth: copy Authorization into an env
+    # var PHP can read as REDIRECT_HTTP_AUTHORIZATION.
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Force HTTPS.
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Serve real files and directories directly (assets, /api/*.php).
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # SPA fallback: everything else → index.html (client-side routing).
+    RewriteRule ^ index.html [L]
+</IfModule>
+
+# Defense in depth: never serve secrets or dotfiles, even if misplaced.
+<FilesMatch "(^\.ht|secrets.*\.php|\.env)">
+    Require all denied
+</FilesMatch>
+
+# Basic security headers.
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
