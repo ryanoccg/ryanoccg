@@ -4,6 +4,7 @@ import { api, ApiError } from '../api'
 import { useAuth } from '../auth/AuthContext'
 import UpgradePrompt from '../components/UpgradePrompt'
 import ContactPicker from '../components/ContactPicker'
+import ItemAssign from '../components/ItemAssign'
 import { CURRENCIES, formatCents, toCents, toNum } from '../money'
 import type { Extraction, Member, Receipt, SessionDetail } from '../types'
 
@@ -25,7 +26,7 @@ export default function ReceiptEditor() {
   const { refreshPlan } = useAuth()
 
   const [members, setMembers] = useState<Member[]>([])
-  const [currency, setCurrency] = useState('USD')
+  const [currency, setCurrency] = useState('MYR')
   const [merchant, setMerchant] = useState('')
   const [tax, setTax] = useState('')
   const [tip, setTip] = useState('')
@@ -40,7 +41,6 @@ export default function ReceiptEditor() {
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [limitMsg, setLimitMsg] = useState('')
-  const [memberFilter, setMemberFilter] = useState('') // search when assigning to many people
 
   // Load session members (+ the receipt being edited).
   const load = useCallback(async () => {
@@ -238,8 +238,9 @@ export default function ReceiptEditor() {
 
       <section className="card">
         <label className="filebtn">
-          {scanning ? 'Scanning…' : '📷 Scan a receipt photo (OCR)'}
-          <input type="file" accept="image/*" capture="environment" onChange={onPickImage} disabled={scanning} hidden />
+          {scanning ? 'Scanning…' : '📷 Scan or upload a receipt photo (OCR)'}
+          {/* No capture attr → lets the user take a photo OR pick an existing image/file. */}
+          <input type="file" accept="image/*" onChange={onPickImage} disabled={scanning} hidden />
         </label>
         {confidence != null && (
           <div className="muted small">OCR confidence: {Math.round(confidence * 100)}%. Please verify the numbers.</div>
@@ -274,15 +275,6 @@ export default function ReceiptEditor() {
             onLimit={setLimitMsg}
           />
         </div>
-        {members.length > 6 && (
-          <input
-            className="mt"
-            placeholder="🔍 Filter people while assigning…"
-            value={memberFilter}
-            onChange={(e) => setMemberFilter(e.target.value)}
-          />
-        )}
-
         <h2>Items — assign each to who shared it</h2>
         {items.map((it, i) => (
           <div className="item" key={i}>
@@ -293,31 +285,13 @@ export default function ReceiptEditor() {
               <input className="num" placeholder="Total" inputMode="decimal" value={it.total} onChange={(e) => setItem(i, { total: e.target.value })} />
               <button className="chip-x" onClick={() => removeRow(i)} aria-label="Remove item">×</button>
             </div>
-            <div className="assign">
-              {members
-                .filter((m) => {
-                  const f = memberFilter.trim().toLowerCase()
-                  // Keep already-assigned people visible even when filtering.
-                  return !f || it.shares[m.id] || m.display_name.toLowerCase().includes(f)
-                })
-                .map((m) => {
-                const on = !!it.shares[m.id]
-                return (
-                  <span key={m.id} className="assign-member">
-                    <button type="button" className={on ? 'pill on' : 'pill'} onClick={() => toggleShare(i, m.id)}>
-                      {m.display_name}
-                    </button>
-                    {on && Object.keys(it.shares).length > 1 && (
-                      <input className="weight" title="weight" inputMode="decimal"
-                        value={String(it.shares[m.id])} onChange={(e) => setWeight(i, m.id, e.target.value)} />
-                    )}
-                  </span>
-                )
-              })}
-              {members.length > 0 && (
-                <button type="button" className="linkbtn" onClick={() => assignAll(i)}>everyone</button>
-              )}
-            </div>
+            <ItemAssign
+              members={members}
+              shares={it.shares}
+              onToggle={(mid) => toggleShare(i, mid)}
+              onSetWeight={(mid, w) => setWeight(i, mid, w)}
+              onAssignAll={() => assignAll(i)}
+            />
           </div>
         ))}
         <button className="btn" onClick={addRow}>+ Add item</button>

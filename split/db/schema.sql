@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS sessions (
   id            CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   owner_user_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   name          VARCHAR(120) NOT NULL,
-  currency      CHAR(3) NOT NULL DEFAULT 'USD',
+  currency      CHAR(3) NOT NULL DEFAULT 'MYR',
   created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   KEY idx_sessions_owner (owner_user_id),
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS receipts (
   session_id        CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   image_path        VARCHAR(255) NULL DEFAULT NULL,   -- relative path under uploads/
   merchant          VARCHAR(160) NULL DEFAULT NULL,   -- the "place"
-  currency          CHAR(3) NOT NULL DEFAULT 'USD',
+  currency          CHAR(3) NOT NULL DEFAULT 'MYR',
   subtotal          DECIMAL(12,2) NOT NULL DEFAULT 0,
   tax               DECIMAL(12,2) NOT NULL DEFAULT 0,
   tip               DECIMAL(12,2) NOT NULL DEFAULT 0,

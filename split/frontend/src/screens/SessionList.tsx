@@ -11,7 +11,7 @@ export default function SessionList() {
   const [sessions, setSessions] = useState<SessionSummary[]>([])
   const [loading, setLoading] = useState(true)
   const [name, setName] = useState('')
-  const [currency, setCurrency] = useState('USD')
+  const [currency, setCurrency] = useState('MYR')
   const [membersText, setMembersText] = useState('')
   const [error, setError] = useState('')
   const [limitMsg, setLimitMsg] = useState('')
