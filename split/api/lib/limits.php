@@ -46,11 +46,11 @@ function ocr_used_this_month(string $userId): int
 function increment_ocr(string $userId): void
 {
     $stmt = db()->prepare(
-        'INSERT INTO usage_counters (user_id, period, ocr_scans)
-         VALUES (?, ?, 1)
+        'INSERT INTO usage_counters (id, user_id, period, ocr_scans)
+         VALUES (?, ?, ?, 1)
          ON DUPLICATE KEY UPDATE ocr_scans = ocr_scans + 1'
     );
-    $stmt->execute([$userId, current_period()]);
+    $stmt->execute([uuidv4(), $userId, current_period()]);
 }
 
 function over_limit(string $action): void

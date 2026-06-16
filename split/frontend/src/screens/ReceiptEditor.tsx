@@ -242,10 +242,12 @@ export default function ReceiptEditor() {
           {/* No capture attr → lets the user take a photo OR pick an existing image/file. */}
           <input type="file" accept="image/*" onChange={onPickImage} disabled={scanning} hidden />
         </label>
-        {confidence != null && (
-          <div className="muted small">OCR confidence: {Math.round(confidence * 100)}%. Please verify the numbers.</div>
-        )}
-        <div className="muted small">Or just fill in the items manually below.</div>
+        <div className="mt muted small">
+          {confidence != null && (
+            <div>OCR confidence: {Math.round(confidence * 100)}%. Please verify the numbers.</div>
+          )}
+          <div>Or just fill in the items manually below.</div>
+        </div>
       </section>
 
       <section className="card form">
@@ -279,11 +281,13 @@ export default function ReceiptEditor() {
         {items.map((it, i) => (
           <div className="item" key={i}>
             <div className="item-fields">
-              <input className="grow" placeholder="Item name" value={it.name} onChange={(e) => setItem(i, { name: e.target.value })} />
-              <input className="num" placeholder="Qty" inputMode="decimal" value={it.quantity} onChange={(e) => updateField(i, 'quantity', e.target.value)} />
-              <input className="num" placeholder="Unit" inputMode="decimal" value={it.unit_price} onChange={(e) => updateField(i, 'unit_price', e.target.value)} />
-              <input className="num" placeholder="Total" inputMode="decimal" value={it.total} onChange={(e) => setItem(i, { total: e.target.value })} />
-              <button className="chip-x" onClick={() => removeRow(i)} aria-label="Remove item">×</button>
+              <input className="item-name" placeholder="Item name" value={it.name} onChange={(e) => setItem(i, { name: e.target.value })} />
+              <div className="item-nums">
+                <input className="num" placeholder="Qty" inputMode="decimal" value={it.quantity} onChange={(e) => updateField(i, 'quantity', e.target.value)} />
+                <input className="num" placeholder="Unit" inputMode="decimal" value={it.unit_price} onChange={(e) => updateField(i, 'unit_price', e.target.value)} />
+                <input className="num" placeholder="Total" inputMode="decimal" value={it.total} onChange={(e) => setItem(i, { total: e.target.value })} />
+                <button className="chip-x" onClick={() => removeRow(i)} aria-label="Remove item">×</button>
+              </div>
             </div>
             <ItemAssign
               members={members}
@@ -294,7 +298,7 @@ export default function ReceiptEditor() {
             />
           </div>
         ))}
-        <button className="btn" onClick={addRow}>+ Add item</button>
+        <button className="btn mt" onClick={addRow}>+ Add item</button>
 
         <div className="totals">
           <label>Tax <input className="num" inputMode="decimal" value={tax} onChange={(e) => setTax(e.target.value)} /></label>
