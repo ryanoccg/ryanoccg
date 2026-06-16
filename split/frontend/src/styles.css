@@ -48,6 +48,7 @@ a:hover { text-decoration: underline; }
 .center { text-align: center; padding: 2rem; }
 .grow { flex: 1; min-width: 0; }
 .mt { margin-top: 0.6rem; }
+.mt-lg { margin-top: 1.25rem; }
 
 /* text */
 .muted { color: var(--muted); }
@@ -115,6 +116,27 @@ button { font: inherit; cursor: pointer; }
 }
 .picker-menu button:hover { background: #f0fdfa; }
 .picker-menu button.create { color: var(--teal-dark); font-weight: 600; }
+
+/* per-item assignment picker */
+.chip.sm { font-size: 0.82rem; padding: 0.15rem 0.5rem; }
+.chip .wlabel { opacity: 0.7; font-size: 0.78rem; margin-left: 0.1rem; }
+.assign-picker { position: relative; display: inline-block; }
+.assign-menu {
+  position: absolute; z-index: 25; top: 100%; left: 0; margin-top: 4px; min-width: 230px;
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.14); padding: 0.5rem;
+}
+.assign-menu > input { width: 100%; margin-bottom: 0.4rem; }
+.assign-menu ul { list-style: none; margin: 0; padding: 0; max-height: 220px; overflow: auto; }
+.assign-menu label {
+  display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.5rem;
+  border-radius: 6px; cursor: pointer;
+}
+.assign-menu label:hover { background: #f0fdfa; }
+.assign-menu input[type="checkbox"] { width: auto; flex: 0 0 auto; }
+.assign-menu .weight { flex: 0 0 auto; }
+.assign-menu .empty-opt { padding: 0.5rem; }
+.assign-menu .linkbtn { margin-top: 0.4rem; padding: 0.3rem 0.4rem; }
 
 /* receipt editor */
 .filebtn { display: inline-block; background: var(--teal); color: #fff; padding: 0.7rem 1rem; border-radius: 10px; font-weight: 600; cursor: pointer; }

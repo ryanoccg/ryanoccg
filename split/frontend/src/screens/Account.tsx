@@ -36,12 +36,16 @@ export default function Account() {
             <span>{plan.usage.sessions} / {unlimited(plan.limits.sessions)}</span>
           </li>
           <li>
-            <span>Members per session</span>
+            <span>People per session</span>
             <span>{unlimited(plan.limits.members_per_session)}</span>
           </li>
         </ul>
 
-        {plan.plan === 'free' && <Link className="btn btn-primary" to="/pricing">Upgrade to Pro</Link>}
+        {plan.plan === 'free' && (
+          <div className="mt-lg">
+            <Link className="btn btn-primary" to="/pricing">Upgrade to Pro</Link>
+          </div>
+        )}
       </section>
     </div>
   )
