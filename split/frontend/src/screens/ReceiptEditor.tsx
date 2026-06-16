@@ -283,9 +283,15 @@ export default function ReceiptEditor() {
             <div className="item-fields">
               <input className="item-name" placeholder="Item name" value={it.name} onChange={(e) => setItem(i, { name: e.target.value })} />
               <div className="item-nums">
-                <input className="num" placeholder="Qty" inputMode="decimal" value={it.quantity} onChange={(e) => updateField(i, 'quantity', e.target.value)} />
-                <input className="num" placeholder="Unit" inputMode="decimal" value={it.unit_price} onChange={(e) => updateField(i, 'unit_price', e.target.value)} />
-                <input className="num" placeholder="Total" inputMode="decimal" value={it.total} onChange={(e) => setItem(i, { total: e.target.value })} />
+                <label className="numfield"><span>Qty</span>
+                  <input className="num" inputMode="decimal" value={it.quantity} onChange={(e) => updateField(i, 'quantity', e.target.value)} />
+                </label>
+                <label className="numfield"><span>Unit price</span>
+                  <input className="num" inputMode="decimal" value={it.unit_price} onChange={(e) => updateField(i, 'unit_price', e.target.value)} />
+                </label>
+                <label className="numfield"><span>Total</span>
+                  <input className="num" inputMode="decimal" value={it.total} onChange={(e) => setItem(i, { total: e.target.value })} />
+                </label>
                 <button className="chip-x" onClick={() => removeRow(i)} aria-label="Remove item">×</button>
               </div>
             </div>
