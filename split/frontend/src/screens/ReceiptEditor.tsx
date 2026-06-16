@@ -254,17 +254,24 @@ export default function ReceiptEditor() {
       )}
 
       <section className="card">
-        <label className="filebtn">
+        <label className={scanning ? 'filebtn disabled' : 'filebtn'}>
           {scanning ? 'Scanning…' : '📷 Scan or upload a receipt photo (OCR)'}
           {/* No capture attr → lets the user take a photo OR pick an existing image/file. */}
           <input type="file" accept="image/*" onChange={onPickImage} disabled={scanning} hidden />
         </label>
-        <div className="mt muted small">
-          {confidence != null && (
-            <div>OCR confidence: {Math.round(confidence * 100)}%. Please verify the numbers.</div>
-          )}
-          <div>Or just fill in the items manually below.</div>
-        </div>
+        {scanning ? (
+          <div className="scan-loading mt">
+            <span className="spinner" aria-hidden="true" />
+            <span>Reading your receipt… this can take a few seconds.</span>
+          </div>
+        ) : (
+          <div className="mt muted small">
+            {confidence != null && (
+              <div>OCR confidence: {Math.round(confidence * 100)}%. Please verify the numbers.</div>
+            )}
+            <div>Or just fill in the items manually below.</div>
+          </div>
+        )}
       </section>
 
       <section className="card form">
