@@ -75,30 +75,28 @@ export default function ItemAssign({
               onChange={(e) => setQ(e.target.value)}
               disabled={busy}
             />
-            <ul>
+            <div className="assign-pills">
               {filtered.map((m) => {
                 const on = !!shares[m.id]
                 return (
-                  <li key={m.id}>
-                    <label>
-                      <input type="checkbox" checked={on} onChange={() => onToggle(m.id)} />
-                      <span className="grow">{m.display_name}</span>
-                      {on && multi && (
-                        <input
-                          className="weight"
-                          title="share weight"
-                          inputMode="decimal"
-                          value={String(shares[m.id])}
-                          onClick={(e) => e.stopPropagation()}
-                          onChange={(e) => onSetWeight(m.id, e.target.value)}
-                        />
-                      )}
-                    </label>
-                  </li>
+                  <span key={m.id} className="assign-pill-wrap">
+                    <button type="button" className={on ? 'pill on' : 'pill'} onClick={() => onToggle(m.id)}>
+                      {m.display_name}
+                    </button>
+                    {on && multi && (
+                      <input
+                        className="weight"
+                        title="share weight"
+                        inputMode="decimal"
+                        value={String(shares[m.id])}
+                        onChange={(e) => onSetWeight(m.id, e.target.value)}
+                      />
+                    )}
+                  </span>
                 )
               })}
-              {filtered.length === 0 && !showCreate && <li className="muted empty-opt">No matches</li>}
-            </ul>
+              {filtered.length === 0 && !showCreate && <span className="muted empty-opt">No matches</span>}
+            </div>
             {showCreate && (
               <button type="button" className="create-opt" onClick={addPerson} disabled={busy}>
                 {busy ? 'Adding…' : `+ Add new contact “${q.trim()}”`}
