@@ -19,6 +19,16 @@ interface EditItem {
 
 const blankItem = (): EditItem => ({ name: '', quantity: '1', unit_price: '', total: '', totalEdited: false, shares: {} })
 
+// Staged messages shown while the (single, opaque) OCR call runs — advance on a
+// timer to feel alive. The last one sticks until the response returns.
+const SCAN_STEPS = [
+  'Uploading your receipt…',
+  'AI is reading it…',
+  'Listing the items…',
+  'Wow, that’s a lot to eat! 😋',
+  'Almost there…',
+]
+
 export default function ReceiptEditor() {
   const { id, rid } = useParams()
   const sessionId = id ?? ''
@@ -42,6 +52,7 @@ export default function ReceiptEditor() {
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [limitMsg, setLimitMsg] = useState('')
+  const [scanStep, setScanStep] = useState(0)
 
   // Load session members (+ the receipt being edited).
   const load = useCallback(async () => {
@@ -62,6 +73,14 @@ export default function ReceiptEditor() {
     }
   }, [sessionId, receiptId])
   useEffect(() => { load() }, [load])
+
+  // Advance the staged scan message while scanning.
+  useEffect(() => {
+    if (!scanning) { setScanStep(0); return }
+    setScanStep(0)
+    const id = setInterval(() => setScanStep((s) => Math.min(s + 1, SCAN_STEPS.length - 1)), 3000)
+    return () => clearInterval(id)
+  }, [scanning])
 
   // Refresh just the people list (after a quick-add) without touching the form.
   async function refreshMembers() {
@@ -263,8 +282,11 @@ export default function ReceiptEditor() {
         </label>
         {scanning ? (
           <div className="scan-loading mt">
-            <span className="spinner" aria-hidden="true" />
-            <span>Reading your receipt… this can take a few seconds.</span>
+            <div className="scan-row">
+              <span className="spinner" aria-hidden="true" />
+              <span>{SCAN_STEPS[scanStep]}</span>
+            </div>
+            <div className="progress"><div className="progress-bar" /></div>
           </div>
         ) : (
           <div className="mt muted small">
