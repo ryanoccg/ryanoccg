@@ -146,7 +146,13 @@ function openai_extract(string $dataUrl): ?array
     ];
 
     for ($attempt = 0; $attempt < 2; $attempt++) {
-        $content = openai_request($apiKey, $body);
+        $req = $body;
+        // First try with low reasoning effort (faster, fine for transcription);
+        // if that call fails for any reason, retry with the model default.
+        if ($attempt === 0) {
+            $req['reasoning_effort'] = 'low';
+        }
+        $content = openai_request($apiKey, $req);
         if ($content === null) {
             continue;
         }
