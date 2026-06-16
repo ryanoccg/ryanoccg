@@ -16,6 +16,9 @@ require __DIR__ . '/bootstrap.php';
 $user = require_user();
 $uid = (string) $user['id'];
 
+// The OCR call can run for a while on long receipts — don't let PHP abort first.
+@set_time_limit(120);
+
 if (method() !== 'POST') {
     jfail('Method not allowed.', 405);
 }
@@ -143,7 +146,10 @@ function openai_extract(string $dataUrl): ?array
             'json_schema' => ['name' => 'receipt', 'strict' => true, 'schema' => $schema],
         ],
         'seed' => 7,                 // best-effort reproducibility across identical images
-        'max_completion_tokens' => 4000,
+        // gpt-5-mini is a reasoning model: reasoning tokens + the JSON output share
+        // this budget. Long receipts (many line items) need plenty of headroom or
+        // the response gets truncated and fails to parse.
+        'max_completion_tokens' => 16000,
     ];
 
     // Use the model's default reasoning — gpt-5-mini needs it to read the whole
@@ -173,7 +179,7 @@ function openai_request(string $apiKey, array $body): ?string
             'Authorization: Bearer ' . $apiKey,
         ],
         CURLOPT_POSTFIELDS => json_encode($body),
-        CURLOPT_TIMEOUT => 60,
+        CURLOPT_TIMEOUT => 90, // dense receipts take a while; stay under proxy (~100s) limits
     ]);
     $resp = curl_exec($ch);
     $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
