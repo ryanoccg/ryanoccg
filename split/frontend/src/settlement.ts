@@ -43,7 +43,7 @@ export function computeSettlement(session: SessionDetail): SettlementResult {
   }
 
   for (const r of session.receipts) {
-    const owedThisReceipt = receiptOwed(r, warnings)
+    const owedThisReceipt = receiptOwed(r, r.paid_by_member_id ?? null)
     let receiptTotal = 0
     for (const [memberId, cents] of owedThisReceipt) {
       owed.set(memberId, (owed.get(memberId) ?? 0) + cents)
@@ -71,7 +71,7 @@ export function computeSettlement(session: SessionDetail): SettlementResult {
 }
 
 /** owed-cents-per-member for a single receipt (items + proportional tax/tip). */
-function receiptOwed(r: Receipt, warnings: string[]): Map<string, number> {
+function receiptOwed(r: Receipt, payerId: string | null): Map<string, number> {
   const itemSubtotal = new Map<string, number>() // cents
   let baseSubtotal = 0
 
@@ -79,7 +79,11 @@ function receiptOwed(r: Receipt, warnings: string[]): Map<string, number> {
     const itemCents = toCents(item.total)
     const shares = item.shares ?? []
     if (shares.length === 0) {
-      if (itemCents > 0) warnings.push(`"${item.name}" isn't assigned to anyone.`)
+      // Unassigned items default to the payer — they cover whatever nobody claimed.
+      if (itemCents > 0 && payerId != null) {
+        itemSubtotal.set(payerId, (itemSubtotal.get(payerId) ?? 0) + itemCents)
+        baseSubtotal += itemCents
+      }
       continue
     }
     let weightSum = 0
