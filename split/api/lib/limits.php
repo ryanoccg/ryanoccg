@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 
 const PLAN_LIMITS = [
-    'free'  => ['sessions' => 2,   'ocr_per_month' => 10,  'members_per_session' => 5],
+    'free'  => ['sessions' => 2,   'ocr_per_month' => 10,  'members_per_session' => -1],
     'pro'   => ['sessions' => -1,  'ocr_per_month' => 200, 'members_per_session' => -1],
     'super' => ['sessions' => -1,  'ocr_per_month' => -1,  'members_per_session' => -1],
 ];
