@@ -142,15 +142,14 @@ button { font: inherit; cursor: pointer; }
 .assign { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; align-items: center; }
 .assign-picker { position: relative; display: inline-block; }
 .assign-menu {
-  position: absolute; z-index: 26; top: 100%; left: 0; margin-top: 4px; min-width: 230px;
+  position: absolute; z-index: 26; top: 100%; left: 0; margin-top: 4px;
+  min-width: 260px; max-width: min(380px, 88vw);
   background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-lg); padding: 0.5rem;
 }
-.assign-menu > input { width: 100%; margin-bottom: 0.4rem; }
-.assign-menu ul { list-style: none; margin: 0; padding: 0; max-height: 220px; overflow: auto; }
-.assign-menu label { display: flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.5rem; border-radius: 8px; cursor: pointer; }
-.assign-menu label:hover { background: var(--primary-tint); }
-.assign-menu input[type="checkbox"] { width: auto; flex: 0 0 auto; accent-color: var(--primary); }
-.assign-menu .weight { flex: 0 0 auto; }
+.assign-menu > input { width: 100%; margin-bottom: 0.5rem; }
+.assign-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; max-height: 220px; overflow: auto; }
+.assign-pill-wrap { display: inline-flex; align-items: center; gap: 0.2rem; }
+.assign-menu .weight { flex: 0 0 auto; width: 46px; }
 .assign-menu .empty-opt { padding: 0.5rem; }
 .assign-menu .linkbtn { margin-top: 0.4rem; padding: 0.3rem 0.4rem; }
 .assign-menu .create-opt { display: block; width: 100%; text-align: left; background: none; border: none; font: inherit; cursor: pointer; color: var(--primary); font-weight: 600; padding: 0.45rem 0.5rem; border-radius: 8px; }
