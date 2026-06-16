@@ -47,6 +47,18 @@ export default function SessionList() {
     }
   }
 
+  async function remove(s: SessionSummary) {
+    if (!confirm(`Delete "${s.name}" and all its receipts and photos?`)) return
+    setError('')
+    try {
+      await api.del(`sessions.php?id=${s.id}`)
+      await load()
+      await refreshPlan()
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Could not delete session.')
+    }
+  }
+
   return (
     <div className="stack">
       <h1>Your sessions</h1>
@@ -72,13 +84,13 @@ export default function SessionList() {
         <ul className="list">
           {sessions.map((s) => (
             <li key={s.id}>
-              <Link to={`/s/${s.id}`} className="row-link">
-                <div>
+              <div className="row-link">
+                <Link to={`/s/${s.id}`} className="grow">
                   <div className="row-title">{s.name}</div>
-                  <div className="muted small">{s.member_count} members · {s.receipt_count} receipts · {s.currency}</div>
-                </div>
-                <span className="chev">›</span>
-              </Link>
+                  <div className="muted small">{s.member_count} people · {s.receipt_count} receipts · {s.currency}</div>
+                </Link>
+                <button className="linkbtn danger" onClick={() => remove(s)}>Delete</button>
+              </div>
             </li>
           ))}
         </ul>

@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api, ApiError } from '../api'
 import { useAuth } from '../auth/AuthContext'
 import UpgradePrompt from '../components/UpgradePrompt'
+import ContactPicker from '../components/ContactPicker'
 import { CURRENCIES, formatCents, toCents, toNum } from '../money'
 import type { Extraction, Member, Receipt, SessionDetail } from '../types'
 
@@ -39,6 +40,7 @@ export default function ReceiptEditor() {
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [limitMsg, setLimitMsg] = useState('')
+  const [memberFilter, setMemberFilter] = useState('') // search when assigning to many people
 
   // Load session members (+ the receipt being edited).
   const load = useCallback(async () => {
@@ -59,6 +61,16 @@ export default function ReceiptEditor() {
     }
   }, [sessionId, receiptId])
   useEffect(() => { load() }, [load])
+
+  // Refresh just the people list (after a quick-add) without touching the form.
+  async function refreshMembers() {
+    try {
+      const res = await api.get(`members.php?session_id=${sessionId}`)
+      setMembers(res.members)
+    } catch {
+      /* ignore */
+    }
+  }
 
   function hydrateFromReceipt(r: Receipt) {
     setMerchant(r.merchant || '')
@@ -221,7 +233,7 @@ export default function ReceiptEditor() {
       {notice && <div className="notice">{notice}</div>}
 
       {members.length === 0 && (
-        <div className="notice">Add members to the session first so you can assign items.</div>
+        <div className="notice">Add the people who shared this receipt below — then tap each item to assign it.</div>
       )}
 
       <section className="card">
@@ -249,6 +261,28 @@ export default function ReceiptEditor() {
           </label>
         </div>
 
+        <h2>People</h2>
+        <div className="chips">
+          {members.map((m) => <span className="chip" key={m.id}>{m.display_name}</span>)}
+          {members.length === 0 && <span className="muted">No one added yet.</span>}
+        </div>
+        <div className="mt">
+          <ContactPicker
+            sessionId={sessionId}
+            memberContactIds={new Set(members.map((m) => m.contact_id))}
+            onAdded={() => refreshMembers()}
+            onLimit={setLimitMsg}
+          />
+        </div>
+        {members.length > 6 && (
+          <input
+            className="mt"
+            placeholder="🔍 Filter people while assigning…"
+            value={memberFilter}
+            onChange={(e) => setMemberFilter(e.target.value)}
+          />
+        )}
+
         <h2>Items — assign each to who shared it</h2>
         {items.map((it, i) => (
           <div className="item" key={i}>
@@ -260,7 +294,13 @@ export default function ReceiptEditor() {
               <button className="chip-x" onClick={() => removeRow(i)} aria-label="Remove item">×</button>
             </div>
             <div className="assign">
-              {members.map((m) => {
+              {members
+                .filter((m) => {
+                  const f = memberFilter.trim().toLowerCase()
+                  // Keep already-assigned people visible even when filtering.
+                  return !f || it.shares[m.id] || m.display_name.toLowerCase().includes(f)
+                })
+                .map((m) => {
                 const on = !!it.shares[m.id]
                 return (
                   <span key={m.id} className="assign-member">

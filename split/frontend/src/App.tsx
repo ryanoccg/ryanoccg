@@ -6,6 +6,7 @@ import SessionList from './screens/SessionList'
 import SessionDetail from './screens/SessionDetail'
 import ReceiptEditor from './screens/ReceiptEditor'
 import Settlement from './screens/Settlement'
+import Contacts from './screens/Contacts'
 import Pricing from './screens/Pricing'
 import Account from './screens/Account'
 import Privacy from './screens/Privacy'
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="/s/:id/add" element={<ReceiptEditor />} />
         <Route path="/s/:id/receipt/:rid" element={<ReceiptEditor />} />
         <Route path="/s/:id/settle" element={<Settlement />} />
+        <Route path="/contacts" element={<Contacts />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/account" element={<Account />} />
       </Route>

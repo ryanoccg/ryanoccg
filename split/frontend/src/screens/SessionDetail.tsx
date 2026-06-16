@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api, ApiError } from '../api'
 import { useAuth } from '../auth/AuthContext'
 import UpgradePrompt from '../components/UpgradePrompt'
+import ContactPicker from '../components/ContactPicker'
 import { computeSettlement } from '../settlement'
 import { formatCents, toCents } from '../money'
 import type { Member, SessionDetail as Session } from '../types'
@@ -14,7 +15,6 @@ export default function SessionDetail() {
   const { refreshPlan } = useAuth()
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
-  const [newMember, setNewMember] = useState('')
   const [limitMsg, setLimitMsg] = useState('')
   const [error, setError] = useState('')
 
@@ -34,19 +34,6 @@ export default function SessionDetail() {
   const settlement = useMemo(() => (session ? computeSettlement(session) : null), [session])
   const memberName = (mid: string | null) =>
     session?.members.find((m: Member) => m.id === mid)?.display_name ?? '—'
-
-  async function addMember(e: React.FormEvent) {
-    e.preventDefault()
-    setError(''); setLimitMsg('')
-    try {
-      await api.post('members.php', { session_id: sessionId, display_name: newMember })
-      setNewMember('')
-      await load()
-    } catch (err) {
-      if (err instanceof ApiError && err.isLimit) setLimitMsg(err.message)
-      else setError(err instanceof ApiError ? err.message : 'Could not add member.')
-    }
-  }
 
   async function removeMember(mid: string) {
     if (!confirm('Remove this member? Their item assignments will be cleared.')) return
@@ -94,7 +81,7 @@ export default function SessionDetail() {
       {error && <div className="error">{error}</div>}
 
       <section className="card">
-        <h2>Members</h2>
+        <h2>People in this session</h2>
         <div className="chips">
           {session.members.map((m) => (
             <span className="chip" key={m.id}>
@@ -102,12 +89,17 @@ export default function SessionDetail() {
               <button className="chip-x" onClick={() => removeMember(m.id)} aria-label={`Remove ${m.display_name}`}>×</button>
             </span>
           ))}
-          {session.members.length === 0 && <span className="muted">No members yet.</span>}
+          {session.members.length === 0 && <span className="muted">No one yet.</span>}
         </div>
-        <form onSubmit={addMember} className="form-row mt">
-          <input placeholder="Add member name" value={newMember} onChange={(e) => setNewMember(e.target.value)} required />
-          <button className="btn">Add</button>
-        </form>
+        <div className="mt">
+          <ContactPicker
+            sessionId={sessionId}
+            memberContactIds={new Set(session.members.map((m) => m.contact_id))}
+            onAdded={() => load()}
+            onLimit={setLimitMsg}
+          />
+        </div>
+        <p className="muted small mt">Contacts are saved to your account and can be reused in any session.</p>
       </section>
 
       <section className="card">

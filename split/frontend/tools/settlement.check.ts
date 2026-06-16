@@ -15,9 +15,9 @@ function eq(label: string, got: unknown, want: unknown) {
 
 // Members A, B, C (UUID-style string ids)
 const members = [
-  { id: 'A', display_name: 'A', linked_user_id: null },
-  { id: 'B', display_name: 'B', linked_user_id: null },
-  { id: 'C', display_name: 'C', linked_user_id: null },
+  { id: 'A', display_name: 'A', contact_id: 'cA' },
+  { id: 'B', display_name: 'B', contact_id: 'cB' },
+  { id: 'C', display_name: 'C', contact_id: 'cC' },
 ]
 
 function item(name: string, total: number, memberIds: string[], weights?: number[]) {

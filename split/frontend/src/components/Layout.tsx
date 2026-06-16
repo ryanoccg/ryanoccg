@@ -12,6 +12,7 @@ export default function Layout() {
         <Link to="/" className="brand">Splitwell</Link>
         <nav className="nav">
           <NavLink to="/" end>Sessions</NavLink>
+          <NavLink to="/contacts">Contacts</NavLink>
           <NavLink to="/pricing">Pricing</NavLink>
           <NavLink to="/account">Account</NavLink>
           <button className="linkbtn" onClick={() => { logout(); navigate('/login') }}>

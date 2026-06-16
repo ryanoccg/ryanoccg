@@ -9,11 +9,16 @@ export interface User {
   plan: Plan
 }
 
+export interface Contact {
+  id: string
+  display_name: string
+}
+
 export interface Member {
   id: string
   session_id?: string
+  contact_id: string
   display_name: string
-  linked_user_id: string | null
 }
 
 export interface ItemShare {

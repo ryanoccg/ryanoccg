@@ -39,6 +39,21 @@ CREATE TABLE IF NOT EXISTS usage_counters (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------------------------
+-- contacts — account-level address book (reused across sessions).
+--   Soft-deleted (deleted_at) so past sessions keep showing the name.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS contacts (
+  id            CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  owner_user_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  display_name  VARCHAR(120) NOT NULL,
+  deleted_at    DATETIME NULL DEFAULT NULL,
+  created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_contacts_owner (owner_user_id),
+  CONSTRAINT fk_contacts_owner FOREIGN KEY (owner_user_id) REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------------
 -- sessions — the receipt container ("session" / "group" / "trip")
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS sessions (
@@ -53,17 +68,19 @@ CREATE TABLE IF NOT EXISTS sessions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------------------------
--- members — named participants in a session (need not be app users)
+-- members — a contact's participation in one session (links session ↔ contact).
+--   receipts/item_shares reference members.id (this session's participation).
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS members (
-  id             CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  session_id     CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  display_name   VARCHAR(120) NOT NULL,
-  linked_user_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NULL DEFAULT NULL,
+  id         CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  session_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  contact_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   PRIMARY KEY (id),
+  UNIQUE KEY uq_member_session_contact (session_id, contact_id),
   KEY idx_members_session (session_id),
+  KEY idx_members_contact (contact_id),
   CONSTRAINT fk_members_session FOREIGN KEY (session_id) REFERENCES sessions (id) ON DELETE CASCADE,
-  CONSTRAINT fk_members_user FOREIGN KEY (linked_user_id) REFERENCES users (id) ON DELETE SET NULL
+  CONSTRAINT fk_members_contact FOREIGN KEY (contact_id) REFERENCES contacts (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------------------------

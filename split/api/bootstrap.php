@@ -74,6 +74,36 @@ function require_owned_line_item(string $lineItemId, string $userId): array
     return $row;
 }
 
+/** Load a contact owned by the user, or 404 (includes soft-deleted). */
+function require_owned_contact(string $contactId, string $userId): array
+{
+    $stmt = db()->prepare('SELECT * FROM contacts WHERE id = ? AND owner_user_id = ?');
+    $stmt->execute([$contactId, $userId]);
+    $row = $stmt->fetch();
+    if (!$row) {
+        jfail('Contact not found.', 404);
+    }
+    return $row;
+}
+
+/** Find an active contact by exact name for this user, or create one. Returns its id. */
+function find_or_create_contact(string $userId, string $displayName): string
+{
+    $name = trim($displayName);
+    $stmt = db()->prepare(
+        'SELECT id FROM contacts WHERE owner_user_id = ? AND deleted_at IS NULL AND display_name = ? LIMIT 1'
+    );
+    $stmt->execute([$userId, $name]);
+    $id = $stmt->fetchColumn();
+    if ($id) {
+        return (string) $id;
+    }
+    $id = uuidv4();
+    $ins = db()->prepare('INSERT INTO contacts (id, owner_user_id, display_name) VALUES (?, ?, ?)');
+    $ins->execute([$id, $userId, $name]);
+    return $id;
+}
+
 // ── Shared validation / write helpers ──
 
 /** Normalize a user/AI-supplied currency to a 3-letter ISO code, else the fallback. */

@@ -43,7 +43,11 @@ function get_session_detail(string $id, string $uid): void
 {
     $session = require_owned_session($id, $uid);
 
-    $m = db()->prepare('SELECT id, display_name, linked_user_id FROM members WHERE session_id = ? ORDER BY display_name, id');
+    $m = db()->prepare(
+        'SELECT m.id, m.contact_id, c.display_name
+         FROM members m JOIN contacts c ON c.id = m.contact_id
+         WHERE m.session_id = ? ORDER BY c.display_name, m.id'
+    );
     $m->execute([$id]);
     $members = $m->fetchAll();
 
@@ -112,16 +116,23 @@ function create_session(array $user): void
     $stmt = db()->prepare('INSERT INTO sessions (id, owner_user_id, name, currency) VALUES (?, ?, ?, ?)');
     $stmt->execute([$id, (string) $user['id'], $name, $currency]);
 
-    // Seed any members provided at creation (each subject to the member guard).
+    // Seed any members provided at creation: each name becomes (or reuses) a
+    // contact, then links into this session. Subject to the member guard.
     if (!empty($in['members']) && is_array($in['members'])) {
         foreach ($in['members'] as $name) {
             $name = trim((string) $name);
             if ($name === '') {
                 continue;
             }
+            $contactId = find_or_create_contact((string) $user['id'], $name);
+            $exists = db()->prepare('SELECT 1 FROM members WHERE session_id = ? AND contact_id = ?');
+            $exists->execute([$id, $contactId]);
+            if ($exists->fetchColumn()) {
+                continue;
+            }
             guard_add_member($user, $id);
-            $ms = db()->prepare('INSERT INTO members (id, session_id, display_name) VALUES (?, ?, ?)');
-            $ms->execute([uuidv4(), $id, $name]);
+            $ms = db()->prepare('INSERT INTO members (id, session_id, contact_id) VALUES (?, ?, ?)');
+            $ms->execute([uuidv4(), $id, $contactId]);
         }
     }
 

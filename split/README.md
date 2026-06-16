@@ -11,12 +11,20 @@ Parked inside the `ryanoccg/ryanoccg` repo under `split/` and deployed to
 ## The core flow
 
 1. **Log in / sign up.**
-2. **Create a session** (a trip / outing) and add **members** (named people).
+2. **Create a session** (a trip / outing) and add the **people** in it. People are
+   **account-level contacts** (an address book): add someone once and search/reuse
+   them in any session. Adding to a session links a contact (or quick-adds a new one).
 3. **Add receipts** — one session holds many receipts, each from a different
    place. Scan a photo (OpenAI `gpt-5-mini` OCR) or enter items by hand, then
-   assign items and pick who paid.
+   assign each item to the people who shared it (with a search box when there are
+   many) and pick who paid. You can quick-add a contact right on the review screen.
 4. **Compile & settle up** — net balances + the minimal "who pays out → who
-   takes back" list, across all places in the session.
+   takes back" list, across all places in the session. This is computed by
+   deterministic code (`settlement.ts`), **not** the AI.
+
+> **Contacts** are managed on a dedicated screen (rename, soft-delete). Deleting a
+> contact hides it from the address book but keeps it in past sessions. The AI is
+> used only to read receipt photos; all money math is plain code.
 
 ## Stack
 
