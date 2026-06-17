@@ -249,11 +249,11 @@ button { font: inherit; cursor: pointer; }
 .stat { display: flex; flex-direction: column; gap: 0.1rem; padding: 0.7rem; border: 1px solid var(--line); border-radius: 10px; background: #fcfcff; }
 .stat-num { font-size: 1.5rem; font-weight: 750; letter-spacing: -0.02em; color: var(--primary-dark); }
 .badge.sm { font-size: 0.66rem; padding: 0.08rem 0.4rem; margin-left: 0.4rem; vertical-align: middle; }
-.table-wrap { overflow-x: auto; }
-.admin-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-.admin-table th, .admin-table td { text-align: left; padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
-.admin-table th { color: var(--muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; }
-.admin-table td:first-child { white-space: normal; word-break: break-all; }
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 10px; }
+.admin-table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 0.9rem; }
+.admin-table th, .admin-table td { text-align: left; padding: 0.6rem 0.7rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.admin-table tr:last-child td { border-bottom: none; }
+.admin-table th { color: var(--muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; background: #fafbff; }
 .admin-table select { padding: 0.3rem 0.4rem; }
 @media (min-width: 640px) { .stat-grid { grid-template-columns: repeat(6, 1fr); } }
 
