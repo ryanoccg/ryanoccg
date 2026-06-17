@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api, ApiError } from '../api'
 import { computeSettlement, receiptBreakdowns } from '../settlement'
-import { formatCents } from '../money'
+import { formatCents, toCents } from '../money'
 import type { SessionDetail } from '../types'
 
 export default function Settlement() {
@@ -24,6 +24,10 @@ export default function Settlement() {
   if (!session || !result) return <div className="muted">Loading…</div>
 
   const cur = session.currency
+  const nameOf = (mid: string | null) => session.members.find((m) => m.id === mid)?.display_name ?? '—'
+  const unassignedReceipts = session.receipts
+    .map((r) => ({ r, cents: r.line_items.reduce((s, li) => s + ((li.shares?.length ?? 0) === 0 ? toCents(li.total) : 0), 0) }))
+    .filter((x) => x.cents > 0)
 
   return (
     <div className="stack">
@@ -34,6 +38,16 @@ export default function Settlement() {
       {result.warnings.length > 0 && (
         <ul className="warn-list">
           {result.warnings.map((w, i) => <li key={i}>⚠ {w}</li>)}
+        </ul>
+      )}
+
+      {unassignedReceipts.length > 0 && (
+        <ul className="warn-list">
+          {unassignedReceipts.map(({ r, cents }) => (
+            <li key={r.id}>
+              ⚠ {formatCents(cents, cur)} unassigned in “{r.merchant || 'Receipt'}” — covered by {nameOf(r.paid_by_member_id)}
+            </li>
+          ))}
         </ul>
       )}
 
