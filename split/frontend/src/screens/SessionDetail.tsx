@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { api, ApiError } from '../api'
+import { api, ApiError, imageUrl } from '../api'
 import { useAuth } from '../auth/AuthContext'
 import UpgradePrompt from '../components/UpgradePrompt'
 import ContactPicker from '../components/ContactPicker'
@@ -17,6 +17,7 @@ export default function SessionDetail() {
   const [loading, setLoading] = useState(true)
   const [limitMsg, setLimitMsg] = useState('')
   const [error, setError] = useState('')
+  const [lightbox, setLightbox] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -114,6 +115,10 @@ export default function SessionDetail() {
             {session.receipts.map((r) => (
               <li key={r.id}>
                 <div className="row-link">
+                  {r.image_path && (
+                    <img className="receipt-thumb" src={imageUrl(r.id)} alt="receipt"
+                      onClick={() => setLightbox(imageUrl(r.id))} />
+                  )}
                   <Link to={`/s/${sessionId}/receipt/${r.id}`} className="grow">
                     <div className="row-title">{r.merchant || 'Receipt'}</div>
                     <div className="muted small">
@@ -152,6 +157,13 @@ export default function SessionDetail() {
             </ul>
           )}
         </section>
+      )}
+
+      {lightbox && (
+        <div className="lightbox" onClick={() => setLightbox(null)}>
+          <img src={lightbox} alt="Receipt" />
+          <button className="lightbox-close" aria-label="Close">×</button>
+        </div>
       )}
     </div>
   )
