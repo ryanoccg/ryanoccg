@@ -81,6 +81,7 @@ function save_receipt(string $id, string $uid): void
     $subtotal = round((float) ($in['subtotal'] ?? 0), 2);
     $tax = round((float) ($in['tax'] ?? 0), 2);
     $tip = round((float) ($in['tip'] ?? 0), 2);
+    $rounding = round((float) ($in['rounding'] ?? 0), 2); // Malaysian 5-sen rounding, can be negative
     $total = round((float) ($in['total'] ?? 0), 2);
 
     // image_path is client-supplied: accept only our own generated filename.
@@ -101,16 +102,16 @@ function save_receipt(string $id, string $uid): void
         if ($id === '') {
             $id = uuidv4();
             $stmt = $pdo->prepare(
-                'INSERT INTO receipts (id, session_id, image_path, merchant, currency, subtotal, tax, tip, total, paid_by_member_id, status)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "ready")'
+                'INSERT INTO receipts (id, session_id, image_path, merchant, currency, subtotal, tax, tip, rounding, total, paid_by_member_id, status)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "ready")'
             );
-            $stmt->execute([$id, $sessionId, $imagePath, $merchant, $currency, $subtotal, $tax, $tip, $total, $payer]);
+            $stmt->execute([$id, $sessionId, $imagePath, $merchant, $currency, $subtotal, $tax, $tip, $rounding, $total, $payer]);
         } else {
             $stmt = $pdo->prepare(
-                'UPDATE receipts SET image_path = ?, merchant = ?, currency = ?, subtotal = ?, tax = ?, tip = ?, total = ?, paid_by_member_id = ?, status = "ready"
+                'UPDATE receipts SET image_path = ?, merchant = ?, currency = ?, subtotal = ?, tax = ?, tip = ?, rounding = ?, total = ?, paid_by_member_id = ?, status = "ready"
                  WHERE id = ?'
             );
-            $stmt->execute([$imagePath, $merchant, $currency, $subtotal, $tax, $tip, $total, $payer, $id]);
+            $stmt->execute([$imagePath, $merchant, $currency, $subtotal, $tax, $tip, $rounding, $total, $payer, $id]);
             // Replace children.
             $del = $pdo->prepare('DELETE FROM line_items WHERE receipt_id = ?'); // cascades to item_shares
             $del->execute([$id]);

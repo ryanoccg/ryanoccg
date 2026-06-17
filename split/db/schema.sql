@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS receipts (
   subtotal          DECIMAL(12,2) NOT NULL DEFAULT 0,
   tax               DECIMAL(12,2) NOT NULL DEFAULT 0,
   tip               DECIMAL(12,2) NOT NULL DEFAULT 0,
+  rounding          DECIMAL(12,2) NOT NULL DEFAULT 0,
   total             DECIMAL(12,2) NOT NULL DEFAULT 0,
   paid_by_member_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NULL DEFAULT NULL,
   status            ENUM('processing','ready','failed') NOT NULL DEFAULT 'ready',

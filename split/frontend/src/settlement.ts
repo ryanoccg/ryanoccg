@@ -130,11 +130,11 @@ function receiptOwed(r: Receipt, payerId: string | null): Map<string, number> {
     itemSubtotal += itemCents
   }
 
-  // Tax + tip proportional to each member's exact item subtotal.
-  const taxTip = toCents(r.tax) + toCents(r.tip)
-  if (itemSubtotal > 0 && taxTip !== 0) {
+  // Tax + tip + rounding (can be negative), proportional to each member's item subtotal.
+  const adjustments = toCents(r.tax) + toCents(r.tip) + toCents(r.rounding)
+  if (itemSubtotal > 0 && adjustments !== 0) {
     for (const [id, sub] of [...exact.entries()]) {
-      add(id, (taxTip * sub) / itemSubtotal)
+      add(id, (adjustments * sub) / itemSubtotal)
     }
   }
 
