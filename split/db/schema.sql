@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash         VARCHAR(255) NOT NULL,
   plan                  ENUM('free','pro','super') NOT NULL DEFAULT 'free',
   plan_expires_at       DATETIME NULL DEFAULT NULL,
+  is_admin              TINYINT(1) NOT NULL DEFAULT 0,
   stripe_customer_id    VARCHAR(255) NULL DEFAULT NULL,
   stripe_subscription_id VARCHAR(255) NULL DEFAULT NULL,
   created_at            DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

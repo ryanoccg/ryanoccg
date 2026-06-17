@@ -106,3 +106,25 @@ function require_user(): array
     }
     return $user;
 }
+
+/** Whether a user is an admin. Defensive: missing column (pre-migration) => false. */
+function user_is_admin(string $userId): bool
+{
+    try {
+        $stmt = db()->prepare('SELECT is_admin FROM users WHERE id = ?');
+        $stmt->execute([$userId]);
+        return (bool) (int) ($stmt->fetchColumn() ?: 0);
+    } catch (Throwable $e) {
+        return false;
+    }
+}
+
+/** Returns the authenticated admin user, or sends 403 and stops. */
+function require_admin(): array
+{
+    $user = require_user();
+    if (!user_is_admin((string) $user['id'])) {
+        jfail('Admin access required.', 403);
+    }
+    return $user;
+}

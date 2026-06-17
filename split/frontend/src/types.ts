@@ -75,6 +75,7 @@ export interface SessionDetail {
 
 export interface PlanInfo {
   user: User
+  is_admin?: boolean
   plan: Plan
   plan_expires_at: string | null
   ads: boolean

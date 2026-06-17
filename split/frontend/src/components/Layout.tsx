@@ -28,6 +28,7 @@ export default function Layout() {
           <NavLink to="/contacts" onClick={close}>Contacts</NavLink>
           <NavLink to="/pricing" onClick={close}>Pricing</NavLink>
           <NavLink to="/account" onClick={close}>Account</NavLink>
+          {plan?.is_admin && <NavLink to="/admin" onClick={close}>Admin</NavLink>}
           <button className="linkbtn" onClick={() => { close(); logout(); navigate('/login') }}>
             Log out
           </button>
