@@ -72,4 +72,15 @@ jobs:
             split/api/ \
             ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SPLIT_DOCROOT }}/api/
 
+      - name: Run database migrations
+        run: |
+          # Applies any new split/api/migrations/*.sql via the migration runner.
+          # Uses secrets.php on the server; CLI PHP must be 8.1+ (override with the
+          # MIGRATE_PHP secret, e.g. "ea-php81" or an absolute path, if needed).
+          PHP_BIN="${{ secrets.MIGRATE_PHP }}"
+          PHP_BIN="${PHP_BIN:-php}"
+          ssh -p ${{ secrets.SSH_PORT }} -o ServerAliveInterval=60 \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+            "cd ${{ secrets.SPLIT_DOCROOT }} && $PHP_BIN api/migrate.php"
+
       - run: echo "✅ Splitwell deployed to split.ryanoccg.com"
