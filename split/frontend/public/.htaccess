@@ -37,7 +37,7 @@ CGIPassAuth On
 </IfModule>
 
 # Defense in depth: never serve secrets or dotfiles, even if misplaced.
-<FilesMatch "(^\.ht|secrets.*\.php|\.env)">
+<FilesMatch "(^\.ht|secrets.*\.php|\.env|\.sql$)">
     Require all denied
 </FilesMatch>
 

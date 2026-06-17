@@ -61,10 +61,21 @@ The deploy workflow reuses the portfolio SSH secrets and adds one:
 |------|------|-------|
 | Secret | `SSH_PRIVATE_KEY`, `SSH_HOST`, `SSH_PORT`, `SSH_USERNAME` | (already set for the portfolio) |
 | Secret | `SPLIT_DOCROOT` | the subdomain docroot, e.g. `~/public_html/split` |
+| Secret | `MIGRATE_PHP` | (optional) CLI PHP binary for migrations if `php` isn't 8.1+, e.g. `ea-php81` |
 | Variable | `VITE_ADSENSE_CLIENT_ID` | public AdSense client id (optional) |
 
 Push to `main` touching `split/**` → the app builds and deploys. Or run the
 **Deploy Splitwell** workflow manually (workflow_dispatch).
+
+### Database migrations (automatic)
+
+Schema changes ship as `split/api/migrations/NNN_name.sql` files. After each
+deploy, the workflow runs `php api/migrate.php` over SSH, which applies any new
+migration files (tracked in a `schema_migrations` table) — so **you don't run
+SQL by hand**. The runner is idempotent: already-applied or "already exists"
+migrations are skipped. To add a change, drop a new numbered `.sql` in
+`migrations/` and push. (You can also run `php api/migrate.php` on the server
+manually any time.)
 
 ## 5. Stripe
 
