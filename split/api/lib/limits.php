@@ -53,6 +53,37 @@ function increment_ocr(string $userId): void
     $stmt->execute([uuidv4(), $userId, current_period()]);
 }
 
+/** Add OpenAI tokens used to this month's counter. Defensive: a missing
+ *  ocr_tokens column (pre-upgrade DB) is ignored rather than breaking OCR. */
+function record_ocr_tokens(string $userId, int $tokens): void
+{
+    if ($tokens <= 0) {
+        return;
+    }
+    try {
+        $stmt = db()->prepare(
+            'INSERT INTO usage_counters (id, user_id, period, ocr_scans, ocr_tokens)
+             VALUES (?, ?, ?, 0, ?)
+             ON DUPLICATE KEY UPDATE ocr_tokens = ocr_tokens + ?'
+        );
+        $stmt->execute([uuidv4(), $userId, current_period(), $tokens, $tokens]);
+    } catch (Throwable $e) {
+        error_log('record_ocr_tokens skipped: ' . $e->getMessage());
+    }
+}
+
+/** OpenAI tokens used this month (0 if the column doesn't exist yet). */
+function ocr_tokens_this_month(string $userId): int
+{
+    try {
+        $stmt = db()->prepare('SELECT ocr_tokens FROM usage_counters WHERE user_id = ? AND period = ?');
+        $stmt->execute([$userId, current_period()]);
+        return (int) ($stmt->fetchColumn() ?: 0);
+    } catch (Throwable $e) {
+        return 0;
+    }
+}
+
 function over_limit(string $action): void
 {
     jfail(

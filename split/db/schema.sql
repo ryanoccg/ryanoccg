@@ -33,10 +33,14 @@ CREATE TABLE IF NOT EXISTS usage_counters (
   user_id    CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   period     CHAR(7) NOT NULL,            -- 'YYYY-MM'
   ocr_scans  INT UNSIGNED NOT NULL DEFAULT 0,
+  ocr_tokens BIGINT UNSIGNED NOT NULL DEFAULT 0,  -- OpenAI tokens used this month
   PRIMARY KEY (id),
   UNIQUE KEY uq_usage_user_period (user_id, period),
   CONSTRAINT fk_usage_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Upgrading an existing database? Run this once to add the token counter:
+--   ALTER TABLE usage_counters ADD COLUMN ocr_tokens BIGINT UNSIGNED NOT NULL DEFAULT 0;
 
 -- ---------------------------------------------------------------------------
 -- contacts — account-level address book (reused across sessions).
