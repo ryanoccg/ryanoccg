@@ -6,7 +6,7 @@ import UpgradePrompt from '../components/UpgradePrompt'
 import ContactPicker from '../components/ContactPicker'
 import { computeSettlement } from '../settlement'
 import { formatCents, toCents } from '../money'
-import type { Member, SessionDetail as Session } from '../types'
+import type { Member, Receipt, SessionDetail as Session } from '../types'
 
 export default function SessionDetail() {
   const { id } = useParams()
@@ -35,6 +35,10 @@ export default function SessionDetail() {
   const settlement = useMemo(() => (session ? computeSettlement(session) : null), [session])
   const memberName = (mid: string | null) =>
     session?.members.find((m: Member) => m.id === mid)?.display_name ?? '—'
+
+  // A receipt with priced items nobody is assigned to (so they'd fall on the payer).
+  const hasUnassigned = (r: Receipt) =>
+    r.line_items.some((li) => (li.shares?.length ?? 0) === 0 && toCents(li.total) > 0)
 
   async function removeMember(mid: string) {
     if (!confirm('Remove this member? Their item assignments will be cleared.')) return
@@ -124,6 +128,7 @@ export default function SessionDetail() {
                     <div className="muted small">
                       {formatCents(toCents(r.total), currency)} · paid by {memberName(r.paid_by_member_id)} · {r.line_items.length} items
                     </div>
+                    {hasUnassigned(r) && <div className="neg small">⚠ Has unassigned items</div>}
                   </Link>
                   <button className="linkbtn danger" onClick={() => deleteReceipt(r.id)}>Delete</button>
                 </div>
