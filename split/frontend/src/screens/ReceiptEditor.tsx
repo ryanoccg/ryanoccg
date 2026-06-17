@@ -25,7 +25,7 @@ const SCAN_STEPS = [
   'Uploading your receipt…',
   'AI is reading it…',
   'Listing the items…',
-  'Wow, that’s a lot to eat! 😋',
+  'Tallying up the prices…',
   'Almost there…',
 ]
 
