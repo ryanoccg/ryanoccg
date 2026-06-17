@@ -187,8 +187,12 @@ remove_action('wp_head', 'rsd_link');
 // description: 120-155 chars, include CTA
 $ryano_seo_overrides = array(
     120 => array(
-        'title'       => 'Bad Website Design Malaysia: 7 Mistakes Killing Sales',
-        'description' => 'These 7 web design mistakes silently kill 80% of Malaysian SME sites. Real audits, real fixes — spot yours in 30 sec. Free review: WhatsApp +60174272807',
+        'title'       => 'Bad Website Design Malaysia: 7 Mistakes Killing Sales (2026)',
+        'description' => 'These 7 web design mistakes quietly kill sales on 80% of Malaysian SME sites. Real audits, real fixes. Spot yours in 30 seconds: WhatsApp +60174272807',
+    ),
+    14 => array(
+        'title'       => 'Mobile Website Malaysia: Stop Losing 72% of Visitors (2026)',
+        'description' => '72% of Malaysians browse phone-first (MCMC). A site that fights them on mobile loses sales daily. The 2026 mobile-first fixes that work. WhatsApp +60174272807',
     ),
     126 => array(
         'title'       => 'Core Web Vitals 2026: 3 Speed Metrics Malaysian Sites Must Pass',
@@ -201,6 +205,10 @@ $ryano_seo_overrides = array(
     26 => array(
         'title'       => 'Web Design Malaysia: 7 Mistakes & Quick Fixes (2026)',
         'description' => '7 web design mistakes I find on 80% of Malaysian SME audits — fix them in 30 mins. Free website review: WhatsApp +60174272807',
+    ),
+    187 => array(
+        'title'       => 'Website Maintenance Company: How to Pick One (2026)',
+        'description' => 'Pick a website maintenance company that protects your site, not one that just bills you. The questions to ask, the red flags, fair pricing. WhatsApp +60174272807',
     ),
 );
 
@@ -232,6 +240,57 @@ function ryano_og_meta_tags() {
     }
 }
 add_action('wp_head', 'ryano_og_meta_tags');
+
+// Per-post FAQPage structured data (id => [ [q, a], ... ])
+// Mirrors the visible FAQ section so Google can show FAQ rich results.
+$ryano_faq_schema = array(
+    22 => array(
+        array('Can I do website maintenance myself?', 'Yes, if you are technical and have time (3-5 hours per month). For non-technical owners or busy businesses, outsourcing is more cost-effective.'),
+        array('What if I have not maintained my site in years?', 'Get a security audit first (RM 1,500-3,000). Clean up any issues, then start regular maintenance.'),
+        array('My developer said maintenance is not necessary. Is that true?', 'No. All websites need maintenance. A developer who says otherwise is either inexperienced or wants you dependent on expensive emergency fixes.'),
+        array('Can my hosting company handle maintenance?', 'Some do (managed WordPress hosting), but most do not. Shared hosting only covers server-level maintenance, not your website specifically.'),
+        array('What happens if I cancel maintenance?', 'Your site gradually becomes vulnerable, slow, and outdated, and the risk of hacking increases significantly.'),
+        array('Is yearly maintenance better than monthly?', 'No. Maintenance should be ongoing. Yearly maintenance means 11 months of vulnerability.'),
+        array('Does WordPress maintenance differ from Shopify maintenance?', 'Yes. WordPress needs hands-on plugin, theme, and core updates (2-4 hours per month) because you own the stack. Shopify handles the platform itself, so maintenance focuses on app audits, theme tweaks, and storefront optimization (1-2 hours per month).'),
+        array('Can maintenance fees be claimed as a business expense in Malaysia?', 'Yes. Website maintenance is a recurring business expense and qualifies as a deduction under your company tax filing. Keep your monthly invoices, as LHDN accepts both digital and printed receipts.'),
+        array('How soon after launching a new website do I need maintenance?', 'Day one. WordPress core, plugins, and themes start receiving updates within weeks of any launch, so a 3-month-old unmaintained site is just as exposed as a 3-year-old one.'),
+        array('Is switching maintenance providers risky?', 'Only if your current provider holds your assets hostage. Before signing up with anyone, confirm in writing that you own the domain, you have admin-level access to hosting and the site, and there is no exit fee.'),
+    ),
+    187 => array(
+        array('Is a website maintenance company worth it for a small business?', 'Yes, if the site earns or represents revenue. The cost of one serious hack or a week of downtime almost always exceeds a year of maintenance fees, and recovery is far more expensive than prevention.'),
+        array('Can I just use my hosting provider for maintenance?', 'Usually not fully. Most hosts maintain the server, not your specific website. Managed WordPress hosting is the exception, and even then it rarely covers plugin conflicts or content fixes.'),
+        array('How do I switch maintenance companies safely?', 'Confirm in writing that you own your domain, hosting, and admin access before signing with anyone new. As long as you hold those, switching is low risk and no provider can hold your site hostage.'),
+        array('What is the difference between a freelancer and a maintenance company?', 'A freelancer is cheaper and more personal but is a single point of failure if they get busy or stop replying. A company costs more but usually offers documented processes and backup coverage when one person is unavailable.'),
+        array('How often should website maintenance actually happen?', 'Continuously, not yearly. Software updates arrive every few weeks, so a site checked once a year spends most of that year exposed.'),
+    ),
+);
+
+// Emit FAQPage JSON-LD on posts that have FAQ entries defined above
+function ryano_faq_jsonld() {
+    if (!is_single()) return;
+    global $ryano_faq_schema;
+    $post_id = get_queried_object_id();
+    if (empty($ryano_faq_schema[$post_id])) return;
+
+    $entities = array();
+    foreach ($ryano_faq_schema[$post_id] as $pair) {
+        $entities[] = array(
+            '@type'          => 'Question',
+            'name'           => $pair[0],
+            'acceptedAnswer' => array(
+                '@type' => 'Answer',
+                'text'  => $pair[1],
+            ),
+        );
+    }
+    $schema = array(
+        '@context'   => 'https://schema.org',
+        '@type'      => 'FAQPage',
+        'mainEntity' => $entities,
+    );
+    echo '<script type="application/ld+json">' . wp_json_encode($schema) . '</script>' . "\n";
+}
+add_action('wp_head', 'ryano_faq_jsonld');
 
 // Shorten <title> tag — default "Post Title – Site Name" appends 31+ chars
 // New format: "SEO Title | Ryano Web" (keeps total under ~65 chars)
