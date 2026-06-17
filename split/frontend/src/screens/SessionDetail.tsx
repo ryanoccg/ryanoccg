@@ -36,9 +36,9 @@ export default function SessionDetail() {
   const memberName = (mid: string | null) =>
     session?.members.find((m: Member) => m.id === mid)?.display_name ?? '—'
 
-  // A receipt with priced items nobody is assigned to (so they'd fall on the payer).
-  const hasUnassigned = (r: Receipt) =>
-    r.line_items.some((li) => (li.shares?.length ?? 0) === 0 && toCents(li.total) > 0)
+  // Total of priced items nobody is assigned to on a receipt (they fall on the payer).
+  const unassignedCents = (r: Receipt) =>
+    r.line_items.reduce((s, li) => s + ((li.shares?.length ?? 0) === 0 ? toCents(li.total) : 0), 0)
 
   async function removeMember(mid: string) {
     if (!confirm('Remove this member? Their item assignments will be cleared.')) return
@@ -73,6 +73,7 @@ export default function SessionDetail() {
   if (!session) return <div className="error">{error || 'Not found.'}</div>
 
   const currency = session.currency
+  const unassignedReceipts = session.receipts.filter((r) => unassignedCents(r) > 0)
 
   return (
     <div className="stack">
@@ -128,7 +129,9 @@ export default function SessionDetail() {
                     <div className="muted small">
                       {formatCents(toCents(r.total), currency)} · paid by {memberName(r.paid_by_member_id)} · {r.line_items.length} items
                     </div>
-                    {hasUnassigned(r) && <div className="neg small">⚠ Has unassigned items</div>}
+                    {unassignedCents(r) > 0 && (
+                      <div className="neg small">⚠ {formatCents(unassignedCents(r), currency)} unassigned</div>
+                    )}
                   </Link>
                   <button className="linkbtn danger" onClick={() => deleteReceipt(r.id)}>Delete</button>
                 </div>
@@ -156,6 +159,15 @@ export default function SessionDetail() {
               </li>
             ))}
           </ul>
+          {unassignedReceipts.length > 0 && (
+            <ul className="warn-list mt">
+              {unassignedReceipts.map((r) => (
+                <li key={r.id}>
+                  ⚠ {formatCents(unassignedCents(r), currency)} unassigned in “{r.merchant || 'Receipt'}” — currently covered by {memberName(r.paid_by_member_id)}
+                </li>
+              ))}
+            </ul>
+          )}
           {settlement.warnings.length > 0 && (
             <ul className="warn-list">
               {settlement.warnings.map((w, i) => <li key={i}>⚠ {w}</li>)}
