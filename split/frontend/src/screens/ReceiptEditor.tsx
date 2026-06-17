@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { api, ApiError } from '../api'
+import { api, ApiError, imageUrl } from '../api'
 import { useAuth } from '../auth/AuthContext'
 import UpgradePrompt from '../components/UpgradePrompt'
 import ContactPicker from '../components/ContactPicker'
@@ -53,6 +53,8 @@ export default function ReceiptEditor() {
   const [notice, setNotice] = useState('')
   const [limitMsg, setLimitMsg] = useState('')
   const [scanStep, setScanStep] = useState(0)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [lightbox, setLightbox] = useState(false)
 
   // Load session members (+ the receipt being edited).
   const load = useCallback(async () => {
@@ -99,6 +101,7 @@ export default function ReceiptEditor() {
     setTip(String(toNum(r.tip) || ''))
     setPayerId(r.paid_by_member_id ?? '')
     setImagePath(r.image_path)
+    if (r.image_path && receiptId) setImagePreview(imageUrl(receiptId))
     setItems(
       r.line_items.map((li) => ({
         name: li.name,
@@ -133,6 +136,7 @@ export default function ReceiptEditor() {
   async function onPickImage(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+    setImagePreview(URL.createObjectURL(file)) // instant local preview
     setScanning(true); setError(''); setNotice(''); setLimitMsg('')
     try {
       const form = new FormData()
@@ -307,6 +311,12 @@ export default function ReceiptEditor() {
             <div>Or just fill in the items manually below.</div>
           </div>
         )}
+        {imagePreview && !scanning && (
+          <div className="receipt-preview mt">
+            <img className="receipt-thumb" src={imagePreview} alt="receipt" onClick={() => setLightbox(true)} />
+            <button type="button" className="linkbtn" onClick={() => setLightbox(true)}>View uploaded receipt</button>
+          </div>
+        )}
       </section>
 
       <section className="card form">
@@ -400,6 +410,13 @@ export default function ReceiptEditor() {
           {saving ? 'Saving…' : receiptId ? 'Save changes' : 'Save receipt'}
         </button>
       </div>
+
+      {lightbox && imagePreview && (
+        <div className="lightbox" onClick={() => setLightbox(false)}>
+          <img src={imagePreview} alt="Receipt" />
+          <button className="lightbox-close" aria-label="Close">×</button>
+        </div>
+      )}
     </div>
   )
 }
