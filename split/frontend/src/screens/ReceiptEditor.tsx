@@ -411,8 +411,8 @@ export default function ReceiptEditor() {
 
       <div className="save-bar">
         <span className="save-bar-total">{formatCents(totalCents, currency)}</span>
-        <button className="btn btn-primary" onClick={save} disabled={saving}>
-          {saving ? 'Saving…' : receiptId ? 'Save changes' : 'Save receipt'}
+        <button className="btn btn-primary" onClick={save} disabled={saving || scanning}>
+          {saving ? 'Saving…' : scanning ? 'Scanning…' : receiptId ? 'Save changes' : 'Save receipt'}
         </button>
       </div>
 
