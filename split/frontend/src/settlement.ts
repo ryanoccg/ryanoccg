@@ -26,6 +26,35 @@ export interface SettlementResult {
   warnings: string[]
 }
 
+export interface ReceiptBreakdown {
+  receiptId: string
+  merchant: string | null
+  totalCents: number
+  hasPayer: boolean
+  payerName: string
+  lines: { memberId: string; name: string; cents: number }[]
+}
+
+/** What each person consumed on each individual receipt (for the expandable per-receipt view). */
+export function receiptBreakdowns(session: SessionDetail): ReceiptBreakdown[] {
+  const nameOf = new Map(session.members.map((m) => [m.id, m.display_name]))
+  return session.receipts.map((r) => {
+    const owed = receiptOwed(r, r.paid_by_member_id ?? null)
+    const lines = [...owed.entries()]
+      .map(([memberId, cents]) => ({ memberId, name: nameOf.get(memberId) ?? '—', cents }))
+      .filter((l) => l.cents !== 0)
+      .sort((a, b) => b.cents - a.cents)
+    return {
+      receiptId: r.id,
+      merchant: r.merchant,
+      totalCents: [...owed.values()].reduce((a, b) => a + b, 0),
+      hasPayer: r.paid_by_member_id != null,
+      payerName: r.paid_by_member_id ? (nameOf.get(r.paid_by_member_id) ?? '—') : '',
+      lines,
+    }
+  })
+}
+
 /**
  * Per receipt: each member owes their weighted share of every assigned line
  * item, plus tax+tip allocated proportionally to that item subtotal. The payer

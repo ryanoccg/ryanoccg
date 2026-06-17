@@ -215,6 +215,15 @@ button { font: inherit; cursor: pointer; }
 .settle-list li { display: flex; align-items: center; gap: 0.4rem; padding: 0.85rem 1rem; background: var(--primary-tint); border: 1px solid var(--primary-border); border-radius: 12px; }
 .settle-list .amt { margin-left: auto; font-weight: 750; color: var(--primary-dark); }
 
+/* per-receipt expandable breakdown (collapsed by default) */
+.receipt-detail { border: 1px solid var(--line); border-radius: 10px; padding: 0 0.85rem; margin-top: 0.6rem; background: #fff; }
+.receipt-detail summary { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; padding: 0.7rem 0; font-weight: 600; list-style: none; }
+.receipt-detail summary::-webkit-details-marker { display: none; }
+.receipt-detail summary::before { content: '▸'; color: var(--muted); transition: transform .15s; }
+.receipt-detail[open] summary::before { transform: rotate(90deg); }
+.receipt-detail .rb-total { font-weight: 750; color: var(--primary-dark); }
+.receipt-detail .balances { padding-bottom: 0.5rem; }
+
 /* pricing */
 .plans { display: grid; gap: 1.1rem; grid-template-columns: 1fr; }
 .plan-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); }
