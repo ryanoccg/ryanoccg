@@ -56,6 +56,7 @@ export default function ReceiptEditor() {
   const [scanStep, setScanStep] = useState(0)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [lightbox, setLightbox] = useState(false)
+  const [showAssignPrompt, setShowAssignPrompt] = useState(false)
 
   // Load session members (+ the receipt being edited).
   const load = useCallback(async () => {
@@ -239,7 +240,37 @@ export default function ReceiptEditor() {
   )
   const totalCents = itemsSubtotalCents + toCents(tax) + toCents(tip) + toCents(rounding)
 
-  async function save() {
+  const pricedItems = (list: EditItem[]) => list.filter((it) => it.name.trim() && toNum(it.total) > 0)
+
+  // Entry point for the Save button: validate, then prompt if any priced item is unassigned.
+  function attemptSave() {
+    setError('')
+    const priced = pricedItems(items)
+    if (priced.length === 0) {
+      setError('Add at least one item with a total.')
+      return
+    }
+    const anyUnassigned = priced.some((it) => Object.keys(it.shares).length === 0)
+    if (anyUnassigned && members.length > 0) {
+      setShowAssignPrompt(true)
+      return
+    }
+    doSave(items)
+  }
+
+  // Assign every still-unassigned priced item to everyone, then save.
+  function shareAllAndSave() {
+    const next = items.map((it) =>
+      toNum(it.total) > 0 && Object.keys(it.shares).length === 0
+        ? { ...it, shares: Object.fromEntries(members.map((m) => [m.id, 1])) }
+        : it,
+    )
+    setItems(next)
+    doSave(next)
+  }
+
+  async function doSave(itemsToSave: EditItem[]) {
+    setShowAssignPrompt(false)
     setError(''); setSaving(true)
     try {
       const payload = {
@@ -253,15 +284,13 @@ export default function ReceiptEditor() {
         total: totalCents / 100,
         paid_by_member_id: payerId === '' ? null : payerId,
         image_path: imagePath,
-        line_items: items
-          .filter((it) => it.name.trim() && toNum(it.total) > 0)
-          .map((it) => ({
-            name: it.name.trim(),
-            quantity: toNum(it.quantity) || 1,
-            unit_price: toNum(it.unit_price),
-            total: toNum(it.total),
-            shares: Object.entries(it.shares).map(([mid, w]) => ({ member_id: mid, weight: w })),
-          })),
+        line_items: pricedItems(itemsToSave).map((it) => ({
+          name: it.name.trim(),
+          quantity: toNum(it.quantity) || 1,
+          unit_price: toNum(it.unit_price),
+          total: toNum(it.total),
+          shares: Object.entries(it.shares).map(([mid, w]) => ({ member_id: mid, weight: w })),
+        })),
       }
       if (payload.line_items.length === 0) {
         setError('Add at least one item with a total.')
@@ -411,10 +440,24 @@ export default function ReceiptEditor() {
 
       <div className="save-bar">
         <span className="save-bar-total">{formatCents(totalCents, currency)}</span>
-        <button className="btn btn-primary" onClick={save} disabled={saving || scanning}>
+        <button className="btn btn-primary" onClick={attemptSave} disabled={saving || scanning}>
           {saving ? 'Saving…' : scanning ? 'Scanning…' : receiptId ? 'Save changes' : 'Save receipt'}
         </button>
       </div>
+
+      {showAssignPrompt && (
+        <div className="lightbox" onClick={() => setShowAssignPrompt(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h2>Some items aren't assigned</h2>
+            <p className="muted">Items nobody is assigned to will be counted to whoever paid. What would you like to do?</p>
+            <div className="modal-actions">
+              <button className="btn btn-primary" onClick={shareAllAndSave} disabled={saving}>Share with everyone</button>
+              <button className="btn" onClick={() => doSave(items)} disabled={saving}>Leave unassigned</button>
+              <button className="linkbtn" onClick={() => setShowAssignPrompt(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {lightbox && imagePreview && (
         <div className="lightbox" onClick={() => setLightbox(false)}>
