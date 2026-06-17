@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api, ApiError } from '../api'
-import { computeSettlement } from '../settlement'
+import { computeSettlement, receiptBreakdowns } from '../settlement'
 import { formatCents } from '../money'
 import type { SessionDetail } from '../types'
 
@@ -18,6 +18,7 @@ export default function Settlement() {
   }, [sessionId])
 
   const result = useMemo(() => (session ? computeSettlement(session) : null), [session])
+  const breakdowns = useMemo(() => (session ? receiptBreakdowns(session) : []), [session])
 
   if (error) return <div className="error">{error}</div>
   if (!session || !result) return <div className="muted">Loading…</div>
@@ -66,6 +67,26 @@ export default function Settlement() {
             ))}
           </ul>
         )}
+      </section>
+
+      <section className="card">
+        <h2>By receipt</h2>
+        <p className="muted small">Tap a receipt to see each person's share of it.</p>
+        {breakdowns.map((b) => (
+          <details className="receipt-detail" key={b.receiptId}>
+            <summary>
+              <span className="grow">{b.merchant || 'Receipt'}</span>
+              <span className="rb-total">{formatCents(b.totalCents, cur)}</span>
+            </summary>
+            <div className="muted small">{b.hasPayer ? `Paid by ${b.payerName}` : '⚠ No payer set'}</div>
+            <ul className="balances">
+              {b.lines.map((l) => (
+                <li key={l.memberId}><span>{l.name}</span><span>{formatCents(l.cents, cur)}</span></li>
+              ))}
+              {b.lines.length === 0 && <li className="muted">No items assigned</li>}
+            </ul>
+          </details>
+        ))}
       </section>
     </div>
   )
