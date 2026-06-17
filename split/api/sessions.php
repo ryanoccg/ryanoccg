@@ -52,7 +52,7 @@ function get_session_detail(string $id, string $uid): void
     $members = $m->fetchAll();
 
     $r = db()->prepare(
-        'SELECT id, merchant, currency, subtotal, tax, tip, total, paid_by_member_id, status, image_path, created_at
+        'SELECT id, merchant, currency, subtotal, tax, tip, rounding, total, paid_by_member_id, status, image_path, created_at
          FROM receipts WHERE session_id = ? ORDER BY created_at, id'
     );
     $r->execute([$id]);

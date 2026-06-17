@@ -46,6 +46,7 @@ export interface Receipt {
   subtotal: number | string
   tax: number | string
   tip: number | string
+  rounding: number | string
   total: number | string
   paid_by_member_id: string | null
   status: 'processing' | 'ready' | 'failed'
@@ -92,6 +93,7 @@ export interface Extraction {
   subtotal: number | null
   tax: number | null
   tip: number | null
+  rounding: number | null
   total: number | null
   line_items: { name: string; quantity: number; unit_price: number; total: number }[]
   confidence: number | null

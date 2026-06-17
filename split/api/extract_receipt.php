@@ -97,6 +97,7 @@ function openai_extract(string $dataUrl, ?int &$tokens = null): ?array
             'subtotal'  => ['type' => ['number', 'null']],
             'tax'       => ['type' => ['number', 'null']],
             'tip'       => ['type' => ['number', 'null']],
+            'rounding'  => ['type' => ['number', 'null']],
             'total'     => ['type' => ['number', 'null']],
             'line_items' => [
                 'type' => 'array',
@@ -114,7 +115,7 @@ function openai_extract(string $dataUrl, ?int &$tokens = null): ?array
             ],
             'confidence' => ['type' => 'number'],
         ],
-        'required' => ['merchant', 'currency', 'subtotal', 'tax', 'tip', 'total', 'line_items', 'confidence'],
+        'required' => ['merchant', 'currency', 'subtotal', 'tax', 'tip', 'rounding', 'total', 'line_items', 'confidence'],
     ];
 
     $body = [
@@ -133,6 +134,7 @@ function openai_extract(string $dataUrl, ?int &$tokens = null): ?array
                     . "- Numbers must be plain decimals with no currency symbols or thousands separators.\n"
                     . "- currency: the printed currency as a 3-letter ISO code (e.g. RM → MYR, \$ → USD, S\$ → SGD); null if unclear.\n"
                     . "- subtotal, tax, tip (gratuity/service charge) and total: take from the printed summary; use null when not shown.\n"
+                    . "- rounding: the cash rounding adjustment line if present (e.g. Malaysian 'rounding adj' / '找零差额', often a few cents, can be NEGATIVE). null if not shown. Sign it so subtotal + tax + tip + rounding = total.\n"
                     . "- confidence: 0..1 for how legible/clear the receipt was.\n"
                     . "- If the image is too blurry or not a receipt, return empty line_items and a low confidence.",
             ],
@@ -226,6 +228,7 @@ function normalize_extraction(array $p): array
         'subtotal'   => $num($p['subtotal'] ?? null),
         'tax'        => $num($p['tax'] ?? null),
         'tip'        => $num($p['tip'] ?? null),
+        'rounding'   => $num($p['rounding'] ?? null),
         'total'      => $num($p['total'] ?? null),
         'line_items' => $items,
         'confidence' => isset($p['confidence']) ? round((float) $p['confidence'], 2) : null,

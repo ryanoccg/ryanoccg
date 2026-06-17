@@ -41,6 +41,7 @@ export default function ReceiptEditor() {
   const [merchant, setMerchant] = useState('')
   const [tax, setTax] = useState('')
   const [tip, setTip] = useState('')
+  const [rounding, setRounding] = useState('')
   const [payerId, setPayerId] = useState<string>('')
   const [imagePath, setImagePath] = useState<string | null>(null)
   const [items, setItems] = useState<EditItem[]>([blankItem()])
@@ -99,6 +100,7 @@ export default function ReceiptEditor() {
     setCurrency(r.currency)
     setTax(String(toNum(r.tax) || ''))
     setTip(String(toNum(r.tip) || ''))
+    setRounding(String(toNum(r.rounding) || ''))
     setPayerId(r.paid_by_member_id ?? '')
     setImagePath(r.image_path)
     if (r.image_path && receiptId) setImagePreview(imageUrl(receiptId))
@@ -119,6 +121,7 @@ export default function ReceiptEditor() {
     if (x.currency) setCurrency(x.currency)
     if (x.tax != null) setTax(String(x.tax))
     if (x.tip != null) setTip(String(x.tip))
+    if (x.rounding != null) setRounding(String(x.rounding))
     setImagePath(x.image_path)
     setConfidence(x.confidence)
     if (x.line_items.length) {
@@ -234,7 +237,7 @@ export default function ReceiptEditor() {
     () => items.reduce((s, it) => s + toCents(it.total), 0),
     [items],
   )
-  const totalCents = itemsSubtotalCents + toCents(tax) + toCents(tip)
+  const totalCents = itemsSubtotalCents + toCents(tax) + toCents(tip) + toCents(rounding)
 
   async function save() {
     setError(''); setSaving(true)
@@ -246,6 +249,7 @@ export default function ReceiptEditor() {
         subtotal: itemsSubtotalCents / 100,
         tax: toNum(tax),
         tip: toNum(tip),
+        rounding: toNum(rounding),
         total: totalCents / 100,
         paid_by_member_id: payerId === '' ? null : payerId,
         image_path: imagePath,
@@ -390,6 +394,7 @@ export default function ReceiptEditor() {
         <div className="totals">
           <label>Tax <input className="num" inputMode="decimal" value={tax} onChange={(e) => setTax(e.target.value)} /></label>
           <label>Tip <input className="num" inputMode="decimal" value={tip} onChange={(e) => setTip(e.target.value)} /></label>
+          <label>Rounding <input className="num" inputMode="decimal" placeholder="0.00" value={rounding} onChange={(e) => setRounding(e.target.value)} /></label>
           <div className="grand">Total: {formatCents(totalCents, currency)}</div>
         </div>
 
