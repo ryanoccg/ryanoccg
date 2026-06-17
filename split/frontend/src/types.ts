@@ -79,7 +79,7 @@ export interface PlanInfo {
   plan_expires_at: string | null
   ads: boolean
   limits: { sessions: number; ocr_per_month: number; members_per_session: number }
-  usage: { sessions: number; ocr_scans: number; period: string }
+  usage: { sessions: number; ocr_scans: number; ocr_tokens?: number; period: string }
 }
 
 // OCR extraction result used to pre-fill the review screen.

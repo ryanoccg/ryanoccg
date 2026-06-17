@@ -32,6 +32,10 @@ export default function Account() {
             <span>{plan.usage.ocr_scans} / {unlimited(plan.limits.ocr_per_month)}</span>
           </li>
           <li>
+            <span>OCR tokens used</span>
+            <span>{(plan.usage.ocr_tokens ?? 0).toLocaleString()}</span>
+          </li>
+          <li>
             <span>Sessions</span>
             <span>{plan.usage.sessions} / {unlimited(plan.limits.sessions)}</span>
           </li>
@@ -40,6 +44,10 @@ export default function Account() {
             <span>{unlimited(plan.limits.members_per_session)}</span>
           </li>
         </ul>
+        <p className="muted small mt">
+          Token usage is the OpenAI tokens spent on receipt scanning this month. For exact billing, see your{' '}
+          <a href="https://platform.openai.com/usage" target="_blank" rel="noreferrer">OpenAI usage dashboard</a>.
+        </p>
 
         {plan.plan === 'free' && (
           <div className="mt-lg">

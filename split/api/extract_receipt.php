@@ -62,7 +62,9 @@ $dataUrl = 'data:' . $mime . ';base64,' . base64_encode((string) file_get_conten
 // concurrent requests and stops unlimited free retries from draining the budget.
 increment_ocr($uid);
 
-$parsed = openai_extract($dataUrl);
+$tokensUsed = 0;
+$parsed = openai_extract($dataUrl, $tokensUsed);
+record_ocr_tokens($uid, $tokensUsed); // count tokens even if parsing failed (they were spent)
 if ($parsed === null) {
     jout([
         'status'     => 'failed',
@@ -79,7 +81,7 @@ jout($parsed, 200);
  * Calls OpenAI; returns the parsed associative array or null on failure.
  * Retries once on malformed JSON, then gives up gracefully.
  */
-function openai_extract(string $dataUrl): ?array
+function openai_extract(string $dataUrl, ?int &$tokens = null): ?array
 {
     $apiKey = (string) cfg('openai_api_key', '');
     if ($apiKey === '') {
@@ -116,7 +118,9 @@ function openai_extract(string $dataUrl): ?array
     ];
 
     $body = [
-        'model' => 'gpt-5-mini',
+        // Model is configurable in secrets.php (openai_model) — switch to 'gpt-5'
+        // for higher accuracy on tricky receipts, at higher token cost.
+        'model' => (string) cfg('openai_model', 'gpt-5-mini'),
         'messages' => [
             [
                 'role' => 'system',
@@ -155,7 +159,12 @@ function openai_extract(string $dataUrl): ?array
     // Use the model's default reasoning — gpt-5-mini needs it to read the whole
     // receipt; lowering it tanked accuracy. Two attempts to tolerate malformed JSON.
     for ($attempt = 0; $attempt < 2; $attempt++) {
-        $content = openai_request($apiKey, $body);
+        $resp = openai_request($apiKey, $body);
+        if ($resp === null) {
+            continue;
+        }
+        $tokens = (int) ($resp['usage']['total_tokens'] ?? $tokens ?? 0);
+        $content = $resp['choices'][0]['message']['content'] ?? null;
         if ($content === null) {
             continue;
         }
@@ -167,8 +176,8 @@ function openai_extract(string $dataUrl): ?array
     return null;
 }
 
-/** Single HTTP call; returns the message content string or null. */
-function openai_request(string $apiKey, array $body): ?string
+/** Single HTTP call; returns the decoded response array (incl. `usage`), or null. */
+function openai_request(string $apiKey, array $body): ?array
 {
     $ch = curl_init('https://api.openai.com/v1/chat/completions');
     curl_setopt_array($ch, [
@@ -189,7 +198,7 @@ function openai_request(string $apiKey, array $body): ?string
         return null;
     }
     $json = json_decode($resp, true);
-    return $json['choices'][0]['message']['content'] ?? null;
+    return is_array($json) ? $json : null;
 }
 
 /** Coerce types + recompute obvious totals so the review screen starts sane. */

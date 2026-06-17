@@ -19,8 +19,10 @@ return [
     // 32+ random bytes, base64 or hex. Rotating it logs everyone out.
     'jwt_secret' => 'CHANGE_ME_LONG_RANDOM_STRING',
 
-    // OpenAI — used server-side only by extract_receipt.php (gpt-5-mini).
+    // OpenAI — used server-side only by extract_receipt.php.
     'openai_api_key' => 'sk-...',
+    // OCR model. 'gpt-5-mini' = cheapest; 'gpt-5' = more accurate, higher cost.
+    'openai_model' => 'gpt-5-mini',
 
     // Stripe (test keys for dev, live keys in production).
     'stripe_secret_key'     => 'sk_test_...',

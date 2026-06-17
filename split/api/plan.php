@@ -21,8 +21,9 @@ jout([
     'ads'              => ads_enabled($plan),
     'limits'           => $limits,
     'usage'            => [
-        'sessions'  => $sessionCount,
-        'ocr_scans' => ocr_used_this_month((string) $user['id']),
-        'period'    => current_period(),
+        'sessions'   => $sessionCount,
+        'ocr_scans'  => ocr_used_this_month((string) $user['id']),
+        'ocr_tokens' => ocr_tokens_this_month((string) $user['id']),
+        'period'     => current_period(),
     ],
 ]);
