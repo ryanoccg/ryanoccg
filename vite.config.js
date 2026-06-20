@@ -54,6 +54,10 @@ export default defineConfig({
               resolve(__dirname, 'dist/llm.txt')
             )
             copyFileSync(
+              resolve(__dirname, 'src/llms.txt'),
+              resolve(__dirname, 'dist/llms.txt')
+            )
+            copyFileSync(
               resolve(__dirname, 'src/sitemap-index.xml'),
               resolve(__dirname, 'dist/sitemap-index.xml')
             )
