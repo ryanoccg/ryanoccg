@@ -267,6 +267,12 @@ $ryano_faq_schema = array(
         array('What is the difference between a freelancer and a maintenance company?', 'A freelancer is cheaper and more personal but is a single point of failure if they get busy or stop replying. A company costs more but usually offers documented processes and backup coverage when one person is unavailable.'),
         array('How often should website maintenance actually happen?', 'Continuously, not yearly. Software updates arrive every few weeks, so a site checked once a year spends most of that year exposed.'),
     ),
+    120 => array(
+        array('How do I know if my website design is actually bad?', 'Three quick checks: ask three people outside your business to complete one task on their phone, run PageSpeed Insights and read the mobile score, and check your Google Analytics bounce rate. Over 70 percent on landing pages means visitors are leaving fast.'),
+        array('Can I fix bad website design myself?', 'Some of it yes: updating copy, swapping stock photos, simplifying forms, and fixing the copyright year. Page speed, mobile layout, SSL, and code quality usually need a developer.'),
+        array('How much does a website redesign cost in Malaysia?', 'A full redesign for an SME site typically runs RM3,500 to RM15,000 depending on scope. A targeted fix of the worst issues can often be done for RM1,500 to RM3,000.'),
+        array('Will fixing the design actually increase sales?', 'If you are losing leads to friction like slow loading, poor mobile, unclear value, or hidden contact details, fixing those usually lifts enquiries within 30 to 60 days.'),
+    ),
     191 => array(
         array('How much does an online store cost in Malaysia?', 'Most small to mid stores cost RM5,000 to RM25,000 to build, plus RM300 to RM800 a month to run.'),
         array('Is Shopify or WooCommerce cheaper?', 'Shopify has a fixed monthly fee but less setup. WooCommerce has no platform fee but needs hosting and maintenance. WooCommerce is usually cheaper at scale.'),
