@@ -210,6 +210,10 @@ $ryano_seo_overrides = array(
         'title'       => 'Website Maintenance Company: How to Pick One (2026)',
         'description' => 'Pick a website maintenance company that protects your site, not one that just bills you. The questions to ask, the red flags, fair pricing. WhatsApp +60174272807',
     ),
+    191 => array(
+        'title'       => 'E-Commerce Website Cost in Malaysia: 2026 Price Guide',
+        'description' => 'What an online store really costs to build and run in 2026: build tiers (RM5k-25k), gateway fees, and the hidden monthly costs. Free quote: WhatsApp +60174272807',
+    ),
 );
 
 // Add Open Graph meta tags + <meta name="description"> for better SEO
@@ -262,6 +266,13 @@ $ryano_faq_schema = array(
         array('How do I switch maintenance companies safely?', 'Confirm in writing that you own your domain, hosting, and admin access before signing with anyone new. As long as you hold those, switching is low risk and no provider can hold your site hostage.'),
         array('What is the difference between a freelancer and a maintenance company?', 'A freelancer is cheaper and more personal but is a single point of failure if they get busy or stop replying. A company costs more but usually offers documented processes and backup coverage when one person is unavailable.'),
         array('How often should website maintenance actually happen?', 'Continuously, not yearly. Software updates arrive every few weeks, so a site checked once a year spends most of that year exposed.'),
+    ),
+    191 => array(
+        array('How much does an online store cost in Malaysia?', 'Most small to mid stores cost RM5,000 to RM25,000 to build, plus RM300 to RM800 a month to run.'),
+        array('Is Shopify or WooCommerce cheaper?', 'Shopify has a fixed monthly fee but less setup. WooCommerce has no platform fee but needs hosting and maintenance. WooCommerce is usually cheaper at scale.'),
+        array('Why is an e-commerce website more expensive than a normal website?', 'Because it has to process payments, manage stock, and secure customer data, which adds engineering a brochure site never needs.'),
+        array('What ongoing costs does an online store have?', 'Payment gateway fees (around 2.5 to 3 percent per card sale), hosting, platform or plugin subscriptions, and a maintenance plan.'),
+        array('Do these prices apply outside Malaysia?', 'The figures are in RM, but the cost drivers are the same anywhere: checkout, payments, hosting, and upkeep. Swap the currency and the logic still holds.'),
     ),
 );
 
@@ -346,15 +357,26 @@ function ryano_structured_data() {
             'description' => get_the_excerpt(),
             'datePublished' => get_the_date('c'),
             'dateModified' => get_the_modified_date('c'),
+            // sameAs links blog author/publisher to the brand entity defined on the
+            // homepage (Person + ProfessionalService), so answer/generative engines
+            // resolve them as one entity instead of an anonymous byline. (GEO)
             'author' => array(
-                '@type' => 'Person',
-                'name' => get_the_author(),
-                'url' => 'https://ryanoccg.com',
-            ),
-            'publisher' => array(
                 '@type' => 'Person',
                 'name' => 'Ryano Chu',
                 'url' => 'https://ryanoccg.com',
+                'sameAs' => array(
+                    'https://www.linkedin.com/in/ryano-chu-chee-guan-76307079/',
+                    'https://www.instagram.com/ryanoccg/',
+                ),
+            ),
+            'publisher' => array(
+                '@type' => 'Organization',
+                'name' => 'Ryano Web',
+                'url' => 'https://ryanoccg.com',
+                'sameAs' => array(
+                    'https://www.linkedin.com/in/ryano-chu-chee-guan-76307079/',
+                    'https://www.instagram.com/ryanoccg/',
+                ),
             ),
             'mainEntityOfPage' => array(
                 '@type' => 'WebPage',
