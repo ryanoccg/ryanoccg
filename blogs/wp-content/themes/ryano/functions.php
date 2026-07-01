@@ -214,6 +214,10 @@ $ryano_seo_overrides = array(
         'title'       => 'E-Commerce Website Cost in Malaysia: 2026 Price Guide',
         'description' => 'What an online store really costs to build and run in 2026: build tiers (RM5k-25k), gateway fees, and the hidden monthly costs. Free quote: WhatsApp +60174272807',
     ),
+    198 => array(
+        'title'       => 'AI Website Builder or Professional Development?',
+        'description' => 'AI website builder or professional development? An honest 2026 breakdown of cost, SEO, and ownership. Free advice: WhatsApp +60174272807',
+    ),
 );
 
 // Add Open Graph meta tags + <meta name="description"> for better SEO
@@ -248,6 +252,11 @@ add_action('wp_head', 'ryano_og_meta_tags');
 // Per-post FAQPage structured data (id => [ [q, a], ... ])
 // Mirrors the visible FAQ section so Google can show FAQ rich results.
 $ryano_faq_schema = array(
+    198 => array(
+        array('Is an AI website builder good for SEO?', 'It can handle the basics, but it caps out. You get less control over structured data, page speed, and URL structure than a custom build, so an AI builder is fine for a simple brochure site and limiting once ranking becomes a real goal.'),
+        array('Can I move my site off an AI website builder later?', 'Sometimes, but rarely cleanly. Most builders let you export raw content, not the design or functionality, so a move usually means rebuilding. That lock-in is the main reason to think about ownership before you commit, not after.'),
+        array('Is professional web development worth the higher cost?', 'If your website is a core revenue channel, yes. The higher upfront fee buys custom features, full SEO control, and a portable stack you own outright, which is what keeps costs predictable as you scale instead of climbing with every plan tier.'),
+    ),
     22 => array(
         array('Can I do website maintenance myself?', 'Yes, if you are technical and have time (3-5 hours per month). For non-technical owners or busy businesses, outsourcing is more cost-effective.'),
         array('What if I have not maintained my site in years?', 'Get a security audit first (RM 1,500-3,000). Clean up any issues, then start regular maintenance.'),
