@@ -320,6 +320,13 @@ $ryano_faq_schema = array(
         array('What’s the difference between SEO and SEM?', 'SEO = organic (free) rankings. SEM = paid ads (Google Ads). Both important, different strategies.'),
         array('Can I guarantee #1 ranking?', 'No. Anyone who guarantees #1 is lying. Google’s algorithm is complex and constantly changing. Ethical SEO promises improvement, not guarantees.'),
     ),
+    8 => array(
+        array('Can I build a website myself for free?', 'Yes, using Wix or WordPress.com, but you’ll have limitations (ads, restricted features, no custom domain). For a professional business site, expect to spend at least RM 2,000.'),
+        array('Do I own the website after paying?', 'Yes, if the developer uses WordPress or open-source platforms. Always clarify ownership before starting.'),
+        array('What if I need changes after launch?', 'Most developers offer 1-3 months of minor updates included. After that, expect RM 100-300/hour for changes.'),
+        array('Is it cheaper to hire overseas developers?', 'Sometimes, but communication delays, time zone differences, and quality issues often make it not worth the savings.'),
+        array('How long does it take to build a website?', 'Simple site: 1-2 weeks Business website: 2-4 weeks E-commerce: 4-8 weeks Custom system: 2-6 months'),
+    ),
 );
 
 // Emit FAQPage JSON-LD on posts that have FAQ entries defined above
