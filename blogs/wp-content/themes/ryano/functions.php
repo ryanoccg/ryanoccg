@@ -203,8 +203,8 @@ $ryano_seo_overrides = array(
         'description' => 'What website maintenance really costs in Malaysia (2026): monthly plans, hidden fees, and which tier your site needs. Free quote: WhatsApp +60174272807',
     ),
     26 => array(
-        'title'       => 'Web Design Malaysia: 7 Mistakes & Quick Fixes (2026)',
-        'description' => '7 web design mistakes I find on 80% of Malaysian SME audits — fix them in 30 mins. Free website review: WhatsApp +60174272807',
+        'title'       => 'Web Design Malaysia: What Actually Converts (2026)',
+        'description' => 'What separates web design that converts from design that just looks nice, plus the practical 2026 fixes that lift enquiries. Free review: WhatsApp +60174272807',
     ),
     187 => array(
         'title'       => 'Website Maintenance Company: How to Pick One (2026)',
