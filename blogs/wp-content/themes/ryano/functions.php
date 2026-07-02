@@ -534,6 +534,21 @@ function ryano_pillar_maintenance_schema() {
 }
 add_action('wp_head', 'ryano_pillar_maintenance_schema');
 
+// 301 redirects for consolidated/retired posts (keyword cannibalization cleanup)
+// Old post stays published so its permalink resolves, but always 301s to the canonical replacement.
+function ryano_content_consolidation_redirects() {
+    if (is_admin() || !is_singular('post')) return;
+    $redirects = array(
+        110 => 198, // ai-website-builder-vs-custom-development -> ai-website-builder-vs-professional-web-development
+    );
+    $id = get_queried_object_id();
+    if (isset($redirects[$id])) {
+        $target = get_permalink($redirects[$id]);
+        if ($target) { wp_redirect($target, 301); exit; }
+    }
+}
+add_action('template_redirect', 'ryano_content_consolidation_redirects');
+
 // Security: Disable XML-RPC
 add_filter('xmlrpc_enabled', '__return_false');
 
