@@ -266,11 +266,11 @@ $ryano_faq_schema = array(
         array('How often should I update for new phone sizes?', 'Responsive design automatically adapts. No updates needed for new phones.'),
     ),
     18 => array(
-        array('Can I start with Shopee/Lazada instead?', 'Yes, great for testing products. But you don\'t own the customer relationship. Use marketplaces + your own site.'),
+        array('Can I start with Shopee/Lazada instead?', 'Yes, great for testing products. But you don’t own the customer relationship. Use marketplaces + your own site.'),
         array('Do I need to hold inventory?', 'Not necessarily. Dropshipping is an option, but margins are lower and you have less control.'),
         array('How long until I make money?', 'Most stores take 3-6 months to become profitable. First months are learning and building audience.'),
         array('Can I sell internationally?', 'Yes, but consider: shipping costs, customs, returns logistics, payment gateways (Stripe or PayPal).'),
-        array('Should I offer COD (Cash on Delivery)?', 'Pros: Customers trust it, especially in rural areas. Cons: 15-25% return rate, courier charges extra. Recommendation: Offer it but encourage online payment (discount for prepayment).'),
+        array('Should I offer COD (Cash on Delivery)?', 'Pros: Customers trust it, especially in rural areas Cons: 15-25% return rate, courier charges extra Recommendation: Offer it but encourage online payment (discount for prepayment)'),
     ),
     22 => array(
         array('Can I do website maintenance myself?', 'Yes, if you are technical and have time (3-5 hours per month). For non-technical owners or busy businesses, outsourcing is more cost-effective.'),
