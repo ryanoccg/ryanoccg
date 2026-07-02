@@ -311,6 +311,15 @@ $ryano_faq_schema = array(
         array('Will a faster site really increase sales?', 'Yes, if the funnel is otherwise healthy. Speed cannot fix a confusing checkout or a weak product, but if you already have traffic and decent conversions, every 100ms of improvement should produce a measurable lift.'),
         array('Is INP harder than the old FID?', 'Yes. FID only measured the first interaction; INP measures every interaction throughout the visit. Sites that easily passed FID are now failing INP, especially e-commerce stores and sites with heavy interactive features.'),
     ),
+    20 => array(
+        array('How do I rank on Google page 1 in Malaysia?', 'Start with your Google Business Profile, add clear location keywords to your key pages, make the site fast and mobile-friendly, then earn a few links from trusted local sites. Most local searches reach page 1 in 3 to 6 months of consistent work, sooner for low-competition keywords.'),
+        array('How long does SEO take?', 'Typically 3-6 months to see significant results. Local SEO can show results faster (4-8 weeks).'),
+        array('Can I do SEO myself?', 'Yes, basic SEO is learnable. But it’s time-intensive and technical. Most businesses find outsourcing more cost-effective.'),
+        array('Does social media help SEO?', 'Indirectly. Social signals don’t directly affect ranking, but social traffic and engagement help.'),
+        array('Should I focus on Google or other search engines?', 'Google dominates 96% of search in Malaysia. Focus there first.'),
+        array('What’s the difference between SEO and SEM?', 'SEO = organic (free) rankings. SEM = paid ads (Google Ads). Both important, different strategies.'),
+        array('Can I guarantee #1 ranking?', 'No. Anyone who guarantees #1 is lying. Google’s algorithm is complex and constantly changing. Ethical SEO promises improvement, not guarantees.'),
+    ),
 );
 
 // Emit FAQPage JSON-LD on posts that have FAQ entries defined above
