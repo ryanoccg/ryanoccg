@@ -257,6 +257,21 @@ $ryano_faq_schema = array(
         array('Can I move my site off an AI website builder later?', 'Sometimes, but rarely cleanly. Most builders let you export raw content, not the design or functionality, so a move usually means rebuilding. That lock-in is the main reason to think about ownership before you commit, not after.'),
         array('Is professional web development worth the higher cost?', 'If your website is a core revenue channel, yes. The higher upfront fee buys custom features, full SEO control, and a portable stack you own outright, which is what keeps costs predictable as you scale instead of climbing with every plan tier.'),
     ),
+    14 => array(
+        array('Do I need a separate mobile website?', 'No. One responsive website that adapts is better than running two separate sites.'),
+        array('Will mobile-first hurt my desktop experience?', 'No. Mobile-first means starting with mobile, then enhancing for desktop. The desktop version still looks great.'),
+        array('How do I test mobile design without a developer?', 'Use the Chrome DevTools mobile simulator or a service like BrowserStack.'),
+        array('Should I build a mobile app instead?', 'Only if you need app-specific features like push notifications or offline mode. Most businesses just need a mobile-first website.'),
+        array('What about tablets?', 'Mobile-first responsive design automatically handles tablets too.'),
+        array('How often should I update for new phone sizes?', 'Responsive design adapts automatically, so no updates are needed for new phone sizes.'),
+    ),
+    18 => array(
+        array('Can I start with Shopee or Lazada instead?', 'Yes, marketplaces are great for testing products. But you do not own the customer relationship, so use them alongside your own site, not instead of it.'),
+        array('Do I need to hold inventory?', 'Not necessarily. Dropshipping is an option, though margins are lower and you have less control over quality and shipping.'),
+        array('How long until an online store makes money?', 'Most stores take 3 to 6 months to become profitable. The first months go into learning and building an audience.'),
+        array('Can I sell internationally?', 'Yes, but factor in shipping costs, customs, returns logistics, and international payment gateways like Stripe or PayPal.'),
+        array('Should I offer Cash on Delivery?', 'You can, but expect a 15 to 25 percent return rate plus extra courier charges. Offer it, but encourage online payment with a small prepayment discount.'),
+    ),
     22 => array(
         array('Can I do website maintenance myself?', 'Yes, if you are technical and have time (3-5 hours per month). For non-technical owners or busy businesses, outsourcing is more cost-effective.'),
         array('What if I have not maintained my site in years?', 'Get a security audit first (RM 1,500-3,000). Clean up any issues, then start regular maintenance.'),
@@ -288,6 +303,13 @@ $ryano_faq_schema = array(
         array('Why is an e-commerce website more expensive than a normal website?', 'Because it has to process payments, manage stock, and secure customer data, which adds engineering a brochure site never needs.'),
         array('What ongoing costs does an online store have?', 'Payment gateway fees (around 2.5 to 3 percent per card sale), hosting, platform or plugin subscriptions, and a maintenance plan.'),
         array('Do these prices apply outside Malaysia?', 'The figures are in RM, but the cost drivers are the same anywhere: checkout, payments, hosting, and upkeep. Swap the currency and the logic still holds.'),
+    ),
+    126 => array(
+        array('Does fixing Core Web Vitals guarantee higher rankings?', 'No, but it removes a known ranking penalty. Google has confirmed Core Web Vitals are a ranking signal, but content quality and backlinks still carry more weight. Speed fixes give you a fairer fight, not a free win.'),
+        array('How long does optimization take?', 'A standard small business site can be optimized in 5 to 10 working days. The 75th percentile data in Search Console takes 28 days to fully update, so the visible improvement lands 4 to 6 weeks after the work is done.'),
+        array('Should I switch hosts just for speed?', 'If your TTFB is consistently over 800ms, yes. Hosting upgrades have the largest single impact on every other metric, because everything else stacks on top of the server response time.'),
+        array('Will a faster site really increase sales?', 'Yes, if the funnel is otherwise healthy. Speed cannot fix a confusing checkout or a weak product, but if you already have traffic and decent conversions, every 100ms of improvement should produce a measurable lift.'),
+        array('Is INP harder than the old FID?', 'Yes. FID only measured the first interaction; INP measures every interaction throughout the visit. Sites that easily passed FID are now failing INP, especially e-commerce stores and sites with heavy interactive features.'),
     ),
 );
 
