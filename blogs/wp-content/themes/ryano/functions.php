@@ -272,18 +272,10 @@ $ryano_faq_schema = array(
         array('Can I sell internationally?', 'Yes, but consider: shipping costs, customs, returns logistics, payment gateways (Stripe or PayPal).'),
         array('Should I offer COD (Cash on Delivery)?', 'Pros: Customers trust it, especially in rural areas Cons: 15-25% return rate, courier charges extra Recommendation: Offer it but encourage online payment (discount for prepayment)'),
     ),
-    22 => array(
-        array('Can I do website maintenance myself?', 'Yes, if you are technical and have time (3-5 hours per month). For non-technical owners or busy businesses, outsourcing is more cost-effective.'),
-        array('What if I have not maintained my site in years?', 'Get a security audit first (RM 1,500-3,000). Clean up any issues, then start regular maintenance.'),
-        array('My developer said maintenance is not necessary. Is that true?', 'No. All websites need maintenance. A developer who says otherwise is either inexperienced or wants you dependent on expensive emergency fixes.'),
-        array('Can my hosting company handle maintenance?', 'Some do (managed WordPress hosting), but most do not. Shared hosting only covers server-level maintenance, not your website specifically.'),
-        array('What happens if I cancel maintenance?', 'Your site gradually becomes vulnerable, slow, and outdated, and the risk of hacking increases significantly.'),
-        array('Is yearly maintenance better than monthly?', 'No. Maintenance should be ongoing. Yearly maintenance means 11 months of vulnerability.'),
-        array('Does WordPress maintenance differ from Shopify maintenance?', 'Yes. WordPress needs hands-on plugin, theme, and core updates (2-4 hours per month) because you own the stack. Shopify handles the platform itself, so maintenance focuses on app audits, theme tweaks, and storefront optimization (1-2 hours per month).'),
-        array('Can maintenance fees be claimed as a business expense in Malaysia?', 'Yes. Website maintenance is a recurring business expense and qualifies as a deduction under your company tax filing. Keep your monthly invoices, as LHDN accepts both digital and printed receipts.'),
-        array('How soon after launching a new website do I need maintenance?', 'Day one. WordPress core, plugins, and themes start receiving updates within weeks of any launch, so a 3-month-old unmaintained site is just as exposed as a 3-year-old one.'),
-        array('Is switching maintenance providers risky?', 'Only if your current provider holds your assets hostage. Before signing up with anyone, confirm in writing that you own the domain, you have admin-level access to hosting and the site, and there is no exit fee.'),
-    ),
+    // 22 (website-maintenance-malaysia) intentionally NOT in this array:
+    // its FAQPage is emitted by ryano_pillar_maintenance_schema() below.
+    // Keeping it here too would output two FAQPage blocks on one URL,
+    // which makes Google ignore both.
     187 => array(
         array('Is a website maintenance company worth it for a small business?', 'Yes, if the site earns or represents revenue. The cost of one serious hack or a week of downtime almost always exceeds a year of maintenance fees, and recovery is far more expensive than prevention.'),
         array('Can I just use my hosting provider for maintenance?', 'Usually not fully. Most hosts maintain the server, not your specific website. Managed WordPress hosting is the exception, and even then it rarely covers plugin conflicts or content fixes.'),
@@ -292,6 +284,7 @@ $ryano_faq_schema = array(
         array('How often should website maintenance actually happen?', 'Continuously, not yearly. Software updates arrive every few weeks, so a site checked once a year spends most of that year exposed.'),
     ),
     120 => array(
+        array('What makes a website design bad?', 'A design is bad when it blocks visitors from acting: no clear value proposition, slow loading, broken mobile layout, hidden contact options, or content that looks abandoned. In Malaysia the two biggest offenders are slow mobile pages and buried WhatsApp buttons, because over 96% of users browse on phones.'),
         array('How do I know if my website design is actually bad?', 'Three quick checks: ask three people outside your business to complete one task on their phone, run PageSpeed Insights and read the mobile score, and check your Google Analytics bounce rate. Over 70 percent on landing pages means visitors are leaving fast.'),
         array('Can I fix bad website design myself?', 'Some of it yes: updating copy, swapping stock photos, simplifying forms, and fixing the copyright year. Page speed, mobile layout, SSL, and code quality usually need a developer.'),
         array('How much does a website redesign cost in Malaysia?', 'A full redesign for an SME site typically runs RM3,500 to RM15,000 depending on scope. A targeted fix of the worst issues can often be done for RM1,500 to RM3,000.'),
@@ -458,14 +451,14 @@ function ryano_pillar_maintenance_schema() {
 
     // FAQPage schema (12 Q&As mirroring the on-page FAQ section)
     $faqs = array(
-        array('Can I do website maintenance myself?', 'Yes, if you are technical and have 3-5 hours per month available. Non-technical owners or busy Malaysian SMEs almost always save money by outsourcing — the cost of one missed update can exceed a year of maintenance fees.'),
+        array('Can I do website maintenance myself?', 'Yes, if you are technical and have 3-5 hours per month available. Non-technical owners or busy Malaysian SMEs almost always save money by outsourcing: the cost of one missed update can exceed a year of maintenance fees.'),
         array('What if I haven\'t maintained my site in years?', 'Start with a security audit (RM 1,500-3,000) to find vulnerabilities and backdoors. Once the site is clean, move to regular monthly maintenance to prevent the issue from recurring.'),
         array('My developer said maintenance isn\'t necessary. Is that true?', 'No. Every website needs ongoing maintenance. A developer claiming otherwise is either inexperienced or hoping you\'ll pay for expensive emergency fixes later. WordPress, plugins, themes, and PHP all receive security patches every few weeks.'),
         array('Can\'t my hosting company handle maintenance?', 'Most cannot. Shared hosting providers handle server-level updates only. Managed WordPress hosts (WP Engine, Kinsta) cover core updates but not your plugins, themes, or content. Maintenance is a separate responsibility.'),
         array('What happens if I cancel maintenance?', 'Your site becomes gradually more vulnerable. Within 3-6 months you will likely have outdated plugins with public CVEs, no recent backup, and broken SSL renewal. The risk of being hacked rises sharply after month 4.'),
         array('Is yearly maintenance better than monthly?', 'No. "Yearly maintenance" means 11 months of vulnerability. Security patches and plugin updates need to be applied weekly, not annually. Monthly retainer plans exist for this reason.'),
         array('Does WordPress maintenance differ from Shopify maintenance?', 'Yes, significantly. WordPress requires hands-on plugin, theme, and core updates (2-4 hours/month) because you own the stack. Shopify handles the platform itself, so your maintenance focuses on app audits, theme tweaks, and storefront optimization (1-2 hours/month).'),
-        array('Can maintenance fees be claimed as a business expense in Malaysia?', 'Yes. Website maintenance is a recurring business expense and qualifies as a deduction under your company tax filing with LHDN. Keep monthly invoices — both digital and printed receipts are accepted.'),
+        array('Can maintenance fees be claimed as a business expense in Malaysia?', 'Yes. Website maintenance is a recurring business expense and qualifies as a deduction under your company tax filing with LHDN. Keep monthly invoices, as both digital and printed receipts are accepted.'),
         array('How soon after launching a new website do I need maintenance?', 'Day one. WordPress core, plugins, and themes start receiving updates within weeks of any launch. A 3-month-old unmaintained site is just as exposed as a 3-year-old one.'),
         array('Is switching maintenance providers risky?', 'Only if your current provider holds your assets hostage. Before signing up, confirm in writing: you own the domain, you have admin-level access to hosting and the site, and there is no exit fee. A clean handover should take less than 48 hours.'),
         array('Can I pause maintenance for one or two months?', 'Technically yes, practically no. WordPress plugin vulnerabilities are exploited within hours of public disclosure. A 60-day pause is enough exposure to get hit by routine mass-scan attacks. Downgrade to a lower tier instead of pausing.'),
