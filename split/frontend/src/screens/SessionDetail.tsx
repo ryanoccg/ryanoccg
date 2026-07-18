@@ -5,7 +5,7 @@ import { useAuth } from '../auth/AuthContext'
 import UpgradePrompt from '../components/UpgradePrompt'
 import ContactPicker from '../components/ContactPicker'
 import { computeSettlement } from '../settlement'
-import { formatCents, toCents } from '../money'
+import { CURRENCIES, convertedLabel, formatCents, toCents } from '../money'
 import type { Member, Receipt, SessionDetail as Session } from '../types'
 
 export default function SessionDetail() {
@@ -18,6 +18,8 @@ export default function SessionDetail() {
   const [limitMsg, setLimitMsg] = useState('')
   const [error, setError] = useState('')
   const [lightbox, setLightbox] = useState<string | null>(null)
+  const [homeCur, setHomeCur] = useState('')
+  const [rate, setRate] = useState('')
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -31,6 +33,27 @@ export default function SessionDetail() {
     }
   }, [sessionId])
   useEffect(() => { load() }, [load])
+
+  // Seed the rate editor once when the session first loads.
+  useEffect(() => {
+    if (session) {
+      setHomeCur(session.home_currency || '')
+      setRate(session.exchange_rate ? String(Number(session.exchange_rate)) : '')
+    }
+  }, [session?.id]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function saveRate() {
+    setError('')
+    try {
+      await api.put(`sessions.php?id=${sessionId}`, {
+        home_currency: homeCur || null,
+        exchange_rate: homeCur && rate ? Number(rate) : null,
+      })
+      await load()
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Could not save rate.')
+    }
+  }
 
   const settlement = useMemo(() => (session ? computeSettlement(session) : null), [session])
   const memberName = (mid: string | null) =>
@@ -73,6 +96,7 @@ export default function SessionDetail() {
   if (!session) return <div className="error">{error || 'Not found.'}</div>
 
   const currency = session.currency
+  const conv = (cents: number) => convertedLabel(cents, session.exchange_rate, session.home_currency)
   const unassignedReceipts = session.receipts.filter((r) => unassignedCents(r) > 0)
 
   return (
@@ -106,6 +130,28 @@ export default function SessionDetail() {
           />
         </div>
         <p className="muted small mt">Contacts are saved to your account and can be reused in any session.</p>
+      </section>
+
+      <section className="card">
+        <h2>Currency</h2>
+        <p className="muted small">Session is in <strong>{currency}</strong>. Optionally convert totals into another currency at your own rate.</p>
+        <div className="form-row mt">
+          <label>Convert to
+            <select value={homeCur} onChange={(e) => setHomeCur(e.target.value)}>
+              <option value="">— none —</option>
+              {CURRENCIES.filter((c) => c !== currency).map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </label>
+          {homeCur && (
+            <label className="grow">Rate (1 {currency} = ? {homeCur})
+              <input className="num" inputMode="decimal" placeholder="e.g. 0.13" value={rate} onChange={(e) => setRate(e.target.value)} />
+            </label>
+          )}
+          <button className="btn" onClick={saveRate}>Save</button>
+        </div>
+        {session.exchange_rate && session.home_currency && (
+          <p className="muted small mt">Showing amounts as {currency}, with ≈ {session.home_currency} at 1 {currency} = {Number(session.exchange_rate)} {session.home_currency}.</p>
+        )}
       </section>
 
       <section className="card">
@@ -155,6 +201,9 @@ export default function SessionDetail() {
                   {b.netCents > 0 ? `is owed ${formatCents(b.netCents, currency)}`
                     : b.netCents < 0 ? `owes ${formatCents(-b.netCents, currency)}`
                     : 'settled'}
+                  {b.netCents !== 0 && conv(Math.abs(b.netCents)) && (
+                    <span className="muted small"> ({conv(Math.abs(b.netCents))})</span>
+                  )}
                 </span>
               </li>
             ))}

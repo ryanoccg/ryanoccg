@@ -66,6 +66,8 @@ CREATE TABLE IF NOT EXISTS sessions (
   owner_user_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   name          VARCHAR(120) NOT NULL,
   currency      CHAR(3) NOT NULL DEFAULT 'MYR',
+  home_currency CHAR(3) NULL DEFAULT NULL,           -- convert into this currency…
+  exchange_rate DECIMAL(16,6) NULL DEFAULT NULL,      -- …at this manual rate (per 1 session-currency unit)
   created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   KEY idx_sessions_owner (owner_user_id),
