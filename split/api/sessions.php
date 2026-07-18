@@ -112,9 +112,18 @@ function create_session(array $user): void
         jfail('Session name is required.', 422);
     }
     $currency = normalize_currency($in['currency'] ?? null, 'MYR');
+    $homeCurrency = normalize_currency($in['home_currency'] ?? null, null);
+    $rate = isset($in['exchange_rate']) && $in['exchange_rate'] !== '' ? round((float) $in['exchange_rate'], 6) : null;
+    if ($rate !== null && $rate <= 0) {
+        $rate = null;
+    }
+    if ($homeCurrency === null || $homeCurrency === $currency || $rate === null) {
+        $homeCurrency = null;
+        $rate = null;
+    }
     $id = uuidv4();
-    $stmt = db()->prepare('INSERT INTO sessions (id, owner_user_id, name, currency) VALUES (?, ?, ?, ?)');
-    $stmt->execute([$id, (string) $user['id'], $name, $currency]);
+    $stmt = db()->prepare('INSERT INTO sessions (id, owner_user_id, name, currency, home_currency, exchange_rate) VALUES (?, ?, ?, ?, ?, ?)');
+    $stmt->execute([$id, (string) $user['id'], $name, $currency, $homeCurrency, $rate]);
 
     // Seed any members provided at creation: each name becomes (or reuses) a
     // contact, then links into this session. Subject to the member guard.
@@ -159,6 +168,18 @@ function update_session(string $id, string $uid): void
             $fields[] = 'currency = ?';
             $args[] = $cur;
         }
+    }
+    if (array_key_exists('home_currency', $in)) {
+        $fields[] = 'home_currency = ?';
+        $args[] = normalize_currency((string) $in['home_currency'], null);
+    }
+    if (array_key_exists('exchange_rate', $in)) {
+        $rate = ($in['exchange_rate'] === '' || $in['exchange_rate'] === null) ? null : round((float) $in['exchange_rate'], 6);
+        if ($rate !== null && $rate <= 0) {
+            $rate = null;
+        }
+        $fields[] = 'exchange_rate = ?';
+        $args[] = $rate;
     }
     if ($fields) {
         $args[] = $id;

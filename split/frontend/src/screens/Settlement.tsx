@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api, ApiError } from '../api'
 import { computeSettlement, receiptBreakdowns } from '../settlement'
-import { formatCents, toCents } from '../money'
+import { convertedLabel, formatCents, toCents } from '../money'
 import type { SessionDetail } from '../types'
 
 export default function Settlement() {
@@ -24,6 +24,7 @@ export default function Settlement() {
   if (!session || !result) return <div className="muted">Loading…</div>
 
   const cur = session.currency
+  const conv = (cents: number) => convertedLabel(cents, session.exchange_rate, session.home_currency)
   const nameOf = (mid: string | null) => session.members.find((m) => m.id === mid)?.display_name ?? '—'
   const unassignedReceipts = session.receipts
     .map((r) => ({ r, cents: r.line_items.reduce((s, li) => s + ((li.shares?.length ?? 0) === 0 ? toCents(li.total) : 0), 0) }))
@@ -61,6 +62,9 @@ export default function Settlement() {
                 {b.netCents > 0 ? `should take back ${formatCents(b.netCents, cur)}`
                   : b.netCents < 0 ? `should pay out ${formatCents(-b.netCents, cur)}`
                   : 'settled'}
+                {b.netCents !== 0 && conv(Math.abs(b.netCents)) && (
+                  <span className="muted small"> ({conv(Math.abs(b.netCents))})</span>
+                )}
               </span>
             </li>
           ))}
@@ -76,7 +80,10 @@ export default function Settlement() {
             {result.transactions.map((t, i) => (
               <li key={i}>
                 <strong>{t.fromName}</strong> pays <strong>{t.toName}</strong>
-                <span className="amt">{formatCents(t.amountCents, cur)}</span>
+                <span className="amt">
+                  {formatCents(t.amountCents, cur)}
+                  {conv(t.amountCents) && <span className="muted small"> ({conv(t.amountCents)})</span>}
+                </span>
               </li>
             ))}
           </ul>

@@ -68,6 +68,8 @@ export interface SessionDetail {
   id: string
   name: string
   currency: string
+  home_currency?: string | null
+  exchange_rate?: number | string | null
   owner_user_id?: string
   created_at?: string
   members: Member[]

@@ -1,7 +1,18 @@
 // Money helpers. All settlement math runs in integer cents to avoid float drift.
 
 // Currencies offered in the UI (shared by session creation + the receipt editor).
-export const CURRENCIES = ['MYR', 'USD', 'SGD', 'EUR', 'GBP', 'AUD', 'JPY', 'CNY']
+export const CURRENCIES = ['MYR', 'USD', 'SGD', 'THB', 'EUR', 'GBP', 'AUD', 'JPY', 'CNY']
+
+/** "≈ RM13.00" for a session-currency cents amount at a home-currency rate, or null. */
+export function convertedLabel(
+  cents: number,
+  rate: number | string | null | undefined,
+  homeCurrency: string | null | undefined,
+): string | null {
+  const r = typeof rate === 'string' ? parseFloat(rate) : rate
+  if (!r || r <= 0 || !homeCurrency) return null
+  return '≈ ' + formatCents(Math.round(cents * r), homeCurrency)
+}
 
 /** Parse a number|string (possibly null) into cents (integer). */
 export function toCents(v: number | string | null | undefined): number {
