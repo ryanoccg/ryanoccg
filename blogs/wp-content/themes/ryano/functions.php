@@ -186,9 +186,11 @@ remove_action('wp_head', 'rsd_link');
 // title: keep under 60 chars so Google doesn't truncate
 // description: 120-155 chars, include CTA
 $ryano_seo_overrides = array(
+    // 2026-07-27: SERP title said "7 Mistakes" while the page lists 10. Aligned to the
+    // visible H1/H2 count and dropped the unsourced "80% of SME sites" claim.
     120 => array(
-        'title'       => 'Bad Website Design Malaysia: 7 Mistakes Killing Sales (2026)',
-        'description' => 'These 7 web design mistakes quietly kill sales on 80% of Malaysian SME sites. Real audits, real fixes. Spot yours in 30 seconds: WhatsApp +60174272807',
+        'title'       => 'Bad Website Design Malaysia: 10 Costly Mistakes (2026)',
+        'description' => 'The 10 design mistakes that quietly cost Malaysian SMEs enquiries, with the fix for each. Spot yours in 30 seconds: WhatsApp +60174272807',
     ),
     14 => array(
         'title'       => 'Mobile Website Malaysia: Stop Losing 72% of Visitors (2026)',
@@ -217,6 +219,14 @@ $ryano_seo_overrides = array(
     198 => array(
         'title'       => 'AI Website Builder or Professional Development?',
         'description' => 'AI website builder or professional development? An honest 2026 breakdown of cost, SEO, and ownership. Free advice: WhatsApp +60174272807',
+    ),
+    // 2026-07-27: post 176 had no override despite being the site's highest-impression
+    // blog page (518 impressions/30d). It owns the generic "plan/package" query cluster
+    // (website maintenance plan, pos 31.9) while pillar 22 holds the geo terms, so lead
+    // the title with the exact generic keyword. No cannibalisation with 22.
+    176 => array(
+        'title'       => 'Website Maintenance Plan: What Yours Should Cover (2026)',
+        'description' => 'What a real website maintenance plan covers, what each tier costs, and the line items cheap plans quietly skip. Free review: WhatsApp +60174272807',
     ),
 );
 
@@ -319,6 +329,16 @@ $ryano_faq_schema = array(
         array('What if I need changes after launch?', 'Most developers offer 1-3 months of minor updates included. After that, expect RM 100-300/hour for changes.'),
         array('Is it cheaper to hire overseas developers?', 'Sometimes, but communication delays, time zone differences, and quality issues often make it not worth the savings.'),
         array('How long does it take to build a website?', 'Simple site: 1-2 weeks Business website: 2-4 weeks E-commerce: 4-8 weeks Custom system: 2-6 months'),
+    ),
+    // 2026-07-27: post 76 had no FAQPage schema (only gap of 14 audited pages).
+    // Mirrors the visible "Questions worth answering directly" block verbatim;
+    // the page body was em-dash cleaned first so schema and visible text match.
+    76 => array(
+        array('How much does this cost?', 'Better hosting (RM 50-100/month for a VPS) plus optionally a premium caching plugin like WP Rocket (around RM 150/year). Cloudflare CDN’s free tier covers most SME needs. Total: under RM 100/month above whatever you are already spending.'),
+        array('Will speed actually improve my Google ranking?', 'Yes. Page speed is a confirmed ranking factor for both desktop and mobile. More importantly, a faster site keeps visitors engaged longer, which signals quality to Google.'),
+        array('How long does the fix take?', 'Basic fixes (compression, caching, Cloudflare) can be done in a few hours. Full audit and optimization with hosting migration usually takes 1-3 days.'),
+        array('My site was fast at launch but has slowed down. Why?', 'Extremely common with WordPress. Adding plugins, content, and images over time cumulatively bloats the site. A 1.2MB launch can easily reach 4-5MB after two years without active maintenance. Regular speed audits every six months prevent this drift. Most professional website maintenance Malaysia plans include monthly performance optimization.'),
+        array('Should I rebuild the site?', 'Rarely the first step. The five fixes above usually deliver dramatic improvements without a rebuild. A rebuild is warranted only if the underlying theme is fundamentally inefficient or the codebase is unsalvageable.'),
     ),
 );
 
