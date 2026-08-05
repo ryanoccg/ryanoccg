@@ -228,6 +228,19 @@ $ryano_seo_overrides = array(
         'title'       => 'Website Maintenance Plan: What Yours Should Cover (2026)',
         'description' => 'What a real website maintenance plan covers, what each tier costs, and the line items cheap plans quietly skip. Free review: WhatsApp +60174272807',
     ),
+    // 2026-08-05: posts 20 and 218 are the two best-ranking pages on the site (pos 8.0
+    // and 6.5) but were the only top-10 pages still falling back to get_the_excerpt(),
+    // so their SERP snippet was a truncated first paragraph ending in an ellipsis.
+    // Every other page sits at pos 30-70 where expected CTR is ~0, making these two the
+    // only places a snippet rewrite can actually move clicks.
+    20 => array(
+        'title'       => 'How to Rank on Google Page 1 in Malaysia: 2026 Basics',
+        'description' => 'Google Business Profile, location keywords, speed, mobile, then local links. Most local searches reach page 1 in 3 to 6 months. WhatsApp +60174272807',
+    ),
+    218 => array(
+        'title'       => 'Signs It Is Time to Redesign Your Website',
+        'description' => 'Traffic holding steady while enquiries fall is the clearest sign. Score your own site before you spend on a redesign. Free review: WhatsApp +60174272807',
+    ),
 );
 
 // Add Open Graph meta tags + <meta name="description"> for better SEO
@@ -339,6 +352,24 @@ $ryano_faq_schema = array(
         array('How long does the fix take?', 'Basic fixes (compression, caching, Cloudflare) can be done in a few hours. Full audit and optimization with hosting migration usually takes 1-3 days.'),
         array('My site was fast at launch but has slowed down. Why?', 'Extremely common with WordPress. Adding plugins, content, and images over time cumulatively bloats the site. A 1.2MB launch can easily reach 4-5MB after two years without active maintenance. Regular speed audits every six months prevent this drift. Most professional website maintenance Malaysia plans include monthly performance optimization.'),
         array('Should I rebuild the site?', 'Rarely the first step. The five fixes above usually deliver dramatic improvements without a rebuild. A rebuild is warranted only if the underlying theme is fundamentally inefficient or the codebase is unsalvageable.'),
+    ),
+    // 2026-08-05: post 243, mirrors the visible FAQ block verbatim.
+    243 => array(
+        array('How much does the WhatsApp Business API cost per message?', 'Meta prices per delivered template message by category and country, in small per-message amounts rather than a flat monthly fee. There are three categories: marketing, utility, and authentication. Marketing always costs money. Utility is free inside an open customer service window, so your bill depends more on when messages fire than how many you send.'),
+        array('Is the WhatsApp Business API free?', 'No, but a large share of messages can be. Since 1 July 2025 Meta charges per delivered template. Non-template messages and utility templates delivered inside an open customer service window are free, and that window opens whenever the customer messages you first. Marketing templates are charged regardless.'),
+        array('What is the difference between WhatsApp Business and the WhatsApp Business API?', 'WhatsApp Business is a free app a person uses on a phone. The API has no app or inbox. It connects to your own system so messages send automatically when something changes, and it can be wired to a shared inbox or CRM so several people work from one number.'),
+        array('How long does it take to set up?', 'Plan for a couple of weeks before going live. Meta business verification, number verification, and template approval all take time, and templates are sometimes rejected on the first attempt. The integration work itself is usually shorter than the approval waiting.'),
+        array('Do customers have to opt in?', 'Yes. Meta requires opt-in before you send template messages, and the opt-in has to make clear the customer will receive WhatsApp messages from your business. Collecting it at the point of sale, on the job sheet or booking form, is the least awkward moment.'),
+        array('Can it work with my existing system?', 'Usually. The API is a standard integration, so anything that can send a web request can trigger a message. The real question is whether your system knows when a job changes stage. If that information only lives in someone\'s head, that gets built first.'),
+    ),
+    // 2026-08-05: post 248, scheduled for 2026-08-12. Mirrors the visible FAQ block verbatim.
+    248 => array(
+        array('What is a customer status page?', 'A public web page showing the current stage of a customer\'s job or order, reachable by a permanent link with no login. It answers the question they would otherwise phone to ask, in plain language rather than internal terminology.'),
+        array('Does a customer status page need a login?', 'Often not, and requiring one is a common reason these projects stall. A long unguessable link per job is enough only when the page shows a stage and a rough date, with no personal details, addresses, amounts, or identity data. Anything beyond that needs proper authentication.'),
+        array('How much does it cost to build?', 'It depends almost entirely on whether your system already records job stages. If it does, this is a small build. If stages currently live in people\'s heads or a spreadsheet, most of the cost is capturing them properly, and the page itself is the cheap part.'),
+        array('Will it actually reduce support calls?', 'It reduces one specific kind: the repeated "where is my order" call. It does nothing for change requests, complaints, or quote chasing. Listen to a week of your actual calls before assuming which kind you have.'),
+        array('Should it send notifications too?', 'They work better together. The notification gets the page looked at, and the page means the notification does not have to carry all the detail. Sending updates as utility messages rather than marketing ones also keeps the messaging cost down.'),
+        array('What if my job stages change often?', 'Design the page around a small number of stable stages rather than every internal step. Customers want to know roughly where their job sits and what happens next, not your full process. Fewer, stabler stages age better and need less maintenance.'),
     ),
 );
 
@@ -562,6 +593,32 @@ function ryano_pillar_maintenance_schema() {
     echo '<script type="application/ld+json">' . wp_json_encode($service, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
 }
 add_action('wp_head', 'ryano_pillar_maintenance_schema');
+
+// HowTo schema for post 20 — "how to rank on google page 1 in malaysia" already sits at
+// pos 19.3 and is pure step-by-step intent, but the page only carried FAQPage.
+// Steps mirror the five visible "Quick Wins" H3s verbatim, including their stated times.
+function ryano_seo_guide_howto_schema() {
+    if (!is_single(20)) {
+        return;
+    }
+
+    $howto = array(
+        '@context' => 'https://schema.org',
+        '@type' => 'HowTo',
+        'name' => 'How to Rank on Google Page 1',
+        'description' => 'The five highest-leverage SEO tasks for a local business website, in the order to do them.',
+        'totalTime' => 'PT4H',
+        'step' => array(
+            array('@type' => 'HowToStep', 'name' => 'Fix your Google Business Profile', 'text' => 'Claim your listing, add accurate address, hours and phone, choose the correct categories, upload 10 or more photos, and collect 5 to 10 reviews. Takes about 30 minutes and can rank you in the local map pack within 2 weeks.'),
+            array('@type' => 'HowToStep', 'name' => 'Add location keywords to your pages', 'text' => 'Not just "web developer" but "web developer Penang" or "web developer Malaysia". Include your city or state in title tags. Takes about an hour.'),
+            array('@type' => 'HowToStep', 'name' => 'Make your site mobile-friendly', 'text' => 'Google ranks the mobile version of your site. Test it with Google\'s mobile-friendly tool. Fixing a mobile-broken site is worth a 30 to 50 percent ranking improvement.'),
+            array('@type' => 'HowToStep', 'name' => 'Speed up your website', 'text' => 'Compress images, enable caching, and move to fast hosting. Takes about 2 hours. Every 1 second of delay costs roughly 7 percent of conversions.'),
+            array('@type' => 'HowToStep', 'name' => 'Earn 3 to 5 links from local sites', 'text' => 'Target local newspaper articles, business directories, partner websites, and your chamber of commerce. A small number of trusted local links gives a significant trust boost.'),
+        ),
+    );
+    echo '<script type="application/ld+json">' . wp_json_encode($howto, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+}
+add_action('wp_head', 'ryano_seo_guide_howto_schema');
 
 // 301 redirects for consolidated/retired posts (keyword cannibalization cleanup)
 // Old post stays published so its permalink resolves, but always 301s to the canonical replacement.
