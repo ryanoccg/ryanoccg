@@ -11,3 +11,9 @@ Disallow: /blogs/xmlrpc.php
 
 # Sitemap location (index points to both static + WP blog sitemaps)
 Sitemap: https://ryanoccg.com/sitemap-index.xml
+
+# The blog sitemap is also listed directly. GSC showed the index above going
+# four months without a re-download (last fetched 2026-04-29), which left every
+# post published after that date unannounced. Listing the WordPress sitemap on
+# its own line means blog discovery no longer depends on the static index.
+Sitemap: https://ryanoccg.com/blogs/wp-sitemap.xml

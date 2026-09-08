@@ -1,7 +1,7 @@
 // vite.config.js
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
-import { copyFileSync } from 'fs'
+import { copyFileSync, readFileSync, writeFileSync } from 'fs'
 
 export default defineConfig({
   root: resolve(__dirname, 'src'),
@@ -57,9 +57,12 @@ export default defineConfig({
               resolve(__dirname, 'src/llms.txt'),
               resolve(__dirname, 'dist/llms.txt')
             )
-            copyFileSync(
-              resolve(__dirname, 'src/sitemap-index.xml'),
-              resolve(__dirname, 'dist/sitemap-index.xml')
+            // Stamp the build date into the sitemap index instead of copying it
+            // verbatim, so lastmod can never sit frozen at a hand-typed date again.
+            writeFileSync(
+              resolve(__dirname, 'dist/sitemap-index.xml'),
+              readFileSync(resolve(__dirname, 'src/sitemap-index.xml'), 'utf-8')
+                .replace(/__BUILD_DATE__/g, new Date().toISOString().slice(0, 10))
             )
           } catch (err) {
             console.warn('Could not copy static files:', err.message)

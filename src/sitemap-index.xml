@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The portfolio lastmod below is stamped at build time by the copy-static-files
+  plugin in vite.config.js. It used to be hand-typed, which went stale and sat
+  frozen for months, giving Google no reason to re-fetch this index.
+
+  The blog entry deliberately carries no lastmod: this static build cannot know
+  when a post last changed, and a wrong date is worse than none. WordPress
+  publishes an accurate lastmod per URL inside wp-sitemap.xml itself.
+-->
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <!-- Main Portfolio Site -->
   <sitemap>
     <loc>https://ryanoccg.com/sitemap.xml</loc>
-    <lastmod>2026-06-20</lastmod>
+    <lastmod>__BUILD_DATE__</lastmod>
   </sitemap>
 
   <!-- WordPress Blog Sitemap -->
   <sitemap>
     <loc>https://ryanoccg.com/blogs/wp-sitemap.xml</loc>
-    <lastmod>2026-06-20</lastmod>
   </sitemap>
 
 </sitemapindex>
