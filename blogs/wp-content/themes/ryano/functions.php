@@ -183,7 +183,9 @@ remove_action('wp_head', 'wlwmanifest_link');
 remove_action('wp_head', 'rsd_link');
 
 // Per-post SEO title/description overrides (id => [title, description])
-// title: keep under 60 chars so Google doesn't truncate
+// title: max 48 chars. ryano_custom_document_title() appends ' | Ryano Web'
+//        (12 chars), so 48 is the budget that keeps the rendered <title> at 60.
+//        Measuring the override alone is how three 62-68 char titles slipped through.
 // description: 120-155 chars, include CTA
 $ryano_seo_overrides = array(
     // 2026-07-27: SERP title said "7 Mistakes" while the page lists 10. Aligned to the
@@ -241,6 +243,43 @@ $ryano_seo_overrides = array(
         'title'       => 'Signs It Is Time to Redesign Your Website',
         'description' => 'Traffic holding steady while enquiries fall is the clearest sign. Score your own site before you spend on a redesign. Free review: WhatsApp +60174272807',
     ),
+    // 2026-08-21: posts 257, 262, 265 scheduled for 26 Aug, 2 Sep and 9 Sep.
+    257 => array(
+        'title'       => 'Shopify Pricing Malaysia: What You Actually Pay',
+        'description' => 'Plan rates, the monthly versus yearly gap, and the extra transaction fee that applies wherever Shopify Payments is unavailable. With the maths.',
+    ),
+    262 => array(
+        'title'       => 'Hosting and Domain Cost After the First Year',
+        'description' => 'Hosting and domains are sold at one price and renewed at another. Real renewal figures, which line items should be free, and what a year settles at.',
+    ),
+    265 => array(
+        'title'       => 'What AI Website Builders Cannot Build',
+        'description' => 'AI can produce a working website in an afternoon. Integrations, undocumented business rules, payment compliance and accountability are what remain.',
+    ),
+    // 2026-09-08: the last five posts still falling back to get_the_excerpt(), so their
+    // SERP snippet was a truncated first paragraph ending mid-sentence. Posts 221, 230
+    // and 235 predate the 2026-08-05 publisher fix; 12 and 18 predate overrides entirely.
+    // No WhatsApp CTA here, matching the newer 257/262/265 convention.
+    12 => array(
+        'title'       => 'WordPress or Custom Build? A Malaysian Guide',
+        'description' => 'Most Malaysian SMEs should use WordPress. The specific cases where custom development earns its cost, with local price comparisons for both.',
+    ),
+    18 => array(
+        'title'       => 'E-Commerce Website Malaysia: 2026 Setup Guide',
+        'description' => 'WooCommerce, Shopify or marketplace? Platform costs, the features that matter, a 30-day launch checklist, and Malaysian legal requirements.',
+    ),
+    221 => array(
+        'title'       => 'Website Backups: What Actually Protects You',
+        'description' => 'Having backups and having a recovery you can trust are different things. What a real backup covers, and the restore test almost nobody runs.',
+    ),
+    230 => array(
+        'title'       => 'Traffic Down, Rankings Flat? Blame AI Answers',
+        'description' => 'Impressions steady, clicks down a third. AI answers sit above your listing and absorb the visit. What changed, and how to get cited instead.',
+    ),
+    235 => array(
+        'title'       => 'Why Visitors Leave Your Website on Their Phones',
+        'description' => 'Speed, tap targets, and the friction you cannot see from a desk. How to test your site like a real mobile visitor, and what to fix first.',
+    ),
 );
 
 // Add Open Graph meta tags + <meta name="description"> for better SEO
@@ -273,7 +312,11 @@ function ryano_og_meta_tags() {
 add_action('wp_head', 'ryano_og_meta_tags');
 
 // Per-post FAQPage structured data (id => [ [q, a], ... ])
-// Mirrors the visible FAQ section so Google can show FAQ rich results.
+// Google stopped showing FAQ rich results on 2026-05-07, so the payoff here is
+// machine-readable Q&A for answer and AI engines, not a richer SERP listing.
+// Google's policy requires the marked-up content to be visible on the page and
+// not misleading. This file goes further by convention: answers are a word-for-word
+// copy of the visible text, which makes "does it still match?" a diff, not a judgement.
 $ryano_faq_schema = array(
     198 => array(
         array('Is an AI website builder good for SEO?', 'It can handle the basics, but it caps out. You get less control over structured data, page speed, and URL structure than a custom build, so an AI builder is fine for a simple brochure site and limiting once ranking becomes a real goal.'),
@@ -370,6 +413,55 @@ $ryano_faq_schema = array(
         array('Will it actually reduce support calls?', 'It reduces one specific kind: the repeated "where is my order" call. It does nothing for change requests, complaints, or quote chasing. Listen to a week of your actual calls before assuming which kind you have.'),
         array('Should it send notifications too?', 'They work better together. The notification gets the page looked at, and the page means the notification does not have to carry all the detail. Sending updates as utility messages rather than marketing ones also keeps the messaging cost down.'),
         array('What if my job stages change often?', 'Design the page around a small number of stable stages rather than every internal step. Customers want to know roughly where their job sits and what happens next, not your full process. Fewer, stabler stages age better and need less maintenance.'),
+    ),
+    // 2026-08-21: post 257, scheduled for 2026-08-26. Mirrors the visible FAQ block verbatim.
+    257 => array(
+        array('Is Shopify Payments available in Malaysia?', 'No. Malaysian merchants use a third-party gateway such as Stripe, iPay88 or Billplz, and Shopify applies an additional transaction fee of 2% on Basic, 1% on Grow and 0.6% on Advanced on top of the gateway\'s own rate.'),
+        array('Why is my Shopify bill higher than the advertised price?', 'The advertised price is the annual rate. Monthly billing costs about a third more on every plan, and app subscriptions plus movement in the USD exchange rate add to the total.'),
+        array('Which Shopify plan is cheapest overall?', 'It depends on volume. On monthly billing, Basic is cheaper below roughly US$4,000 in monthly sales, near RM17,000. On yearly billing the crossover is about US$3,000. Above it, Grow\'s lower transaction fee outweighs the higher subscription.'),
+        array('Can I avoid Shopify\'s third-party transaction fee?', 'Not when accepting card payments through an external gateway from a country where Shopify Payments is unavailable. Manual methods such as bank transfer or cash on delivery fall outside it, which is part of why they stay common locally.'),
+    ),
+    // 2026-08-21: post 262, scheduled for 2026-09-02. Mirrors the visible FAQ block verbatim.
+    262 => array(
+        array('Why did my hosting bill suddenly go up?', 'Your promotional term ended. Introductory rates usually apply to a prepaid multi-year term, after which the account renews at the standard rate. On the plans checked here that renewal was around three to four times the promotional rate.'),
+        array('Should I pay for an SSL certificate?', 'Usually not much. Let\'s Encrypt provides free, automatically renewing certificates that browsers trust, and most reputable hosts install them at little or no charge. Paid certificates mainly matter for organisation-validated or extended-validation requirements.'),
+        array('Is it cheaper to prepay hosting for several years?', 'Cheaper per month, yes. It also commits you to one provider for four years, which is a long time to bet on a setup you have not launched yet, so weigh the saving against the chance of outgrowing the plan.'),
+        array('What is the cheapest way to keep a domain long term?', 'An at-cost registrar. Providers such as Cloudflare Registrar pass through only the registry and ICANN fees with no markup, so there is no first-year discount to be recovered later.'),
+    ),
+    // 2026-08-21: post 265, scheduled for 2026-09-09. Mirrors the visible FAQ block verbatim.
+    265 => array(
+        array('Can AI replace a web developer?', 'For static, self-contained websites, largely yes. Where a project is dominated by integrations, undocumented business logic, payment compliance or ongoing accountability, the remaining work is defining requirements and connecting systems, and that is where the effort concentrates.'),
+        array('Is it cheaper to build a website with AI than hire a freelancer?', 'For a brochure site, yes, and often by a wide margin on the initial build. The comparison narrows once the site has to connect to other systems, because that work is priced by complexity rather than page count and does not shrink when the pages get generated.'),
+        array('What should I use an AI website builder for?', 'Validating an idea, launching a campaign page quickly, or running a small service business site that does not integrate with anything. Those are genuine wins, not compromises.'),
+    ),
+    // 2026-09-08: posts 10, 12 and 16 carry real visible FAQ sections but had no schema.
+    // Listed questions are the ones answered by visible prose, copied verbatim. The
+    // question-shaped headings left out are answered only by a table or bullet list
+    // (post 10 "What Should a Redesign Cost in Malaysia?", post 12 "What is WordPress?",
+    // post 16 "How long should it take to build a website?"): flattening those into one
+    // answer string would put text in the markup that no reader sees in that form.
+    // Posts 24 and 104 stay absent on purpose: neither has a visible FAQ to mirror.
+    10 => array(
+        array('How long does a redesign take?', 'Typically 4-8 weeks for a business website. E-commerce or custom features can take 8-12 weeks.'),
+        array('Will I lose my Google rankings?', 'Not if done properly. A good developer will set up 301 redirects and maintain your SEO structure.'),
+        array('Can I keep my current domain?', 'Yes, absolutely. You keep your domain and just point it to the new website.'),
+        array('What happens to my old website?', 'Most developers keep a backup. You can also request a copy before launch.'),
+        array('Do I need new content/photos?', 'Not necessarily, but fresh content usually performs better. Many redesigns reuse 60-70% of old content.'),
+    ),
+    12 => array(
+        array('Is WordPress secure?', 'Yes, if maintained properly. WordPress itself is secure. Issues come from outdated plugins or weak passwords. Regular website maintenance keeps those risks in check.'),
+        array('Can WordPress handle high traffic?', 'Yes. CNN, TechCrunch, and major sites use WordPress. Proper hosting and caching are key.'),
+        array('Will I own the website?', 'With WordPress: Yes, completely. With custom: Depends on contract, so always negotiate source code ownership.'),
+        array('Can I switch developers later?', 'WordPress: Easy. Custom: Harder, depends on technology used.'),
+        array('What about Wix or Squarespace?', 'Good for very small businesses (< RM 50k/year revenue). For serious businesses, WordPress or custom is better.'),
+        array('Do I need to know coding?', 'WordPress: No. Custom: No, but technical knowledge helps with communication.'),
+    ),
+    16 => array(
+        array('Should I hire local or overseas?', 'Local advantages: easier communication, same timezone, can meet in person, understands Malaysian market. Usually worth the slight premium.'),
+        array('What if the developer disappears?', 'This is why contracts and source code access matter. Choose developers with established track records.'),
+        array('Can I negotiate the price?', 'Yes, but focus on scope instead. “What can we remove to hit RM X budget?” works better than “Give me 20% discount.”'),
+        array('How do I know if the price is fair?', 'Get 2-3 quotes. If one is way lower/higher, ask why. Average of 3 quotes is usually fair market rate.'),
+        array('Should I pay hourly or fixed price?', 'Fixed price for defined projects. Hourly for ongoing maintenance or unclear scope.'),
     ),
 );
 
