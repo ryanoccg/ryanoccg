@@ -45,10 +45,8 @@ export default defineConfig({
               resolve(__dirname, 'src/sitemap.xml'),
               resolve(__dirname, 'dist/sitemap.xml')
             )
-            copyFileSync(
-              resolve(__dirname, 'src/robots.txt'),
-              resolve(__dirname, 'dist/robots.txt')
-            )
+            // robots.txt is deliberately not built: it is served from the repo root
+            // (see the note in that file) so the build cannot shadow or be shadowed.
             copyFileSync(
               resolve(__dirname, 'src/llm.txt'),
               resolve(__dirname, 'dist/llm.txt')

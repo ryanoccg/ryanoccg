@@ -1,3 +1,8 @@
+# This file lives at the repo root, not in src/, because .htaccess serves an
+# existing document-root file directly and only rewrites misses into dist/.
+# A stale copy left here by an earlier deploy shadowed the built one for months,
+# so root is the only location that actually decides what crawlers read.
+
 # Allow all crawlers
 User-agent: *
 Allow: /
