@@ -191,32 +191,32 @@ $ryano_seo_overrides = array(
     // 2026-07-27: SERP title said "7 Mistakes" while the page lists 10. Aligned to the
     // visible H1/H2 count and dropped the unsourced "80% of SME sites" claim.
     120 => array(
-        'title'       => 'Bad Website Design Malaysia: 10 Costly Mistakes (2026)',
+        'title'       => 'Bad Website Design in Malaysia: 10 Mistakes',
         'description' => 'The 10 design mistakes that quietly cost Malaysian SMEs enquiries, with the fix for each. Spot yours in 30 seconds: WhatsApp +60174272807',
     ),
     14 => array(
-        'title'       => 'Mobile Website Malaysia: Stop Losing 72% of Visitors (2026)',
-        'description' => '72% of Malaysians browse phone-first (MCMC). A site that fights them on mobile loses sales daily. The 2026 mobile-first fixes that work. WhatsApp +60174272807',
+        'title'       => 'Mobile Website Malaysia: Stop Losing 72%',
+        'description' => '72% of Malaysians browse phone-first (MCMC). A site that fights them on mobile loses sales daily. The 2026 mobile-first fixes. WhatsApp +60174272807',
     ),
     126 => array(
-        'title'       => 'Core Web Vitals 2026: 3 Speed Metrics Malaysian Sites Must Pass',
+        'title'       => 'Core Web Vitals 2026: 3 Metrics to Pass',
         'description' => 'Failed Core Web Vitals = Page 2 rankings. The 3 metrics Google now demands in 2026, with exact fixes for Malaysian sites. Free audit: WhatsApp +60174272807',
     ),
     22 => array(
-        'title'       => 'Website Maintenance Malaysia 2026: Real Costs + Plans',
+        'title'       => 'Website Maintenance Malaysia: 2026 Costs',
         'description' => 'What website maintenance really costs in Malaysia (2026): monthly plans, hidden fees, and which tier your site needs. Free quote: WhatsApp +60174272807',
     ),
     26 => array(
-        'title'       => 'Web Design Malaysia: What Actually Converts (2026)',
-        'description' => 'What separates web design that converts from design that just looks nice, plus the practical 2026 fixes that lift enquiries. Free review: WhatsApp +60174272807',
+        'title'       => 'Web Design Malaysia: What Converts',
+        'description' => 'What separates web design that converts from design that just looks nice, plus the practical 2026 fixes that lift enquiries. WhatsApp +60174272807',
     ),
     187 => array(
-        'title'       => 'Website Maintenance Company: How to Pick One (2026)',
-        'description' => 'Pick a website maintenance company that protects your site, not one that just bills you. The questions to ask, the red flags, fair pricing. WhatsApp +60174272807',
+        'title'       => 'Website Maintenance Company: How to Pick',
+        'description' => 'Pick a website maintenance company that protects your site, not one that just bills you. The questions to ask and the red flags. WhatsApp +60174272807',
     ),
     191 => array(
-        'title'       => 'E-Commerce Website Cost in Malaysia: 2026 Price Guide',
-        'description' => 'What an online store really costs to build and run in 2026: build tiers (RM5k-25k), gateway fees, and the hidden monthly costs. Free quote: WhatsApp +60174272807',
+        'title'       => 'Ecommerce Website Price in Malaysia 2026',
+        'description' => 'What an online store really costs to build and run in 2026: build tiers (RM5k-25k), gateway fees, and hidden monthly costs. WhatsApp +60174272807',
     ),
     198 => array(
         'title'       => 'AI Website Builder or Professional Development?',
@@ -227,7 +227,7 @@ $ryano_seo_overrides = array(
     // (website maintenance plan, pos 31.9) while pillar 22 holds the geo terms, so lead
     // the title with the exact generic keyword. No cannibalisation with 22.
     176 => array(
-        'title'       => 'Website Maintenance Plan: What Yours Should Cover (2026)',
+        'title'       => 'Website Maintenance Plan: What It Covers',
         'description' => 'What a real website maintenance plan covers, what each tier costs, and the line items cheap plans quietly skip. Free review: WhatsApp +60174272807',
     ),
     // 2026-08-05: posts 20 and 218 are the two best-ranking pages on the site (pos 8.0
@@ -236,7 +236,7 @@ $ryano_seo_overrides = array(
     // Every other page sits at pos 30-70 where expected CTR is ~0, making these two the
     // only places a snippet rewrite can actually move clicks.
     20 => array(
-        'title'       => 'How to Rank on Google Page 1 in Malaysia: 2026 Basics',
+        'title'       => 'How to Rank on Google Page 1 in Malaysia',
         'description' => 'Google Business Profile, location keywords, speed, mobile, then local links. Most local searches reach page 1 in 3 to 6 months. WhatsApp +60174272807',
     ),
     218 => array(
@@ -279,6 +279,54 @@ $ryano_seo_overrides = array(
     235 => array(
         'title'       => 'Why Visitors Leave Your Website on Their Phones',
         'description' => 'Speed, tap targets, and the friction you cannot see from a desk. How to test your site like a real mobile visitor, and what to fix first.',
+    ),
+    // 2026-09-15: the ten posts that never had an override. Their <title> fell back to
+    // the post title plus ' | Ryano Web' and rendered at 62-88 chars, so Google was
+    // truncating the part that carries the keyword. Each title below leads with the
+    // exact query the page ranks for, then drops the trailing qualifiers.
+    //
+    // Post 115's description also carried an em dash. It came from get_the_excerpt(),
+    // which mirrors the body text, so the override is what fixes it in the SERP; the
+    // body copy itself is still to be cleaned separately.
+    136 => array(
+        'title'       => 'WordPress Website Maintenance Malaysia 2026',
+        'description' => 'What WordPress maintenance really costs in Malaysia (2026): plugin updates, core upgrades, security patches, and the costs that break SME budgets.',
+    ),
+    137 => array(
+        'title'       => 'Ecommerce Website Maintenance Malaysia 2026',
+        'description' => 'The maintenance checklist for WooCommerce and Shopify stores in Malaysia, real monthly costs, and how to prevent a checkout outage.',
+    ),
+    115 => array(
+        'title'       => 'AI Chatbots for Small Business: Worth It?',
+        'description' => 'AI chatbots in 2026 do more than auto-replies. They book calls, qualify leads and close sales. What works, what does not, and what it costs.',
+    ),
+    8 => array(
+        'title'       => 'Website Cost in Malaysia: 2026 Price Guide',
+        'description' => 'Complete breakdown of website costs in Malaysia for 2026. From RM2,000 landing pages to RM50,000+ custom systems. Get transparent pricing.',
+    ),
+    76 => array(
+        'title'       => 'Why Your Malaysian Website Is Slow (2026)',
+        'description' => 'The five most common causes of slow websites in Malaysia, how to measure yours in ten minutes, and exactly how to fix each one in 2026.',
+    ),
+    243 => array(
+        'title'       => 'WhatsApp Business API: What It Costs',
+        'description' => 'Per-message pricing, which template category is free, and why the timing of a notification decides whether you pay for it. Honestly costed.',
+    ),
+    104 => array(
+        'title'       => 'Website Security Checklist for 2026',
+        'description' => '53% of small businesses have no cybersecurity plan. Use this checklist to protect your website from hackers, malware, and data breaches in 2026.',
+    ),
+    24 => array(
+        'title'       => 'Landing Page or Full Website? (Malaysia)',
+        'description' => 'Landing page or full website? The differences, costs (RM 2,000 vs RM 10,000), when to use each, and real Malaysian business cases.',
+    ),
+    10 => array(
+        'title'       => '5 Signs Your Website Needs a Redesign',
+        'description' => 'The five warning signs your Malaysian business needs a website redesign, plus real before and after cases with cost estimates.',
+    ),
+    16 => array(
+        'title'       => 'How to Choose a Web Developer in Malaysia',
+        'description' => 'Hiring a web developer in Malaysia: the vetting checklist, red flags, interview questions, and how agency and freelancer pricing compares.',
     ),
 );
 
@@ -726,6 +774,41 @@ function ryano_content_consolidation_redirects() {
     }
 }
 add_action('template_redirect', 'ryano_content_consolidation_redirects');
+
+// Keep retired and placeholder URLs out of wp-sitemap.xml.
+//
+// Post 110 has to stay published: the redirect above resolves its permalink before
+// 301ing, so unpublishing it would break the redirect instead of retiring the URL.
+// Dropping it from the sitemap is the part that can be done safely, and it matters
+// because Google is currently crawl-starved here (posts have waited weeks for a
+// first crawl), so every advertised URL that only ever 301s is budget spent for
+// nothing. Page 2 is WordPress's stock "Sample Page", which still returns 200.
+$ryano_sitemap_excluded = array(
+    'post' => array(110),
+    'page' => array(2),
+);
+
+function ryano_filter_sitemap_entries($args, $post_type) {
+    global $ryano_sitemap_excluded;
+    if (empty($ryano_sitemap_excluded[$post_type])) {
+        return $args;
+    }
+    $existing = isset($args['post__not_in']) ? (array) $args['post__not_in'] : array();
+    $args['post__not_in'] = array_merge($existing, $ryano_sitemap_excluded[$post_type]);
+    return $args;
+}
+add_filter('wp_sitemaps_posts_query_args', 'ryano_filter_sitemap_entries', 10, 2);
+
+// Merges into the robots tag WordPress already prints rather than emitting a second one.
+// is_page(2) would also match a page titled or slugged "2", so compare the ID directly.
+function ryano_noindex_placeholder_page($robots) {
+    if (is_page() && 2 === get_queried_object_id()) {
+        $robots['noindex'] = true;
+        $robots['follow'] = true;
+    }
+    return $robots;
+}
+add_filter('wp_robots', 'ryano_noindex_placeholder_page');
 
 // Security: Disable XML-RPC
 add_filter('xmlrpc_enabled', '__return_false');
