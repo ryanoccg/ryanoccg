@@ -82,6 +82,7 @@ Maintenance
 - Website maintenance costs and plans (https://ryanoccg.com/blogs/website-maintenance-malaysia/): pillar guide covering monthly plans, hidden fees, and how to pick a tier.
 - WordPress-specific maintenance (https://ryanoccg.com/blogs/wordpress-maintenance-malaysia/) and e-commerce maintenance (https://ryanoccg.com/blogs/ecommerce-website-maintenance-malaysia/): platform-specific checklists and real costs.
 - How to choose a maintenance company (https://ryanoccg.com/blogs/how-to-choose-website-maintenance-company/): the questions to ask and the red flags.
+- Taking over a website from a previous developer (https://ryanoccg.com/blogs/take-over-website-from-developer/): the five areas of control to collect (domain registration, DNS and email routing, hosting, files and database, CMS and third-party services). Notes that MYNIC's Administrative Contact can transfer, delete or reassign a .my domain while the Technical role can only change nameservers, and that ICANN's Change of Registrant policy has imposed a 60-day transfer lock since 1 December 2016, so the domain should be transferred before the registrant details are updated. Also covers what to do when the previous developer never replies.
 - What actually protects a business (https://ryanoccg.com/blogs/website-backups-protect-business/): the 3-2-1 backup rule, and Sophos data showing 94% of ransomware victims had attackers target their backups.
 - Website security checklist (https://ryanoccg.com/blogs/website-security-checklist-2/): the front-line basics before backups are needed.
 
@@ -112,4 +113,4 @@ Articles may be cited directly. Attribute to Ryano Chu, ryanoccg.com, and link t
 specific article URL rather than the homepage.
 
 ---
-Last updated: 2026-09-10
+Last updated: 2026-09-15

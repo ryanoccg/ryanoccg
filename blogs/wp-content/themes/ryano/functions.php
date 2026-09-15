@@ -328,6 +328,12 @@ $ryano_seo_overrides = array(
         'title'       => 'How to Choose a Web Developer in Malaysia',
         'description' => 'Hiring a web developer in Malaysia: the vetting checklist, red flags, interview questions, and how agency and freelancer pricing compares.',
     ),
+    // 2026-09-15: post 277, scheduled for 16 Sep. The post title runs 56 chars, which
+    // renders at 68 once ' | Ryano Web' is appended, so it needs an override from day one.
+    277 => array(
+        'title'       => 'Taking Over a Website From Your Developer',
+        'description' => 'The five areas of control that decide whether a website is really yours, how to verify each one, and the transfer order that can save you a two-month wait.',
+    ),
 );
 
 // Add Open Graph meta tags + <meta name="description"> for better SEO
@@ -510,6 +516,14 @@ $ryano_faq_schema = array(
         array('Can I negotiate the price?', 'Yes, but focus on scope instead. “What can we remove to hit RM X budget?” works better than “Give me 20% discount.”'),
         array('How do I know if the price is fair?', 'Get 2-3 quotes. If one is way lower/higher, ask why. Average of 3 quotes is usually fair market rate.'),
         array('Should I pay hourly or fixed price?', 'Fixed price for defined projects. Hourly for ongoing maintenance or unclear scope.'),
+    ),
+    // 2026-09-15: post 277, scheduled for 16 Sep. Answers extracted from the published
+    // post body rather than retyped, so the mirror holds by construction.
+    277 => array(
+        array('Can a developer legally keep my domain name?', 'It depends on the contract, who is recorded as registrant, and the law that applies. If they are listed as the registrant, the registration is in their name and you may need to rely on contractual terms or a formal dispute process rather than a simple request. Being merely the Administrative Contact gives practical control without ownership, which is a different and usually easier problem.'),
+        array('My developer says the site is on their own hosting. Is that a problem?', 'It works while the relationship does and becomes a problem when it ends. Shared reseller hosting often has no way to give you independent, permanent access, so plan on migrating to an account billed in your own name.'),
+        array('I only have WordPress admin. What can I still do?', 'More than people assume. On most hosts you can install a backup plugin and take a real copy of the database and files. What you still lack are the accounts underneath, which may be spread across a registrar, a DNS provider, an email provider and a host, so treat this as protecting your content while you chase the rest.'),
+        array('Should I change all the passwords immediately?', 'Change them, but check the recovery email and two-factor settings first. A password change alone does not remove someone who can still trigger a reset.'),
     ),
 );
 
