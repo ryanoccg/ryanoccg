@@ -1,4 +1,4 @@
-# Ryano Chu — Web Developer (ryanoccg.com)
+# Ryano Chu, Web Developer (ryanoccg.com)
 
 > Ryano Chu Chee Guan is a full-stack web developer based in Penang, Malaysia
 > with 10+ years of experience. He builds custom websites, web applications, and
@@ -22,11 +22,11 @@
 - WordPress development (themes, plugins, CMS)
 - Bug fixing, performance optimization & maintenance
 
-## Pricing (MYR, development only — excludes domain/hosting/3rd-party fees)
-- Business Website — from RM 1,500 (up to 5 pages, responsive, SEO-ready, 7-day delivery)
-- CMS Website — from RM 3,500 (up to 10 pages + blog, WordPress/custom CMS, advanced SEO, 30-day support)
-- Web Application — from RM 8,000 (custom Laravel/Vue, auth, admin dashboard, API integrations)
-- Fix / Maintenance — RM 150/hour (bug fixing, speed, security; minimum 2 hours)
+## Pricing (MYR, development only; excludes domain/hosting/3rd-party fees)
+- Business Website: from RM 1,500 (up to 5 pages, responsive, SEO-ready, 7-day delivery)
+- CMS Website: from RM 3,500 (up to 10 pages + blog, WordPress/custom CMS, advanced SEO, 30-day support)
+- Web Application: from RM 8,000 (custom Laravel/Vue, auth, admin dashboard, API integrations)
+- Fix / Maintenance: RM 150/hour (bug fixing, speed, security; minimum 2 hours)
 - Payment terms: 50% deposit to start, 50% on delivery
 
 ## Tech stack
@@ -35,24 +35,24 @@
 - Tools/Platforms: WordPress, AWS, Cloudflare, Git, Vite
 
 ## Featured work
-- Uwrapz (https://uwrapz.com/) — Laravel car-wrapping workflow platform with a
+- Uwrapz (https://uwrapz.com/): Laravel car-wrapping workflow platform with a
   customer status page and WhatsApp Business API auto-notifications. Solo build,
-  0 → production in ~2 months.
-- Grab & Drop (https://portfolio.ryanoccg.com/aicam/grabstickergame.html) —
+  0 to production in ~2 months.
+- Grab & Drop (https://portfolio.ryanoccg.com/aicam/grabstickergame.html):
   browser-based real-time hand-tracking AR experiment in plain JavaScript, no plugins.
 
 ## What clients say
-- "Turned our messy paper-based system into a proper web platform in 2 months.
-  Customers love the automatic WhatsApp updates." — Chong Teck Wei, Kuala Lumpur
-- "Delivered on time, fixed bugs fast, explained everything clearly." — Lim Mei Ling, Penang
-- "Very responsive on WhatsApp even after office hours. Highly recommend for SMEs." — Tan Yee Ling, Ipoh
+- Chong Teck Wei, Kuala Lumpur: "Turned our messy paper-based system into a proper
+  web platform in 2 months. Customers love the automatic WhatsApp updates."
+- Lim Mei Ling, Penang: "Delivered on time, fixed bugs fast, explained everything clearly."
+- Tan Yee Ling, Ipoh: "Very responsive on WhatsApp even after office hours. Highly recommend for SMEs."
 
 ## Common questions
 - Timeline: simple 5-page site 1–2 weeks; CMS/custom system 1–3 months.
 - Hosting/domain: billed separately (~RM 200–500/year); recommendations provided.
 - After launch: client owns the site; handover doc + training; 30 days free minor fixes.
 - Self-editing: yes with the CMS package (WordPress or custom admin).
-- Outside Penang: yes — most projects are remote (KL, Johor, Singapore, international).
+- Outside Penang: yes, most projects are remote (KL, Johor, Singapore, international).
 - Free initial consultation available.
 
 ## Guides and articles (blog at https://ryanoccg.com/blogs/)
@@ -112,4 +112,4 @@ Articles may be cited directly. Attribute to Ryano Chu, ryanoccg.com, and link t
 specific article URL rather than the homepage.
 
 ---
-Last updated: 2026-08-21
+Last updated: 2026-09-10
