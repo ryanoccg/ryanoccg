@@ -776,29 +776,37 @@ add_action('wp_head', 'ryano_seo_guide_howto_schema');
 
 // 301 redirects for consolidated/retired posts (keyword cannibalization cleanup)
 // Old post stays published so its permalink resolves, but always 301s to the canonical replacement.
+$ryano_consolidated_posts = array(
+    110 => 198, // ai-website-builder-vs-custom-development -> ai-website-builder-vs-professional-web-development
+    10  => 218, // website-redesign-malaysia -> signs-website-redesign
+    137 => 22,  // ecommerce-website-maintenance-malaysia -> website-maintenance-malaysia
+    187 => 22,  // how-to-choose-website-maintenance-company -> website-maintenance-malaysia
+    8   => 191, // website-cost-malaysia-2026 -> ecommerce-website-cost-malaysia
+    12  => 16,  // wordpress-developer-malaysia -> hire-web-developer-malaysia
+);
+
+// Priority 1 runs ahead of redirect_canonical, so ?p= and slash variants land on the target in one hop.
 function ryano_content_consolidation_redirects() {
+    global $ryano_consolidated_posts;
     if (is_admin() || !is_singular('post')) return;
-    $redirects = array(
-        110 => 198, // ai-website-builder-vs-custom-development -> ai-website-builder-vs-professional-web-development
-    );
     $id = get_queried_object_id();
-    if (isset($redirects[$id])) {
-        $target = get_permalink($redirects[$id]);
+    if (isset($ryano_consolidated_posts[$id])) {
+        $target = get_permalink($ryano_consolidated_posts[$id]);
         if ($target) { wp_redirect($target, 301); exit; }
     }
 }
-add_action('template_redirect', 'ryano_content_consolidation_redirects');
+add_action('template_redirect', 'ryano_content_consolidation_redirects', 1);
 
 // Keep retired and placeholder URLs out of wp-sitemap.xml.
 //
-// Post 110 has to stay published: the redirect above resolves its permalink before
-// 301ing, so unpublishing it would break the redirect instead of retiring the URL.
-// Dropping it from the sitemap is the part that can be done safely, and it matters
+// Consolidated posts have to stay published: the redirect above resolves their permalinks
+// before 301ing, so unpublishing one would break its redirect instead of retiring the URL.
+// Dropping them from the sitemap is the part that can be done safely, and it matters
 // because Google is currently crawl-starved here (posts have waited weeks for a
 // first crawl), so every advertised URL that only ever 301s is budget spent for
 // nothing. Page 2 is WordPress's stock "Sample Page", which still returns 200.
 $ryano_sitemap_excluded = array(
-    'post' => array(110),
+    'post' => array_keys($ryano_consolidated_posts),
     'page' => array(2),
 );
 
