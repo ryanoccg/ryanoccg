@@ -19,6 +19,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'src/index.html'),
         resume: resolve(__dirname, 'src/resume/index.html'),
+        privacy: resolve(__dirname, 'src/privacy/index.html'),
       },
       output: {
         // Manual chunks for better caching

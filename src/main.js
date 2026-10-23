@@ -80,25 +80,28 @@ const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 const mobileMenu = document.querySelector('.mobile-menu');
 const mobileMenuLinks = document.querySelectorAll('.mobile-menu a');
 
-mobileMenuBtn.addEventListener('click', () => {
-    mobileMenu.classList.toggle('active');
-});
-
-// Close mobile menu when clicking a link
-mobileMenuLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        mobileMenu.classList.remove('active');
+// Resume and privacy pages have no mobile menu markup
+if (mobileMenuBtn && mobileMenu) {
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('active');
     });
-});
 
-// Close mobile menu when clicking outside
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('.mobile-menu') &&
-        !e.target.closest('.mobile-menu-btn') &&
-        mobileMenu.classList.contains('active')) {
-        mobileMenu.classList.remove('active');
-    }
-});
+    // Close mobile menu when clicking a link
+    mobileMenuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+        });
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.mobile-menu') &&
+            !e.target.closest('.mobile-menu-btn') &&
+            mobileMenu.classList.contains('active')) {
+            mobileMenu.classList.remove('active');
+        }
+    });
+}
 
 // ─── Latest Blog (homepage) ──────────────────────────────────────────────────
 // Fetches 3 newest posts from the WordPress REST API and replaces the static
