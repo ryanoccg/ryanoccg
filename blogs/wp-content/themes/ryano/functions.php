@@ -188,11 +188,9 @@ remove_action('wp_head', 'rsd_link');
 //        Measuring the override alone is how three 62-68 char titles slipped through.
 // description: 120-155 chars, include CTA
 $ryano_seo_overrides = array(
-    // 2026-07-27: SERP title said "7 Mistakes" while the page lists 10. Aligned to the
-    // visible H1/H2 count and dropped the unsourced "80% of SME sites" claim.
     120 => array(
-        'title'       => 'Bad Website Design in Malaysia: 10 Mistakes',
-        'description' => 'The 10 design mistakes that quietly cost Malaysian SMEs enquiries, with the fix for each. Spot yours in 30 seconds: WhatsApp +60174272807',
+        'title'       => 'Bad Website Design in Malaysia: 20 Sites Tested',
+        'description' => 'We tested 20 Malaysian SME homepages on mobile: none of the 19 measured had an LCP under 4 seconds. See what failed. WhatsApp +60174272807',
     ),
     14 => array(
         'title'       => 'Mobile Website Malaysia: Stop Losing 72%',
@@ -404,11 +402,11 @@ $ryano_faq_schema = array(
         array('How often should website maintenance actually happen?', 'Continuously, not yearly. Software updates arrive every few weeks, so a site checked once a year spends most of that year exposed.'),
     ),
     120 => array(
-        array('What makes a website design bad?', 'A design is bad when it blocks visitors from acting: no clear value proposition, slow loading, broken mobile layout, hidden contact options, or content that looks abandoned. In Malaysia the two biggest offenders are slow mobile pages and buried WhatsApp buttons, because over 96% of users browse on phones.'),
-        array('How do I know if my website design is actually bad?', 'Three quick checks: ask three people outside your business to complete one task on their phone, run PageSpeed Insights and read the mobile score, and check your Google Analytics bounce rate. Over 70 percent on landing pages means visitors are leaving fast.'),
-        array('Can I fix bad website design myself?', 'Some of it yes: updating copy, swapping stock photos, simplifying forms, and fixing the copyright year. Page speed, mobile layout, SSL, and code quality usually need a developer.'),
-        array('How much does a website redesign cost in Malaysia?', 'A full redesign for an SME site typically runs RM3,500 to RM15,000 depending on scope. A targeted fix of the worst issues can often be done for RM1,500 to RM3,000.'),
-        array('Will fixing the design actually increase sales?', 'If you are losing leads to friction like slow loading, poor mobile, unclear value, or hidden contact details, fixing those usually lifts enquiries within 30 to 60 days.'),
+        array('What makes a website design bad?', 'A website design is bad when it stops a ready buyer from acting. In our October 2026 test of 20 Malaysian SME homepages, the most common problems were slow mobile loading (all 19 measurable sites had a Largest Contentful Paint over 4 seconds), hidden prices and out-of-date copyright years.'),
+        array('How slow is too slow for a homepage?', 'Google\'s web.dev guidance treats a Largest Contentful Paint of 2.5 seconds or less as good and anything above 4.0 seconds as poor, measured at the 75th percentile of visits on mobile and desktop.'),
+        array('Should I show prices on my website?', 'Usually yes, at least as a starting price or a typical range. In our test, every aircon service and bakery showed a ringgit figure, while none of the renovation, dental or accounting sites did, which leaves price-comparing visitors with nothing to anchor on.'),
+        array('Does an old copyright year really matter?', 'It costs nothing to fix and removes a doubt. A visitor who sees © 2020 in 2026 may wonder whether the business is still operating, right when they are deciding whether to get in touch.'),
+        array('How can I test my website\'s speed for free?', 'Paste your homepage into Google\'s PageSpeed Insights and read the mobile results. Lighthouse, which powers it, is also built into Chrome\'s developer tools if you want to run it yourself.'),
     ),
     191 => array(
         array('How much does an online store cost in Malaysia?', 'Most small to mid stores cost RM5,000 to RM25,000 to build, plus RM300 to RM800 a month to run.'),
