@@ -73,6 +73,8 @@ jobs:
             --exclude 'blog/' \
             --exclude 'scripts/' \
             --exclude 'split/' \
+            --exclude '.ddev/' \
+            --exclude 'wp-config-ddev.php' \
             -e "ssh -p ${{ secrets.SSH_PORT }} -o ServerAliveInterval=60 -o ServerAliveCountMax=3" \
             ./ \
             ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/public_html/
