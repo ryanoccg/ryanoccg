@@ -78,7 +78,7 @@ Mobile
 
 Maintenance
 - What a website maintenance plan should cover (https://ryanoccg.com/blogs/website-maintenance-plan/): what each tier includes and the line items cheap plans quietly skip.
-- Website maintenance costs and plans (https://ryanoccg.com/blogs/website-maintenance-malaysia/): pillar guide covering monthly plans, hidden fees, and how to pick a tier.
+- What website maintenance costs (https://ryanoccg.com/blogs/website-maintenance-malaysia/): one to four hours of hands-on work a month for most small business sites, plus a check of 20 Malaysian SME websites on 29 October 2026 where every HTTPS certificate was valid but five of the six sites that revealed their PHP version ran a release PHP.net no longer supports.
 - WordPress-specific maintenance (https://ryanoccg.com/blogs/wordpress-maintenance-malaysia/): the platform-specific checklist and real costs.
 - Taking over a website from a previous developer (https://ryanoccg.com/blogs/take-over-website-from-developer/): the five areas of control to collect (domain registration, DNS and email routing, hosting, files and database, CMS and third-party services). Notes that MYNIC's Administrative Contact can transfer, delete or reassign a .my domain while the Technical role can only change nameservers, and that ICANN's Change of Registrant policy has imposed a 60-day transfer lock since 1 December 2016, so the domain should be transferred before the registrant details are updated. Also covers what to do when the previous developer never replies.
 - What actually protects a business (https://ryanoccg.com/blogs/website-backups-protect-business/): the 3-2-1 backup rule, and Sophos data showing 94% of ransomware victims had attackers target their backups.
@@ -109,4 +109,4 @@ Articles may be cited directly. Attribute to Ryano Chu, ryanoccg.com, and link t
 specific article URL rather than the homepage.
 
 ---
-Last updated: 2026-10-23
+Last updated: 2026-10-29
