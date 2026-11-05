@@ -97,3 +97,6 @@ split/**/uploads/
 split/frontend/*.tsbuildinfo
 # Keep the app's own markdown docs (override the global *.md ignore above)
 !split/**/*.md
+
+# Python venv for the GA4/GSC report scripts
+.venv/

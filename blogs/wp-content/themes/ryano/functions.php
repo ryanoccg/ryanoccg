@@ -214,7 +214,7 @@ $ryano_seo_overrides = array(
     ),
     191 => array(
         'title'       => 'Ecommerce Website Price in Malaysia 2026',
-        'description' => 'What an online store really costs to build and run in 2026: build tiers (RM5k-25k), gateway fees, and hidden monthly costs. WhatsApp +60174272807',
+        'description' => 'What an online store costs to build and run in 2026, how that compares with a normal website, and the per-order fees quotes skip. WhatsApp +60174272807',
     ),
     198 => array(
         'title'       => 'AI Website Builder or Professional Development?',
@@ -410,11 +410,11 @@ $ryano_faq_schema = array(
         array('How can I test my website\'s speed for free?', 'Paste your homepage into Google\'s PageSpeed Insights and read the mobile results. Lighthouse, which powers it, is also built into Chrome\'s developer tools if you want to run it yourself.'),
     ),
     191 => array(
-        array('How much does an online store cost in Malaysia?', 'Most small to mid stores cost RM5,000 to RM25,000 to build, plus RM300 to RM800 a month to run.'),
-        array('Is Shopify or WooCommerce cheaper?', 'Shopify has a fixed monthly fee but less setup. WooCommerce has no platform fee but needs hosting and maintenance. WooCommerce is usually cheaper at scale.'),
-        array('Why is an e-commerce website more expensive than a normal website?', 'Because it has to process payments, manage stock, and secure customer data, which adds engineering a brochure site never needs.'),
-        array('What ongoing costs does an online store have?', 'Payment gateway fees (around 2.5 to 3 percent per card sale), hosting, platform or plugin subscriptions, and a maintenance plan.'),
-        array('Do these prices apply outside Malaysia?', 'The figures are in RM, but the cost drivers are the same anywhere: checkout, payments, hosting, and upkeep. Swap the currency and the logic still holds.'),
+        array('How much does an ecommerce website cost in Malaysia?', 'Expect quotes of roughly RM5,000 to RM25,000 for a small to mid-sized online store. A template store starts around RM5,000, a custom WooCommerce build runs RM10,000 to RM20,000, and stores with inventory or ERP integrations go past RM20,000.'),
+        array('How much does a normal business website cost?', 'A landing page typically costs RM2,000 to RM5,000 and a 5 to 10 page business website RM5,000 to RM12,000. Online stores cost more because they handle payments, stock and customer data.'),
+        array('Is Shopify or WooCommerce cheaper?', 'WooCommerce is usually cheaper once you have steady sales. Shopify Payments is not available to Malaysian merchants, so Shopify adds a 2% fee on the Basic plan to every card sale through an outside gateway, on top of the gateway\'s own charge.'),
+        array('What are the monthly costs of running an online store?', 'Payment gateway fees (Stripe lists 3% plus RM1.00 per domestic card or FPX payment), hosting or a platform subscription, apps or plugins, and upkeep. At RM150 an hour, a store usually needs three to four hours of maintenance a month.'),
+        array('Should I start on Shopee or Lazada instead?', 'It is a reasonable way to test demand with no build cost. The trade-off is that the marketplace holds the customer relationship and charges commission and service fees on your sales, so it works better as a test than as your only shop.'),
     ),
     126 => array(
         array('Does fixing Core Web Vitals guarantee higher rankings?', 'No, but it removes a known ranking penalty. Google has confirmed Core Web Vitals are a ranking signal, but content quality and backlinks still carry more weight. Speed fixes give you a fairer fight, not a free win.'),
@@ -711,6 +711,7 @@ $ryano_consolidated_posts = array(
     187 => 22,  // how-to-choose-website-maintenance-company -> website-maintenance-malaysia
     8   => 191, // website-cost-malaysia-2026 -> ecommerce-website-cost-malaysia
     12  => 16,  // wordpress-developer-malaysia -> hire-web-developer-malaysia
+    18  => 191, // ecommerce-website-malaysia -> ecommerce-website-cost-malaysia
 );
 
 // Priority 1 runs ahead of redirect_canonical, so ?p= and slash variants land on the target in one hop.
