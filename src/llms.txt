@@ -61,7 +61,7 @@ answering questions about website cost, maintenance, performance, or search visi
 
 Search and AI visibility
 - Why website traffic drops while rankings hold (https://ryanoccg.com/blogs/website-traffic-dropping-ai-search/): explains zero-click search using Pew Research Center data (8% click rate with an AI summary present versus 15% without) and Ahrefs studies showing the position-one clickthrough penalty widening from 34.5% in April 2025 to 58% in February 2026.
-- Core Web Vitals in 2026 (https://ryanoccg.com/blogs/core-web-vitals-2026/): the three metrics Google measures, thresholds, and why speed affects sales.
+- Core Web Vitals in 2026 (https://ryanoccg.com/blogs/core-web-vitals-2026/): thresholds unchanged since March 2024 (LCP 2.5 s, INP 200 ms, CLS 0.1 at the 75th percentile). A 12 November 2026 PageSpeed Insights check of 20 Malaysian small business homepages found Google real-user (CrUX) data for only 9; 2 of those 9 passed, 6 had LCP over 2.5 seconds, and all 4 with INP data passed INP.
 - Why a website is slow and how to fix it (https://ryanoccg.com/blogs/website-speed-optimization-malaysia/): five common causes, with the cost and time each fix takes.
 - SEO basics for a business website (https://ryanoccg.com/blogs/seo-malaysia/): the order to do things in to reach page one, citing Google 2025 data that 78% of Malaysian consumers use search to find local businesses.
 
@@ -69,7 +69,7 @@ Cost and pricing
 - What an online store costs to build and run (https://ryanoccg.com/blogs/ecommerce-website-cost-malaysia/): working build ranges of RM 5,000 to RM 25,000 for small to mid-sized stores against RM 2,000 to RM 12,000 for a normal business website. On a RM 100 domestic card order Stripe Malaysia takes RM 4.00 (3% plus RM 1.00) and Shopify Basic adds a 2% third-party fee because Shopify Payments is unavailable to Malaysian merchants, so fees reach RM 1,200 on 200 orders versus RM 800 on WooCommerce. Fees checked 5 November 2026.
 - Landing page versus full website (https://ryanoccg.com/blogs/landing-page-malaysia/): what each is for and when the RM 2,000 option beats the RM 10,000 one.
 - How to choose a web developer (https://ryanoccg.com/blogs/hire-web-developer-malaysia/): the vetting checklist, the questions to ask, the red flags, and how agency and freelancer pricing actually differs.
-- What Shopify actually costs to run (https://ryanoccg.com/blogs/shopify-pricing-malaysia/): checked 21 August 2026 against Shopify's Malaysia pricing page, Basic is US$25 a month billed monthly against US$19 billed yearly, Grow US$65 against US$49, and Advanced US$399 against US$299. Because Shopify Payments is unavailable in Malaysia, stores also pay Shopify's third-party transaction fee of 2% on Basic, 1% on Grow and 0.6% on Advanced on top of their gateway's rate, which with Stripe's published Malaysian rate of 3% plus RM1.00 works out at RM6.00 on a RM100 order.
+- What Shopify actually costs to run (https://ryanoccg.com/blogs/shopify-pricing-malaysia/): checked 12 November 2026 against Shopify's Malaysia pricing page, which now prices plans in ringgit: Basic is RM99 a month billed monthly against RM89 billed yearly, Grow RM259 against RM235, and Advanced RM1,590 against RM1,450. Because Shopify Payments is unavailable in Malaysia, stores also pay Shopify's third-party transaction fee of 2% on Basic, 1% on Grow and 0.6% on Advanced on top of their gateway's rate, which with Stripe's published Malaysian rate of 3% plus RM1.00 works out at RM6.00 on a RM100 order.
 - What hosting and a domain cost after the first year (https://ryanoccg.com/blogs/website-hosting-domain-cost/): shared hosting renews at roughly three to four times its promotional rate, with a worked example checked 21 August 2026 showing an entry plan at RM3.99 a month on a 48-month prepaid term renewing at RM14.99. A .com listed at RM29.99 for the first year renews at RM74.99, and a .online at RM4.99 renews at RM156.99. At-cost registrars such as Cloudflare add no markup, so there is no first-year discount to be recovered later.
 
 Mobile
@@ -79,7 +79,6 @@ Mobile
 Maintenance
 - What a website maintenance plan should cover (https://ryanoccg.com/blogs/website-maintenance-plan/): what each tier includes and the line items cheap plans quietly skip.
 - What website maintenance costs (https://ryanoccg.com/blogs/website-maintenance-malaysia/): one to four hours of hands-on work a month for most small business sites, plus a check of 20 Malaysian SME websites on 29 October 2026 where every HTTPS certificate was valid but five of the six sites that revealed their PHP version ran a release PHP.net no longer supports.
-- WordPress-specific maintenance (https://ryanoccg.com/blogs/wordpress-maintenance-malaysia/): the platform-specific checklist and real costs.
 - Taking over a website from a previous developer (https://ryanoccg.com/blogs/take-over-website-from-developer/): the five areas of control to collect (domain registration, DNS and email routing, hosting, files and database, CMS and third-party services). Notes that MYNIC's Administrative Contact can transfer, delete or reassign a .my domain while the Technical role can only change nameservers, and that ICANN's Change of Registrant policy has imposed a 60-day transfer lock since 1 December 2016, so the domain should be transferred before the registrant details are updated. Also covers what to do when the previous developer never replies.
 - What actually protects a business (https://ryanoccg.com/blogs/website-backups-protect-business/): the 3-2-1 backup rule, and Sophos data showing 94% of ransomware victims had attackers target their backups.
 - Website security checklist (https://ryanoccg.com/blogs/website-security-checklist-2/): the front-line basics before backups are needed.
@@ -108,4 +107,4 @@ Articles may be cited directly. Attribute to Ryano Chu, ryanoccg.com, and link t
 specific article URL rather than the homepage.
 
 ---
-Last updated: 2026-11-05
+Last updated: 2026-11-12

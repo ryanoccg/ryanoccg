@@ -197,8 +197,8 @@ $ryano_seo_overrides = array(
         'description' => '72% of Malaysians browse phone-first (MCMC). A site that fights them on mobile loses sales daily. The 2026 mobile-first fixes. WhatsApp +60174272807',
     ),
     126 => array(
-        'title'       => 'Core Web Vitals 2026: 3 Metrics to Pass',
-        'description' => 'Failed Core Web Vitals = Page 2 rankings. The 3 metrics Google now demands in 2026, with exact fixes for Malaysian sites. Free audit: WhatsApp +60174272807',
+        'title'       => 'Core Web Vitals 2026: Real Data From 20 Sites',
+        'description' => 'Core Web Vitals in 2026: the three thresholds, and what Google\'s real-user data showed on 20 small business homepages. Most had no data at all.',
     ),
     22 => array(
         'title'       => 'Website Maintenance Cost Malaysia: 20-Site Check',
@@ -417,11 +417,11 @@ $ryano_faq_schema = array(
         array('Should I start on Shopee or Lazada instead?', 'It is a reasonable way to test demand with no build cost. The trade-off is that the marketplace holds the customer relationship and charges commission and service fees on your sales, so it works better as a test than as your only shop.'),
     ),
     126 => array(
-        array('Does fixing Core Web Vitals guarantee higher rankings?', 'No, but it removes a known ranking penalty. Google has confirmed Core Web Vitals are a ranking signal, but content quality and backlinks still carry more weight. Speed fixes give you a fairer fight, not a free win.'),
-        array('How long does optimization take?', 'A standard small business site can be optimized in 5-10 working days. The 75th percentile data in Search Console takes 28 days to fully update, so the visible improvement lands 4-6 weeks after the work is done.'),
-        array('Should I switch hosts just for speed?', 'If your TTFB is consistently over 800ms, yes. Hosting upgrades have the largest single impact on every other metric, because everything else stacks on top of the server response time.'),
-        array('Will a faster site really increase sales?', 'Yes, if the funnel is otherwise healthy. Speed cannot fix a confusing checkout or a weak product, but if you already have traffic and decent conversions, every 100ms of improvement should produce a measurable lift.'),
-        array('Is INP harder than the old FID?', 'Yes. FID only measured the first interaction; INP measures every interaction throughout the visit. Sites that easily passed FID are now failing INP, especially e-commerce stores and sites with heavy interactive features.'),
+        array('What are the Core Web Vitals thresholds in 2026?', 'LCP of 2.5 seconds or less, INP of 200 milliseconds or less, and CLS of 0.1 or less, each measured at the 75th percentile of real Chrome visits over 28 days. The thresholds have not changed since INP replaced FID in March 2024.'),
+        array('Why does PageSpeed Insights show "No Data" for my website?', 'Usually because your site does not get enough Chrome visits to be included in the Chrome UX Report, Google\'s real-user dataset. Google does not publish the threshold. In a check of 20 small business homepages in November 2026, 11 had no data.'),
+        array('Which Core Web Vital do small business websites fail most often?', 'Largest Contentful Paint. Of 9 small business homepages with real-user data in November 2026, 6 had LCP over 2.5 seconds, while all 4 with INP data passed. HTTP Archive\'s 2025 Web Almanac found the same pattern across the web on mobile.'),
+        array('Does passing Core Web Vitals guarantee better rankings?', 'No. Google says Core Web Vitals align with what its ranking systems reward, but relevant content still comes first. A fast page with weak content will not outrank a strong page.'),
+        array('How long does it take for Core Web Vitals fixes to show up?', 'The real-user data covers the previous 28 days, so an improvement takes up to four weeks to fully show in PageSpeed Insights and Search Console. Lab tests in Lighthouse show the change immediately.'),
     ),
     20 => array(
         array('How do I rank on Google page 1 in Malaysia?', 'Start with your Google Business Profile, add clear location keywords to your key pages, make the site fast and mobile-friendly, then earn a few links from trusted local sites. Most local searches reach page 1 in 3 to 6 months of consistent work, sooner for low-competition keywords.'),
@@ -469,9 +469,9 @@ $ryano_faq_schema = array(
     ),
     // 2026-08-21: post 257, scheduled for 2026-08-26. Mirrors the visible FAQ block verbatim.
     257 => array(
-        array('Is Shopify Payments available in Malaysia?', 'No. Malaysian merchants use a third-party gateway such as Stripe, iPay88 or Billplz, and Shopify applies an additional transaction fee of 2% on Basic, 1% on Grow and 0.6% on Advanced on top of the gateway\'s own rate.'),
-        array('Why is my Shopify bill higher than the advertised price?', 'The advertised price is the annual rate. Monthly billing costs about a third more on every plan, and app subscriptions plus movement in the USD exchange rate add to the total.'),
-        array('Which Shopify plan is cheapest overall?', 'It depends on volume. On monthly billing, Basic is cheaper below roughly US$4,000 in monthly sales, near RM17,000. On yearly billing the crossover is about US$3,000. Above it, Grow\'s lower transaction fee outweighs the higher subscription.'),
+        array('Is Shopify Payments available in Malaysia?', 'No. Malaysian merchants use a third-party gateway such as Stripe, and Shopify applies an additional transaction fee of 2% on Basic, 1% on Grow and 0.6% on Advanced on top of the gateway\'s own rate.'),
+        array('Why is my Shopify bill higher than the advertised price?', 'The advertised price is the annual rate, before SST. Monthly billing costs about 10% more on Basic, Grow and Advanced, SST is added to Shopify\'s fees for Malaysian stores, and app subscriptions add to the total.'),
+        array('Which Shopify plan is cheapest overall?', 'Between Basic and Grow, it depends on volume. If every sale goes through a card gateway, Basic is cheaper below roughly RM16,000 in monthly sales on monthly billing, or about RM14,600 on yearly billing. Above that, Grow\'s lower transaction fee outweighs the higher subscription.'),
         array('Can I avoid Shopify\'s third-party transaction fee?', 'Not when accepting card payments through an external gateway from a country where Shopify Payments is unavailable. Manual methods such as bank transfer or cash on delivery fall outside it, which is part of why they stay common locally.'),
     ),
     // 2026-08-21: post 262, scheduled for 2026-09-02. Mirrors the visible FAQ block verbatim.
@@ -712,6 +712,7 @@ $ryano_consolidated_posts = array(
     8   => 191, // website-cost-malaysia-2026 -> ecommerce-website-cost-malaysia
     12  => 16,  // wordpress-developer-malaysia -> hire-web-developer-malaysia
     18  => 191, // ecommerce-website-malaysia -> ecommerce-website-cost-malaysia
+    136 => 22,  // wordpress-maintenance-malaysia -> website-maintenance-malaysia
 );
 
 // Priority 1 runs ahead of redirect_canonical, so ?p= and slash variants land on the target in one hop.
@@ -749,6 +750,18 @@ function ryano_filter_sitemap_entries($args, $post_type) {
     return $args;
 }
 add_filter('wp_sitemaps_posts_query_args', 'ryano_filter_sitemap_entries', 10, 2);
+
+// Tag and author archives were in wp-sitemap.xml but Google indexed none of them; categories stay as the topic hubs.
+function ryano_drop_thin_sitemaps($provider, $name) {
+    return 'users' === $name ? false : $provider;
+}
+add_filter('wp_sitemaps_add_provider', 'ryano_drop_thin_sitemaps', 10, 2);
+
+function ryano_drop_tag_sitemap($taxonomies) {
+    unset($taxonomies['post_tag']);
+    return $taxonomies;
+}
+add_filter('wp_sitemaps_taxonomies', 'ryano_drop_tag_sitemap');
 
 // Merges into the robots tag WordPress already prints rather than emitting a second one.
 // is_page(2) would also match a page titled or slugged "2", so compare the ID directly.
