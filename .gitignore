@@ -100,3 +100,23 @@ split/frontend/*.tsbuildinfo
 
 # Python venv for the GA4/GSC report scripts
 .venv/
+
+# Local SEO report workspace (seo-report skill): GSC/GA4 pulls, history ledger, screenshots,
+# one-off WordPress fix scripts and saved page copies. Never commit: deploy rsyncs the repo
+# root into public_html, so any of these committed would become a public URL.
+__pycache__/
+/seo_*.json
+/seo_report_history.jsonl
+/seo_report_dynamic.py
+/seo_report_query.py
+/seo_screenshots/
+/url_inspection_*.json
+/emdash_*
+/live_audit.json
+/maintenance_*.html
+/maintenance_*.json
+/v8.html
+/add_internal_links.py
+/publish_sister_articles.py
+/update_maintenance_post.py
+/.review_pack.json

@@ -526,9 +526,42 @@ $ryano_faq_schema = array(
         array('I only have WordPress admin. What can I still do?', 'More than people assume. On most hosts you can install a backup plugin and take a real copy of the database and files. What you still lack are the accounts underneath, which may be spread across a registrar, a DNS provider, an email provider and a host, so treat this as protecting your content while you chase the rest.'),
         array('Should I change all the passwords immediately?', 'Change them, but check the recovery email and two-factor settings first. A password change alone does not remove someone who can still trigger a reset.'),
     ),
+    // 2026-11-20: moved out of JSON-LD embedded in these six post bodies, which paraphrased the visible FAQ and listed questions the pages never show.
+    115 => array(
+        array('How much does it really cost?', 'USD 20-60 a month for DIY (Tidio, Chatbase), USD 800-2,500 one-time plus USD 40-120 monthly for a properly trained custom setup, USD 3,000+ for full custom AI agents with CRM integration.'),
+        array('Will it replace a customer support person?', 'Not entirely, and it should not. The goal is handling the first 80% of repetitive questions so your humans focus on the 20% that need real judgment, empathy, or sales skill.'),
+        array('Does it work with WhatsApp?', 'Yes. WhatsApp Business API integration is one of the highest-ROI setups for businesses whose customers prefer messaging.'),
+        array('Will it slow my site down?', 'A well-built chatbot loads asynchronously with zero Core Web Vitals impact. Cheap embed scripts from low-quality vendors can slow you down. Pick a reputable platform or have it built properly.'),
+        array('What if the AI says something wrong?', 'Modern bots use strict guardrails: they only answer from approved sources and refuse to answer outside their scope. Weekly transcript reviews for the first month catch most edge cases.'),
+    ),
+    176 => array(
+        array('What is a website maintenance plan, exactly?', 'A website maintenance plan is a recurring service that keeps a site secure and working: tested software updates, off-site backups, security scanning, uptime monitoring, and a guaranteed response time when something breaks. Price scales with how much the site earns, not how many pages it has.'),
+        array('What should a website maintenance plan include?', 'Tested software updates, automated off-site backups with restore tests, security scanning, uptime and functional monitoring, and a written response time for emergencies. If a plan cannot name where backups go and how updates are tested, keep looking.'),
+        array('How much does a website maintenance plan cost?', 'In 2026, light plans for brochure sites run around RM 150-300 a month, standard WordPress plans RM 300-500, and managed e-commerce plans RM 600-1,200. Price scales with response time and how much revenue the site handles, not with page count.'),
+        array('What does a good maintenance plan example look like?', 'Weekly: tested updates and backup verification. Monthly: performance checks and database cleanup. Quarterly: a full restore test and a security audit. Plus a named response time for emergencies. Anything labelled “monitoring” or “SEO optimisation” with no deliverable attached is filler.'),
+    ),
+    218 => array(
+        array('How do you know it\'s time to redesign your website?', 'It\'s time to redesign when the site is losing you money or trust: slow mobile load times, a design that looks dated next to competitors, a rising bounce rate, or a layout you can no longer update yourself. One of these is a warning. Two or more is a decision.'),
+    ),
+    221 => array(
+        array('How often should you back up your website?', 'Back up daily if your site changes often, such as a shop, a blog, or anything with customer accounts. A brochure site that rarely changes can go weekly. The real rule is simple: your backup frequency should match how much work you\'re willing to lose, measured in hours, not days.'),
+    ),
+    230 => array(
+        array('Why is my website traffic dropping when my rankings haven\'t changed?', 'Because fewer people click at all. Google now answers many questions directly on the results page with an AI summary, so your listing gets seen and skipped. You keep the ranking and lose the visit. The industry calls this zero-click search.'),
+        array('How do you get your business cited by AI search?', 'Publish specific, verifiable claims that an engine can lift as a complete sentence. Use numbers with sources and years, answer each heading\'s question directly in under 50 words, cite primary research, and make your business identity explicit with structured data. Vague, unsourced pages do not get cited.'),
+    ),
+    235 => array(
+        array('Why do people leave a website on mobile?', 'Usually because something made them wait or made them work. Slow loading, text they have to pinch to read, buttons too small to hit, forms that demand too much, or a popup that covers the screen before they see anything. Each one is small. Together they are an exit.'),
+        array('How do you test your site like a real mobile visitor?', 'Open it on your own phone using mobile data, not office wifi, in a private browsing window so nothing is cached. Then complete your main goal one handed: find the price, submit the form, or place an order. Whatever slows you down is what is costing you enquiries.'),
+    ),
 );
 
 // Emit FAQPage JSON-LD on posts that have FAQ entries defined above
+// The visible FAQ goes through wptexturize, so straight quotes in these strings would never match the page's curly ones.
+function ryano_faq_text($s) {
+    return html_entity_decode(wptexturize($s), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+}
+
 function ryano_faq_jsonld() {
     if (!is_single()) return;
     global $ryano_faq_schema;
@@ -539,10 +572,10 @@ function ryano_faq_jsonld() {
     foreach ($ryano_faq_schema[$post_id] as $pair) {
         $entities[] = array(
             '@type'          => 'Question',
-            'name'           => $pair[0],
+            'name'           => ryano_faq_text($pair[0]),
             'acceptedAnswer' => array(
                 '@type' => 'Answer',
-                'text'  => $pair[1],
+                'text'  => ryano_faq_text($pair[1]),
             ),
         );
     }
