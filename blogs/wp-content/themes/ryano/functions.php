@@ -373,7 +373,7 @@ add_action('wp_head', 'ryano_og_meta_tags');
 $ryano_faq_schema = array(
     198 => array(
         array('Is an AI website builder good for SEO?', 'It covers the basics, but advanced control varies a lot between builders. Before choosing one for a site that has to rank, check whether it lets you add custom structured data, set redirects and control URLs and page speed.'),
-        array('Can I move my site off an AI website builder later?', 'Usually not intact. In a November 2026 check, Wix did not allow external hosting at all, while Squarespace and Hostinger\'s manual mode exported content but not the design or the online store. Moving usually means rebuilding.'),
+        array('Can I move my site off an AI website builder later?', 'Usually not intact. In a November 2026 check, Wix did not allow external hosting at all, while Squarespace and Hostinger in manual mode exported content but not the design or the online store. Moving usually means rebuilding.'),
         array('Can AI replace a web developer?', 'For static, self-contained websites, largely yes. Where a project is dominated by integrations, undocumented business rules, payment compliance or ongoing accountability, the remaining work is defining requirements and connecting systems, and that is where the effort concentrates.'),
         array('Is it cheaper to build a website with AI than hire a freelancer?', 'For a brochure site, yes, by a wide margin: entry builder plans started at RM6.99 a month on a November 2026 Black Friday deal, against several thousand ringgit for a custom build. The gap narrows once the site has to connect to other systems, because that work is priced by complexity rather than page count.'),
     ),
