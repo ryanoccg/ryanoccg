@@ -216,9 +216,10 @@ $ryano_seo_overrides = array(
         'title'       => 'Ecommerce Website Price in Malaysia 2026',
         'description' => 'What an online store costs to build and run in 2026, how that compares with a normal website, and the per-order fees quotes skip. WhatsApp +60174272807',
     ),
+    // 2026-11-20: rewritten with a four-builder price and export check, and post 265 merged in.
     198 => array(
-        'title'       => 'AI Website Builder or Professional Development?',
-        'description' => 'AI website builder or professional development? An honest 2026 breakdown of cost, SEO, and ownership. Free advice: WhatsApp +60174272807',
+        'title'       => 'AI Website Builder vs a Professional Developer',
+        'description' => 'Four AI website builders checked in November 2026: entry prices, renewal traps, and whether you can take your site with you to another host.',
     ),
     // 2026-07-27: post 176 had no override despite being the site's highest-impression
     // blog page (518 impressions/30d). It owns the generic "plan/package" query cluster
@@ -371,9 +372,10 @@ add_action('wp_head', 'ryano_og_meta_tags');
 // copy of the visible text, which makes "does it still match?" a diff, not a judgement.
 $ryano_faq_schema = array(
     198 => array(
-        array('Is an AI website builder good for SEO?', 'It can handle the basics, but it caps out. You get less control over structured data, page speed, and URL structure than a custom build, so an AI builder is fine for a simple brochure site and limiting once ranking becomes a real goal.'),
-        array('Can I move my site off an AI website builder later?', 'Sometimes, but rarely cleanly. Most builders let you export raw content, not the design or functionality, so a move usually means rebuilding. That lock-in is the main reason to think about ownership before you commit, not after.'),
-        array('Is professional web development worth the higher cost?', 'If your website is a core revenue channel, yes. The higher upfront fee buys custom features, full SEO control, and a portable stack you own outright, which is what keeps costs predictable as you scale instead of climbing with every plan tier.'),
+        array('Is an AI website builder good for SEO?', 'It covers the basics, but advanced control varies a lot between builders. Before choosing one for a site that has to rank, check whether it lets you add custom structured data, set redirects and control URLs and page speed.'),
+        array('Can I move my site off an AI website builder later?', 'Usually not intact. In a November 2026 check, Wix did not allow external hosting at all, while Squarespace and Hostinger\'s manual mode exported content but not the design or the online store. Moving usually means rebuilding.'),
+        array('Can AI replace a web developer?', 'For static, self-contained websites, largely yes. Where a project is dominated by integrations, undocumented business rules, payment compliance or ongoing accountability, the remaining work is defining requirements and connecting systems, and that is where the effort concentrates.'),
+        array('Is it cheaper to build a website with AI than hire a freelancer?', 'For a brochure site, yes, by a wide margin: entry builder plans started at RM6.99 a month on a November 2026 Black Friday deal, against several thousand ringgit for a custom build. The gap narrows once the site has to connect to other systems, because that work is priced by complexity rather than page count.'),
     ),
     14 => array(
         array('Do I need a separate mobile website?', 'No. One responsive website that adapts is better than two separate sites.'),
@@ -713,6 +715,7 @@ $ryano_consolidated_posts = array(
     12  => 16,  // wordpress-developer-malaysia -> hire-web-developer-malaysia
     18  => 191, // ecommerce-website-malaysia -> ecommerce-website-cost-malaysia
     136 => 22,  // wordpress-maintenance-malaysia -> website-maintenance-malaysia
+    265 => 198, // what-ai-website-builders-cannot-build -> ai-website-builder-vs-professional-web-development
 );
 
 // Priority 1 runs ahead of redirect_canonical, so ?p= and slash variants land on the target in one hop.
